@@ -1,0 +1,107 @@
+/* 전체 화면 중앙 정렬 및 배경 */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+  }
+  
+  /* 입력 폼 */
+  .form {
+    width: 347px;
+    padding: 20px;
+    text-align: center;
+  
+  }
+  
+  /* 라벨 스타일 */
+  .label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: left;
+    font-weight: bold;
+  }
+  
+  /* 입력 필드 스타일 */
+  .input {
+    width: 100%;
+    padding: 10px;
+    height: 45px;
+    margin-bottom: 20px;
+    border: 1.5px solid white;
+    border-radius: 5px;
+    background: transparent;
+    color: white;
+    font-size: 16px;
+    outline: none;
+  }
+  .input::placeholder {
+    color: rgba(255, 255, 255, 0.6); 
+    font-size: 14px;      
+    background: transparent;          
+  }
+  .input:focus {
+    background: transparent;
+    color: white;
+  }
+  /* 버튼 스타일 */
+  .button {
+    width: 100%;
+    height: 45px;
+    padding: 10px;
+    background-color: black;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .button:hover {
+    background-color: white;
+    color: black;
+  }
+
+  .popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+  }
+  
+  .popupContent {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    color: black;
+    width: 80%;
+    font-family:Inter,sans-serif;
+
+    max-width: 400px;
+  }
+  
+  .closeButton {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .closeButton:hover {
+    background-color: white;
+    color: black;
+  }
