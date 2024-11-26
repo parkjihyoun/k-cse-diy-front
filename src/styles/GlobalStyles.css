@@ -1,0 +1,13 @@
+.title {
+    font-family: Inter, sans-serif;
+    color: white;
+    font-size:25px; 
+    font-weight:bold;
+}
+
+.line {
+    width: 50px;
+    height: 4px;
+    background-color: white;
+    margin-top: 10px;
+}
