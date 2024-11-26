@@ -36,7 +36,7 @@ const styles = {
     header: {
         display: 'flex',
         color: '#fff',
-        // position: 'fixed',
+        position: 'fixed',
         width: '100%',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -49,7 +49,6 @@ const styles = {
     },
 
     nav: {
-        marginRight: '80px',
         
     },
     navList: {
