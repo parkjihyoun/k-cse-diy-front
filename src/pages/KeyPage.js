@@ -5,11 +5,19 @@ const KeyPage = () => {
   const [status, setStatus] = useState("대여가능"); // 초기 상태 설정
 
   const handleBorrowKey = () => {
-    setStatus("대여중");
+    // 대여 확인 팝업
+    const userConfirmed = window.confirm("DIY실 열쇠를 대여하시겠습니까?");
+    if (userConfirmed) {
+      setStatus("대여중");
+    }
   };
 
   const handleReturnKey = () => {
-    setStatus("대여가능");
+    // 반납 확인 팝업
+    const userConfirmed = window.confirm("DIY실 열쇠를 반납하시겠습니까?");
+    if (userConfirmed) {
+      setStatus("대여가능");
+    }
   };
 
   return (
