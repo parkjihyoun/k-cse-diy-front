@@ -68,6 +68,7 @@ const styles = {
         fontSize: '30px',
         fontWeight: '700',
     },
+
     nav: {},
     navList: {
         display: 'flex',

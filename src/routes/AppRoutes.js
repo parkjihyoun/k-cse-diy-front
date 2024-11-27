@@ -7,7 +7,7 @@ import WeekPage from '../pages/WeekPage';
 import MonthPage from '../pages/MonthPage';
 import KeyPage from '../pages/KeyPage';
 import HelpPage from '../pages/HelpPage';
-import CheckPageList from '../pages/CheckListPage';
+import CheckListPage from '../pages/CheckListPage';
 
 const AppRoutes = () => {
   return (
@@ -17,7 +17,7 @@ const AppRoutes = () => {
         {/* Layout 내부의 페이지들 */}
         <Route index element={<MainPage />} />
         <Route path="check" element={<CheckPage />} />
-        <Route path="check/list" element={<CheckPageList />} />
+        <Route path="check/list" element={<CheckListPage />} />
         <Route path="week" element={<WeekPage />} />
         <Route path="month" element={<MonthPage />} />
         <Route path="key" element={<KeyPage />} />
