@@ -1,0 +1,100 @@
+
+/* main-container */
+.main-container {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+/* main-text */
+.main-text {
+    padding: 20px;
+    text-align: center;
+    margin-top: 150px;
+}
+
+.main-title {
+    color: #fff;
+    font-size: 50px;
+    margin-bottom: 30px;
+}
+
+.main-subtitle {
+    color: #bbb;
+    font-size: 25px;
+    margin-bottom: 100px;
+}
+
+.main-button {
+    background-color: #324E97;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 15px 60px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 250px;
+}
+
+.main-button:hover {
+    background-color: #223B7C;
+    transform: translateY(-5px);
+}
+
+
+
+/* main-status */
+.main-status {
+    
+}
+
+.status-title-wrapper {
+    margin-bottom: 20px;
+}
+
+.status-title {
+    font-size: 25px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.status-line {
+    width: 50px;
+    height: 4px;
+    background-color: #fff;
+    margin-top: 10px;
+}
+
+.status-box {
+    background-color: rgba(255, 255, 255, 0.2);
+    margin-bottom: 100px;
+    padding: 80px 150px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 50px;
+    text-align: center;
+}
+
+.status {
+    color: #fff;
+}
+
+.status h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.status p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.status-info-line {
+    width: 200px;
+    height: 1px;
+    background-color: #fff;
+    margin: 20px auto 0;
+    margin-bottom: 20px;
+}
