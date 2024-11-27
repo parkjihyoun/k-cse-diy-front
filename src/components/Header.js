@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 const Header = () => {
     const location = useLocation();
+    const [activeStyle, setActiveStyle] = useState({ left: 0, width: 0 });
+    const navRef = useRef(null);
+
+    useEffect(() => {
+        const navItems = Array.from(navRef.current?.children || []);
+        const activeIndex = navItems.findIndex(
+            (item) => item.firstChild.getAttribute('href') === location.pathname
+        );
+
+        if (activeIndex !== -1) {
+            const activeItem = navItems[activeIndex];
+            const { offsetLeft, offsetWidth } = activeItem;
+            setActiveStyle({ left: offsetLeft, width: offsetWidth });
+        }
+    }, [location]);
 
     return (
         <header style={styles.header}>
@@ -11,44 +26,33 @@ const Header = () => {
             </div>
 
             <nav style={styles.nav}>
-                <ul style={styles.navList}>
+                <ul ref={navRef} style={styles.navList}>
                     <li style={styles.navItem}>
-                        <Link to="/" style={styles.navLink}>
-                            메인
-                            {location.pathname === '/' && <div style={styles.activeLine}></div>}
-                        </Link>
+                        <Link to="/" style={styles.navLink}>메인</Link>
                     </li>
                     <li style={styles.navItem}>
-                        <Link to="/month" style={styles.navLink}>
-                            예약하기
-                            {location.pathname === '/month' && <div style={styles.activeLine}></div>}
-                        </Link>
+                        <Link to="/month" style={styles.navLink}>예약하기</Link>
                     </li>
                     <li style={styles.navItem}>
-                        <Link to="/week" style={styles.navLink}>
-                            주
-                            {location.pathname === '/week' && <div style={styles.activeLine}></div>}
-                        </Link>
+                        <Link to="/week" style={styles.navLink}>주</Link>
                     </li>
                     <li style={styles.navItem}>
-                        <Link to="/key" style={styles.navLink}>
-                            열쇠 대여/반납
-                            {location.pathname === '/key' && <div style={styles.activeLine}></div>}
-                        </Link>
+                        <Link to="/key" style={styles.navLink}>열쇠 대여/반납</Link>
                     </li>
                     <li style={styles.navItem}>
-                        <Link to="/check" style={styles.navLink}>
-                            예약 확인/수정
-                            {location.pathname === '/check' && <div style={styles.activeLine}></div>}
-                        </Link>
+                        <Link to="/check" style={styles.navLink}>예약 확인/수정</Link>
                     </li>
                     <li style={styles.navItem}>
-                        <Link to="/help" style={styles.navLink}>
-                            이용 안내
-                            {location.pathname === '/help' && <div style={styles.activeLine}></div>}
-                        </Link>
+                        <Link to="/help" style={styles.navLink}>이용 안내</Link>
                     </li>
                 </ul>
+                <div
+                    style={{
+                        ...styles.activeLine,
+                        left: activeStyle.left,
+                        width: activeStyle.width,
+                    }}
+                />
             </nav>
         </header>
     );
@@ -63,19 +67,22 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '30px 40px',
+        backgroundColor: 'rgba(0,0,0,0.4)',
     },
     logo: {
         fontSize: '30px',
         fontWeight: '700',
     },
-
-    nav: {},
+    nav: {
+        position: 'relative',
+    },
     navList: {
         display: 'flex',
         listStyle: 'none',
         margin: 0,
         padding: 0,
         gap: '30px',
+        position: 'relative',
     },
     navItem: {
         margin: 0,
@@ -93,13 +100,10 @@ const styles = {
     activeLine: {
         position: 'absolute',
         bottom: '-10px',
-        width: '120%',
-        height: '1px',
+        height: '2px',
         backgroundColor: '#fff',
-        left: '50%',
-        transform: 'translateX(-50%)',
+        transition: 'all 0.3s ease',
     },
 };
-
 
 export default Header;

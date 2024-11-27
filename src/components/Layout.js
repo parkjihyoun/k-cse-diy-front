@@ -42,13 +42,12 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        background: 'rgba(0, 0, 0, 0.5)',
+        background: 'rgba(0, 0, 0, 0.6)',
     },
     main: {
         flex: 1,
         padding: '40px',
         marginTop:'96px',
-        background: 'rgba(255, 255, 255, 0.1)',
         marginTop: '96px',
     },
     titleWrapper: {
