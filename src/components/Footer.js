@@ -1,10 +1,10 @@
 import React from 'react';
-import logo from '../img/logo.png';
+import cselogo from '../img/cselogo.png';
 
 const Footer = () => {
     return (
         <footer style={styles.footer}>
-            <img src={logo} alt="logo" />
+            <img src={cselogo} alt="cselogo" style={styles.cselogo} />
             <p>made by: @yeaey_oo | @unnhyo | @w.o_xna | @y___ch__</p>
         </footer>
     );
@@ -12,12 +12,18 @@ const Footer = () => {
 
 const styles = {
     footer: {
-        backgroundColor: '#212121',
-        color: '#bbb',
+        backgroundColor: '#000',
+        opacity: '0.6',
+        color: '#fff',
         textAlign: 'center',
         bottom: 0,
         width: '100%',
-        padding: '20px',
+        padding: '30px',
+    },
+
+    cselogo: {
+        width: '50px',
+        marginBottom: '20px'
     },
 };
 
