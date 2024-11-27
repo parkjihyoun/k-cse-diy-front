@@ -1,72 +1,74 @@
 
 /* main-container */
-.main-container {
+.maincontainer {
     padding: 0;
     margin: 0;
     width: 100%;
 }
 
 /* main-text */
-.main-text {
+.maintext {
     padding: 20px;
     text-align: center;
     margin-top: 150px;
 }
 
-.main-title {
+.maintitle {
     color: #fff;
     font-size: 50px;
     margin-bottom: 30px;
 }
 
-.main-subtitle {
+.mainsubtitle {
     color: #bbb;
     font-size: 25px;
     margin-bottom: 100px;
 }
 
-.main-button {
+.mainbutton {
     background-color: #324E97;
     color: #fff;
     border: none;
     border-radius: 5px;
-    padding: 15px 60px;
+    padding: 15px;
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
     margin-bottom: 250px;
+    width: 200px;
 }
 
-.main-button:hover {
+.mainbutton:hover {
     background-color: #223B7C;
-    transform: translateY(-5px);
+    transform: scale(1.1);
 }
 
 
 
 /* main-status */
-.main-status {
+.mainstatus {
     
 }
 
-.status-title-wrapper {
+.statustitle-wrapper {
     margin-bottom: 20px;
 }
 
-.status-title {
+.statustitle {
     font-size: 25px;
     font-weight: bold;
     color: #fff;
 }
 
-.status-line {
+.statusline {
     width: 50px;
     height: 4px;
     background-color: #fff;
     margin-top: 10px;
+    margin-bottom: 20px;
 }
 
-.status-box {
+.statusbox {
     background-color: rgba(255, 255, 255, 0.2);
     margin-bottom: 100px;
     padding: 80px 150px;
@@ -91,7 +93,7 @@
     margin-bottom: 10px;
 }
 
-.status-info-line {
+.statusinfoline {
     width: 200px;
     height: 1px;
     background-color: #fff;
