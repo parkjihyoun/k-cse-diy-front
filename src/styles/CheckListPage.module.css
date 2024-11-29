@@ -2,6 +2,7 @@
   position: relative; 
   display: flex;
   flex-direction: column;
+  margin-top: 96px;
   
 }
 
@@ -166,6 +167,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-left:40px;
 
 }
 
@@ -173,6 +175,7 @@
   font-weight: bold;
   font-size: 16px;
   color: rgba(255,255,255, 0.8);
+
 }
 
 .noResults{
