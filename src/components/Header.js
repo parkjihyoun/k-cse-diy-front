@@ -68,6 +68,7 @@ const styles = {
         justifyContent: 'space-between',
         padding: '30px 40px',
         backgroundColor: 'rgba(0,0,0,0.4)',
+        zIndex: '1000',
     },
     logo: {
         fontSize: '30px',
@@ -83,6 +84,7 @@ const styles = {
         padding: 0,
         gap: '30px',
         position: 'relative',
+
     },
     navItem: {
         margin: 0,

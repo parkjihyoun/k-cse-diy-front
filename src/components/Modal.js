@@ -75,8 +75,7 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
         ) : (
           <>
             <h2 className={styles.modalTitle}>
-              예약 수정
-              <img src={editIcon} alt="Edit Icon" className={styles.editIcon} />
+              예약 수정<img src={editIcon} alt="Edit Icon" className={styles.editIcon} />
             </h2>
             <div className={styles.inputGroup}>
               <DatePicker
