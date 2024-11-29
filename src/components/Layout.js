@@ -7,10 +7,11 @@ const Layout = () => {
     const location = useLocation();
 
     const titles = {
-        '/key': '예약 확인',
+        '/key': '실시간 열쇠 상태',
         '/month': '소개',
         '/check': '예약 확인',
         '/check/list': '예약 리스트',
+        '/help' : '이용 안내',
     };
 
     const currentTitle = titles[location.pathname] || '페이지';

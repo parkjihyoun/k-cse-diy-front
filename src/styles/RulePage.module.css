@@ -1,0 +1,14 @@
+.rulepage {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box; /* 여백 포함 크기 계산 */
+  }
+  
+  .rule1,
+  .rule2 {
+    white-space: normal; /* 줄바꿈 허용 */
+    margin-bottom: 10px; /* 각 줄 간의 간격 */
+    font-size: 1rem; /* 글자 크기 */
+    line-height: 1.5; /* 줄 간 간격 */
+  }
+  
