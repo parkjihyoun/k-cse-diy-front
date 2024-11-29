@@ -1,0 +1,60 @@
+html, body {
+    margin: 0; /* 기본 마진 제거 */
+    padding: 0; /* 기본 패딩 제거 */
+    width: 100%; /* 너비를 100%로 설정 */
+    height: 100%; /* 높이를 100%로 설정 */
+  }
+  
+  .tutorialPage {
+    position: fixed; /* 뷰포트 기준으로 고정 */
+    top: 0;
+    left: 0;
+    width: 100vw; /* 화면 너비 */
+    height: 100vh; /* 화면 높이 */
+    overflow: hidden; /* 초과 콘텐츠 숨김 */
+    
+  }
+  
+  .mainImage {
+    position: absolute; /* 부모를 기준으로 절대 위치 */
+    top: 0;
+    left: 0;
+    width: 100%; /* 부모의 너비를 채움 */
+    height: 100%; /* 부모의 높이를 채움 */
+    object-fit: cover; /* 비율 유지하면서 부모 크기에 맞춤 */
+    z-index: 0; /* 다른 요소보다 뒤로 배치 */
+    
+  }
+
+  .button {
+    background-color: #324E97;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 250px;
+    width: 200px;
+}
+.skipButton {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1;
+  }
+  
+  .skipButton:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+
+  

@@ -11,6 +11,7 @@ const Layout = () => {
         '/month': '실시간 예약 현황',
         '/check': '예약 확인',
         '/check/list': '예약 리스트',
+        '/help' : '이용 안내',
     };
 
     const currentTitle = titles[location.pathname] || '페이지';

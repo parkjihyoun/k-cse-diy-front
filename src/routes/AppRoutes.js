@@ -8,6 +8,8 @@ import MonthPage from '../pages/MonthPage';
 import KeyPage from '../pages/KeyPage';
 import HelpPage from '../pages/HelpPage';
 import CheckListPage from '../pages/CheckListPage';
+import TutorialPage from '../pages/TutorialPage';
+import RulePage from '../pages/RulePage';
 
 const AppRoutes = () => {
   return (
@@ -22,6 +24,8 @@ const AppRoutes = () => {
         <Route path="month" element={<MonthPage />} />
         <Route path="key" element={<KeyPage />} />
         <Route path="help" element={<HelpPage />} />
+        <Route path="help/tutorial" element={<TutorialPage />} />
+        <Route path="help/rule" element={<RulePage />} />
       </Route>
     </Routes>
   );
