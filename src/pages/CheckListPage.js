@@ -1,3 +1,5 @@
+
+
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import styles from "../styles/CheckListPage.module.css";
@@ -77,7 +79,7 @@ const CheckListPage = () => {
     {
       reservationNum: 7,
       date: "2024-11-25",
-      day: "MON",
+      day: "THU",
       time: "11:00 ~ 16:00",
       title: "공부해라",
       status: "대기",
