@@ -1,0 +1,30 @@
+.helppage {
+    display: flex; /* Flexbox 사용 */
+    flex-direction: column; /* 세로로 배치 */
+    justify-content: center; /* 세로 중앙 정렬 */
+    align-items: center; /* 가로 중앙 정렬 */
+    margin-top: 240px;
+  }
+
+  .tutorial,
+  .rule {
+    margin-bottom: 25px; /* 버튼 간 간격 */
+  }
+  
+  .helpButton {
+    padding: 10px 20px; /* 버튼 내부 여백 */
+    font-size: 1rem; /* 버튼 텍스트 크기 */
+    width: 300px;
+    height: 50px;
+    border: none; /* 기본 테두리 제거 */
+    border-radius: 5px; /* 버튼 모서리 둥글게 */
+    background-color: #000000; /* 버튼 배경색 */
+    color: white; /* 텍스트 색상 */
+    cursor: pointer; /* 포인터 커서 */
+    transition: background-color 0.3s ease;
+  }
+  
+  .helpButton:hover {
+    background-color: #1f3775; /* 호버 효과 */
+  }
+  

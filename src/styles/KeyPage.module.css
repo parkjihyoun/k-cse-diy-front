@@ -1,0 +1,162 @@
+/* KeyPage.module.css */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  margin-top: 120px;
+}
+
+.centerBox {
+  width: 410px;
+  padding: 25px;
+  margin-top: -90px;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  color: white;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* 그림자 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.roomTitle {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 5px;
+}
+
+.roomSubtitle {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  margin-left: 6px;
+}
+
+
+.lastUserTitle {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.lastUser,
+.eventTitle {
+  font-size: 0.9rem;
+}
+
+.locationContainer {
+  display: flex; /* 가로로 배치 */
+  align-items: center; /* 수직 정렬 */
+  gap: 20px; /* 박스와 날짜 사이 간격 */
+  margin-top: 20px; /* 위아래 여백 */
+}
+
+.locationBox {
+  border-radius: 5px; /* 모서리 둥글게 */
+  padding: 2px 5px;
+  font-size: 0.9rem; /* 글씨 크기 */
+  border: none; 
+  color: #ccc; /* 글자 색상 */
+  background-color: rgba(255, 255, 255, 0.251); /* 배경 색상 */
+  text-align: center; /* 텍스트 가운데 정렬 */
+  display: inline-block; /* 글자 길이에 맞는 박스 */
+}
+
+.date {
+  font-size: 13px; /* 글자 크기 */
+  color: #aaa; /* 날짜 글자 색상 */
+  margin-bottom: -3px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  white-space: nowrap;
+  margin-bottom: 8px;
+}
+.checkkey
+{
+    margin-top: 30px;
+    margin-right: 1310px;
+}
+
+/* KeyPage.module.css */
+.separator {
+  border: none; /* 기본 테두리를 제거 */
+  height: 1px; /* 선의 두께 */
+  background: rgba(255, 255, 255, 0.8); /* 흰색 반투명 배경 */
+  width: 100%; /* 선의 길이를 부모 요소에 맞춤 */
+  margin: 15px 0; /* 위아래 간격 설정 */
+}
+
+
+/* 기본 원 스타일 */
+.statusCircle {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%; /* 원 모양 */
+  display: inline-block; /* 인라인 블록으로 표시 */
+  margin-left: 15px; /* 텍스트와의 간격 */
+}
+
+.statusCircle2 {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%; /* 원 모양 */
+  display: inline-block; /* 인라인 블록으로 표시 */
+  margin-left: 250px; /* 텍스트와의 간격 */
+  margin-bottom: 0; /* 아래 여백 초기화 */
+}
+/* 대여가능 상태 색상 */
+.canlentCircle {
+  background-color: #e4e4e4; /* 회색 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 대여중 상태 색상 */
+.usingCircle {
+  background-color: #1f3775; /* 파란색 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 미반납 상태 색상 */
+.didntreturnCircle {
+  background-color: #861c1c; /* 빨간색 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 450px;
+  margin-top: 20px;
+}
+
+.actionButton {
+  flex: 1;
+  padding: 14px 20px;
+  margin: 0 20px;
+  gap: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #000000;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.actionButton:hover {
+  background-color: #1f3775;
+}
+

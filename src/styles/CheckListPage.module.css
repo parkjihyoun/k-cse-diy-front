@@ -2,6 +2,7 @@
   position: relative; 
   display: flex;
   flex-direction: column;
+  margin-top: 120px;
   
 }
 
@@ -12,7 +13,7 @@
   justify-content: center;
   padding: 20px;
   position: relative;
-  margin-top: 50px;
+  margin-top: 30px;
 }
 
 .legend {
@@ -70,6 +71,8 @@
   border-radius: 5px;
   padding: 20px;
   width: 300px;
+  height: 185px;
+  flex-direction: column;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
@@ -87,21 +90,24 @@
 }
 
 .cardHeader h3 {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
-  margin: 0;
+  margin: 0;  margin-top: 10px; 
+
 }
 
 .cardHeader .day {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold; 
   color: white;
+  margin-top: 10px; 
+
 }
 
 .cardHeader .time {
   font-size: 14px;
-  margin-top: 5px; 
-  color: #aaa;
+  margin-top: 10px; 
+  color: #e3e3e3;
 }
 
 
@@ -109,19 +115,29 @@
 .title {
   font-size: 14px;
   font-weight: bold;
-  margin-top: 30px;;
+  margin-top: 20px;;
+  color: #e3e3e3;
+
+    overflow: hidden;       
+    white-space: nowrap;    
+    text-overflow: ellipsis; 
+    max-width: 120px; 
+        display: inline-block;   
+  
 }
 
 .titleAndActions {
   display: flex;
   justify-content: space-between; 
   align-items: center;
+  margin-top: 20px; 
 }
 
 .actions {
   display: flex;
   gap: 10px;
   margin-top: 20px;
+  margin-left: 10px;
 }
 
 .editBtn,
@@ -145,4 +161,28 @@
 .deleteBtn {
   background-color: black;
   color: white;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left:40px;
+
+}
+
+.userInfo {
+  font-weight: bold;
+  font-size: 16px;
+  color: rgba(255,255,255, 0.8);
+
+}
+
+.noResults{
+  margin-top:15px;
+  margin-left: 40px;
+  font-weight: bold;
+  font-size: 25px;
+  color: rgba(255,255,255, 0.8);
+
 }

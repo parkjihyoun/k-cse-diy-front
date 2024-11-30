@@ -12,6 +12,7 @@ const Layout = () => {
         '/week': '예약 현황',
         '/check': '예약 확인',
         '/check/list': '예약 리스트',
+        '/help' : '이용 안내',
     };
 
     const currentTitle = titles[location.pathname] || '페이지';
@@ -47,12 +48,16 @@ const styles = {
     },
     main: {
         flex: 1,
-        padding: '40px',
-        marginTop:'96px',
+        display: 'flex',
+        flexDirection: 'column',
         marginTop: '96px',
+        position: 'relative', 
     },
     titleWrapper: {
-        marginBottom: '20px',
+        position: 'absolute', 
+        top: '20px', 
+        left: '40px', 
+        width: '300px',
     },
     title: {
         fontFamily: 'Inter, sans-serif',
@@ -64,7 +69,7 @@ const styles = {
         width: '50px',
         height: '4px',
         backgroundColor: 'white',
-        marginTop: '10px',
+        marginTop: '20px',
     },
 };
 

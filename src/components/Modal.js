@@ -5,11 +5,12 @@ import styles from "../styles/Modal.module.css";
 import editIcon from "../img/edit.png";
 
 const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
+  const [authCodeInput, setAuthCodeInput] = useState(""); // 인증번호 입력 상태 추가
   const [editedReservation, setEditedReservation] = useState({
-    date: reservation?.date ? new Date(reservation.date) : new Date(), // 전달된 date가 있으면 변환
-    startTime: reservation?.startTime || reservation?.time?.split(" ~ ")[0] || "09:00", // 전달된 startTime, 없으면 time에서 추출
-    endTime: reservation?.endTime || reservation?.time?.split(" ~ ")[1] || "10:00", // 전달된 endTime, 없으면 time에서 추출
-    title: reservation?.title || "", // 전달된 title 유지
+    date: reservation?.date ? new Date(reservation.date) : new Date(),
+    startTime: reservation?.startTime || reservation?.time?.split(" ~ ")[0] || "09:00",
+    endTime: reservation?.endTime || reservation?.time?.split(" ~ ")[1] || "10:00",
+    title: reservation?.title || "",
   });
 
   const handleDateChange = (date) => {
@@ -25,25 +26,23 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
   };
 
   const handleSave = () => {
-    // 수정된 데이터를 상위 컴포넌트로 전달
     const updatedReservation = {
       ...reservation,
-      date: editedReservation.date.toISOString().slice(0, 10), // ISO 형식으로 변환
-      startTime: editedReservation.startTime, // 수정된 시작 시간
-      endTime: editedReservation.endTime, // 수정된 끝나는 시간
-      title: editedReservation.title, // 수정된 제목
+      date: editedReservation.date.toISOString().slice(0, 10),
+      startTime: editedReservation.startTime,
+      endTime: editedReservation.endTime,
+      title: editedReservation.title,
     };
 
-    onSave(updatedReservation); // 수정된 예약 정보를 상위 컴포넌트로 전달
-    onClose(); // 모달 닫기
+    onSave(updatedReservation);
+    onClose();
   };
 
-  // 30분 간격으로 시간을 생성
   const generateTimeOptions = () => {
     const times = [];
     for (let i = 0; i <= 24; i++) {
       times.push(`${String(i).padStart(2, "0")}:00`);
-      if (i < 18) times.push(`${String(i).padStart(2, "0")}:30`);
+      if (i < 24) times.push(`${String(i).padStart(2, "0")}:30`);
     }
     return times;
   };
@@ -56,17 +55,15 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
             <h2 className={styles.modalTitle}>인증번호를 입력해주세요</h2>
             <input
               type="text"
-              value={editedReservation.title}
-              onChange={(e) =>
-                setEditedReservation({ ...editedReservation, title: e.target.value })
-              }
+              value={authCodeInput} // 인증번호 입력 필드 상태 사용
+              onChange={(e) => setAuthCodeInput(e.target.value)}
               placeholder="인증번호 입력"
               className={styles.input}
             />
             <div className={styles.actions}>
               <button
                 className={styles.confirmBtn}
-                onClick={() => onAuthenticate(editedReservation.title)}
+                onClick={() => onAuthenticate(authCodeInput)} // 인증번호 전달
               >
                 확인
               </button>
@@ -78,8 +75,7 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
         ) : (
           <>
             <h2 className={styles.modalTitle}>
-              예약 수정
-              <img src={editIcon} alt="Edit Icon" className={styles.editIcon} />
+              예약 수정<img src={editIcon} alt="Edit Icon" className={styles.editIcon} />
             </h2>
             <div className={styles.inputGroup}>
               <DatePicker
@@ -92,7 +88,7 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
             </div>
             <div className={styles.timeGroup}>
               <select
-                value={editedReservation.startTime} // 시작 시간을 설정
+                value={editedReservation.startTime}
                 onChange={handleStartTimeChange}
                 className={styles.timeSelect}
               >
@@ -104,7 +100,7 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
               </select>
               <span className={styles.timeSeparator}> ~ </span>
               <select
-                value={editedReservation.endTime} // 끝나는 시간을 설정
+                value={editedReservation.endTime}
                 onChange={handleEndTimeChange}
                 className={styles.timeSelect}
               >
@@ -122,7 +118,7 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
                 onChange={(e) =>
                   setEditedReservation({ ...editedReservation, title: e.target.value })
                 }
-                placeholder="title"
+                placeholder="사유를 작성해주세요"
                 className={styles.inputedit}
               />
             </div>
