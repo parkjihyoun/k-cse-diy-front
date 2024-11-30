@@ -110,7 +110,7 @@
 
 .dropdownMenu {
   position: absolute;
-  top: 40px;
+  top: 36px;
   right: 0;
   background-color: white;
   color: black;
@@ -219,4 +219,10 @@ td:last-child {
 .empty {
   background-color: transparent; /* 날짜 없는 칸: 투명 */
   cursor: default; /* 클릭 불가 */
+}
+
+
+.today {
+  border: 1.5px solid white; 
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
 }
