@@ -2,7 +2,7 @@
   position: relative; 
   display: flex;
   flex-direction: column;
-  margin-top: 96px;
+  margin-top: 120px;
   
 }
 
@@ -179,9 +179,10 @@
 }
 
 .noResults{
-  margin-top:10px;
+  margin-top:15px;
+  margin-left: 40px;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 25px;
   color: rgba(255,255,255, 0.8);
 
 }
