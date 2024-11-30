@@ -14,12 +14,12 @@ const HelpPage = () => {
 
   return (
     <div className={styles.helppage}> {/* styles.클래스명으로 참조 */}
-      <div className={styles.tutorial}>
-        <button className={styles.helpButton} onClick={handleNavigateToTutorial}>예약 튜토리얼</button>
-      </div>
-      <div className={styles.rule}>
-        <button className={styles.helpButton} onClick={handleNavigateToRule}>사용규칙</button>
-      </div>
+        <div className={styles.tutorial}>
+          <button className={styles.helpButton} onClick={handleNavigateToTutorial}>예약 튜토리얼</button>
+       </div>
+       <div className={styles.rule}>
+          <button className={styles.helpButton} onClick={handleNavigateToRule}>사용규칙</button>
+       </div>
     </div>
   );
 };

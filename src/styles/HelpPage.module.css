@@ -3,9 +3,9 @@
     flex-direction: column; /* 세로로 배치 */
     justify-content: center; /* 세로 중앙 정렬 */
     align-items: center; /* 가로 중앙 정렬 */
-    margin-top: 170px;
+    margin-top: 240px;
   }
-  
+
   .tutorial,
   .rule {
     margin-bottom: 25px; /* 버튼 간 간격 */
