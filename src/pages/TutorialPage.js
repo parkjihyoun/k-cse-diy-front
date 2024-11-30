@@ -32,7 +32,7 @@ const TutorialPage = () => {
   return (
     <div className={styles.tutorialPage}>
       <button className={styles.skipButton} onClick={handleSkip}>
-        Skip
+      Skip&gt;&gt;
       </button>
       <div className={styles.imageContainer}>
           {currentImageIndex < images.length && (

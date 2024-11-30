@@ -3,9 +3,9 @@ import styles from '../styles/RulePage.module.css';
 const RulePage = () => {
 
   return (
-    <div className='rulepage'>
-        <div className='rule1'> DIY 실깨끗하게 사용하세요 안녕하세요 키 반납하세요 예약 시 비밀번호 까먹지 마세요 </div>
-        <div className='rule2'> DIY 실깨끗하게 사용하세요 안녕하세요 키 반납하세요 예약 시 비밀번호 까먹지 마세요 </div>
+    <div className={styles.RulePage}>
+        <div className={styles.rule1}> 1. DIY실 깨끗하게 사용하세요<br/> 2. 안녕하세요 <br/>3. 키 반납하세요 <br/>4. 예약 시 비밀번호 까먹지 마세요 </div>
+        <div className={styles.rule2}> 1. DIY실 깨끗하게 사용하세요<br/> 2. 안녕하세요 <br/>3. 키 반납하세요 <br/>4. 예약 시 비밀번호 까먹지 마세요 </div>
     </div>
   );
 };
