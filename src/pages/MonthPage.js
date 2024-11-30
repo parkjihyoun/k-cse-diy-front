@@ -6,7 +6,7 @@ import ReservationModal from "../components/ReservationModal";
 const MonthPage = () => {
   const [month, setMonth] = useState(10); // November (0-indexed)
   const [year, setYear] = useState(2024);
-  const [selectedView, setSelectedView] = useState("Month ▼");
+  const [selectedView, setSelectedView] = useState("Month");
   const [selectedDate, setSelectedDate] = useState(null); // 선택한 날짜 상태
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
   const [reservations, setReservations] = useState([
