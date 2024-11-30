@@ -44,6 +44,12 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
       password: e.target.password.value,
     };
 
+    // 인증번호 유효성 검사
+    if (formData.password.length !== 4 || isNaN(Number(formData.password))) {
+      alert("인증번호는 반드시 4자리 숫자여야 합니다!");
+      return;
+    }
+
     handleSave(formData); // 부모 컴포넌트의 저장 함수 호출
     onClose(); // 모달 닫기
   };
@@ -55,9 +61,6 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
           <h2 className={styles.modalTitle}>
             {selectedDate} {dayName} <img src={editIcon} alt="Edit Icon" className={styles.editIcon} />
           </h2>
-          <button className={styles.closeButton} onClick={onClose}>
-            &times;
-          </button>
         </div>
         <form onSubmit={handleSubmit}>
           <div className={styles.formGrid}>
@@ -78,13 +81,13 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
               <input type="text" name="studentId" placeholder="ex) 2024XXXXXX" required />
             </div>
             <div className={`${styles.inputGroup} ${styles.textareaGroup}`}>
-  <label>예약 사유</label>
-  <textarea
-    name="reason"
-    placeholder="예약 사유를 구체적으로 적어주세요&#10;ex)창의융합설계 팀 프로젝트"
-    required
-  />
-</div>
+              <label>예약 사유</label>
+              <textarea
+                name="reason"
+                placeholder="예약 사유를 구체적으로 적어주세요&#10;ex)창의융합설계 팀 프로젝트"
+                required
+              />
+            </div>
             <div className={styles.inputGroup}>
               <label>인증번호</label>
               <input type="password" name="password" placeholder="네 자리를 입력해주세요" required />
@@ -94,6 +97,9 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
           <div className={styles.modalFooter}>
             <button type="submit" className={styles.submitButton}>
               예약하기
+            </button>
+            <button type="button" className={styles.cancelButton} onClick={onClose}>
+              취소
             </button>
           </div>
         </form>

@@ -29,15 +29,14 @@
 .legendItem {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 14px;
+  gap: 10px;
+  font-size: 16px;
+  text-align: center;
 }
 
 .statusCircle {
-  width: 11px;
-  height: 11px;
-  top:10px;
-  right:10px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   display: inline-block;
   margin-left: auto;
@@ -67,12 +66,14 @@
 
 .card {
   position: relative;
+  display: flex; 
+  flex-direction: column; 
+  justify-content: space-between; 
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 5px;
-  padding: 20px;
-  width: 300px;
-  height: 185px;
-  flex-direction: column;
+  padding: 30px 20px 30px 20px;
+  width: 350px;
+  height: 215px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
@@ -90,39 +91,34 @@
 }
 
 .cardHeader h3 {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
-  margin: 0;  margin-top: 10px; 
-
+  margin: 0;  
 }
 
 .cardHeader .day {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold; 
   color: white;
-  margin-top: 10px; 
-
 }
 
-.cardHeader .time {
-  font-size: 14px;
-  margin-top: 10px; 
+.time {
+  font-size: 18px;
+  margin-top: 5px; 
   color: #e3e3e3;
 }
-
 
 
 .title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
-  margin-top: 20px;;
+  margin-top: auto; 
   color: #e3e3e3;
-
-    overflow: hidden;       
+    overflow: hidden;
     white-space: nowrap;    
     text-overflow: ellipsis; 
     max-width: 120px; 
-        display: inline-block;   
+    display: inline-block;   
   
 }
 
@@ -130,13 +126,12 @@
   display: flex;
   justify-content: space-between; 
   align-items: center;
-  margin-top: 20px; 
+  margin-top: auto; 
 }
 
 .actions {
   display: flex;
   gap: 10px;
-  margin-top: 20px;
   margin-left: 10px;
 }
 
@@ -144,7 +139,7 @@
 .deleteBtn {
   padding: 8px 16px;
   border: none;
-  width: 65px;
+  width: 70px;
   height: 30px;
   border-radius: 5px;
   font-size: 14px;
@@ -155,12 +150,20 @@
 .editBtn {
   background-color: white;
   color: black;
-  border: 1px solid #aaa;
+}
+.editBtn:hover{
+  background-color: #333; 
+  transform: scale(1);
+  color:white;
 }
 
 .deleteBtn {
   background-color: black;
   color: white;
+}
+.deleteBtn:hover{
+  background-color: #c9302c; 
+  transform: scale(1);
 }
 
 .header {
@@ -173,7 +176,7 @@
 
 .userInfo {
   font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
   color: rgba(255,255,255, 0.8);
 
 }
