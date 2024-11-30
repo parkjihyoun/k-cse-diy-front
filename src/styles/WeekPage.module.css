@@ -1,0 +1,206 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  font-family: Inter, sans-serif;
+  margin-top: 60px;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: transparent;
+  margin-top: 10px;
+}
+
+.navButton {
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  width: 50px;
+}
+
+.navButton:hover {
+  background: none;
+}
+
+.navText {
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.weekDaysContainer {
+  display: flex;
+  margin-left: 60px;
+  margin-right: 41px;
+}
+
+.weekDaysHeader {
+  display: flex;
+  background-color: transparent;
+  border-bottom: 1px solid #ddd;
+  width: 100%;
+}
+
+.dateHeader {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  font-weight: bold;
+  font-size: 16px;
+  color: white;
+  
+}
+
+.weekGrid {
+  display: flex;
+  margin-top: 0;
+  overflow-x: auto;
+  margin-left: 50px;
+  margin-right: 90px;
+}
+
+.timeColumn {
+  flex-shrink: 0;
+  width: 60px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.hourRow {
+  height: 50px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hourLabel {
+  font-size: 12px;
+  color: #ffffff;
+}
+
+.dayColumn {
+  flex: 1;
+  position: relative;
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+}
+
+.dayColumn.selected {
+  background-color: rgba(255, 255, 255, 0.6); /* 선택된 컬럼 배경색 */
+}
+
+.dayGrid {
+  position: relative;
+  margin-top:4px;
+  background-color: rgba(255, 255, 255, 0.05);
+  min-height: 1200px;
+}
+
+.reservationItem {
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent */
+  color: black;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.2;
+  border: 1px solid transparent; /* Add border for debugging if needed */
+}
+
+.reservationItem:hover {
+  background-color: rgba(224, 224, 224, 1);
+}
+
+.reservationTitle {
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.reservationDetails {
+  font-size: 10px;
+  margin-top: 3px;
+  display: block;
+  color: #333;
+}
+
+/* Shared styles for hover effects and alignments */
+.reservationItem,
+.navButton:hover {
+  transition: background-color 0.3s ease;
+}
+
+.rightControls {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+
+.reserveButton {
+  padding: 8px 15px;
+  background-color: #1f3775;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 90px;
+  height: 35px;
+  font-size: 15px;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdownButton {
+  padding: 8px 15px;
+  background-color: #1d1e1d;
+  color: white;
+  width: 90px;
+  height: 35px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 36px;
+  right: 0;
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  list-style: none;
+  padding: 5px 0;
+  display: none;
+}
+
+.dropdown:hover .dropdownMenu {
+  display: block;
+}
+
+.dropdownMenu li {
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.dropdownMenu li:hover {
+  background-color: #f0f0f0;
+}
