@@ -4,10 +4,13 @@ import styles from "../styles/MonthPage.module.css";
 import ReservationModal from "../components/ReservationModal";
 
 const MonthPage = () => {
-  const [month, setMonth] = useState(10); // November (0-indexed)
-  const [year, setYear] = useState(2024);
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
+  const [month, setMonth] = useState(today.getMonth()); // 현재 달로 초기화
+  const [year, setYear] = useState(today.getFullYear()); // 현재 연도로 초기화
   const [selectedView, setSelectedView] = useState("Month");
-  const [selectedDate, setSelectedDate] = useState(null); // 선택한 날짜 상태
+  const [selectedDate, setSelectedDate] = useState(todayStr); // 오늘 날짜로 초기화
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
   const [reservations, setReservations] = useState([
     { id: 1, date: "2024-11-13", status: "complete" },
@@ -64,7 +67,7 @@ const MonthPage = () => {
       ...prev,
       { ...data, date: selectedDate, id: prev.length + 1, status: "pending" },
     ]);
-    alert("예약이 저장되었습니다!");
+    alert("예약이 신청되었습니다!");
   };
 
   const renderDays = () => {
@@ -72,10 +75,6 @@ const MonthPage = () => {
     const firstDayOfMonth = new Date(year, month, 1).getDay();
     const calendar = [];
     let currentDay = 1;
-
-    // 오늘 날짜 가져오기
-    const today = new Date();
-    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 
     for (let week = 0; week < 6; week++) {
       const weekRow = [];

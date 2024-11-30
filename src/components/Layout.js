@@ -8,8 +8,8 @@ const Layout = () => {
 
     const titles = {
         '/key': '예약 확인',
-        '/month': '소개',
-        '/week': '예약 현황',
+        '/month': '실시간 예약 현황',
+        '/week': '실시간 예약 현황',
         '/check': '예약 확인',
         '/check/list': '예약 리스트',
         '/help' : '이용 안내',

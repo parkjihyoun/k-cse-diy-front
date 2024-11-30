@@ -60,9 +60,10 @@
     transition: background 0.3s, transform 0.3s;
   }
   
-  button:hover {
-    background: #444444;
-    transform: scale(1.1);
+  .confirmBtn:hover,
+  .saveBtn:hover {
+    background: #333;
+    transform: scale(1.0);
   }
   
   .confirmBtn,
@@ -71,6 +72,11 @@
     background: black;
     color: white;
     border: 1.3px solid #ffffff; /* 개별 스타일 대신 공통 버튼 스타일 적용 */
+  }
+
+  .cancelBtn:hover {
+    background: #c9302c;
+    transform: scale(1.0);
   }
   
   .inputedit {
