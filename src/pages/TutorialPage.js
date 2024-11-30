@@ -34,13 +34,14 @@ const TutorialPage = () => {
       <button className={styles.skipButton} onClick={handleSkip}>
         Skip
       </button>
-      {currentImageIndex < images.length && (
-        <img
-          src={images[currentImageIndex]}
-          alt={`Slide ${currentImageIndex + 1}`}
-          className={styles.mainImage}
-        />
-      )}
+      <div className={styles.imageContainer}>
+          {currentImageIndex < images.length && (
+            <img
+              src={images[currentImageIndex]}
+              alt={`Slide ${currentImageIndex + 1}`}
+              className={styles.mainImage}
+            />)}
+        </div>
     </div>
   );
 };
