@@ -73,6 +73,10 @@ const MonthPage = () => {
     const calendar = [];
     let currentDay = 1;
 
+    // 오늘 날짜 가져오기
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
     for (let week = 0; week < 6; week++) {
       const weekRow = [];
       for (let day = 0; day < 7; day++) {
@@ -83,12 +87,14 @@ const MonthPage = () => {
         } else {
           const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(currentDay).padStart(2, "0")}`;
           const isSelected = selectedDate === dateStr;
-          const hasReservation = reservations.some((r) => r.date === dateStr);
+          const isToday = todayStr === dateStr; // 오늘 날짜인지 확인
 
           weekRow.push(
             <td
               key={`day-${currentDay}`}
-              className={`${styles.dayCell} ${isSelected ? styles.selected : ""}`}
+              className={`${styles.dayCell} ${isSelected ? styles.selected : ""} ${
+                isToday ? styles.today : ""
+              }`}
               onClick={() => setSelectedDate(dateStr)}
             >
               <div className={styles.dateNumber}>{currentDay}</div>
