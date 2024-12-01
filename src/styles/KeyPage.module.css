@@ -20,11 +20,13 @@ body {
 }
 /*규칙*/
 .rules {
-  font-size: 13px;
+
+  font-size: 14px;
   color: #ffffff;
   border-bottom: 0.3px solid #ffffff;
   cursor: pointer; /* 마우스 커서를 포인터로 변경 */
-  background-color: #00000096;
+  background-color: transparent;
+
   margin-top: 20px;
 
 }
@@ -72,16 +74,17 @@ body {
 }
 
 .locationContainer {
-  display: flex; /* 가로로 배치 */
-  align-items: center; /* 수직 정렬 */
-  gap: 20px; /* 박스와 날짜 사이 간격 */
-  margin-top: 20px; /* 위아래 여백 */
+  display: flex; /* Flexbox로 설정 */
+  justify-content: space-between; /* 두 요소를 양 끝으로 정렬 */
+  align-items: center; /* 세로축 가운데 정렬 */
+  width: 100%; /* 부모 요소의 너비를 가득 채우도록 설정 */
+  margin-top: 10px; /* 요소 간의 간격 */
 }
 
 .locationBox {
   border-radius: 5px; /* 모서리 둥글게 */
   padding: 2px 5px;
-  font-size: 0.9rem; /* 글씨 크기 */
+  font-size: 14px; /* 글씨 크기 */
   border: none; 
   color: #ccc; /* 글자 색상 */
   background-color: rgba(255, 255, 255, 0.251); /* 배경 색상 */
@@ -128,7 +131,6 @@ body {
   height: 15px;
   border-radius: 50%; /* 원 모양 */
   display: inline-block; /* 인라인 블록으로 표시 */
-  margin-left: 250px; /* 텍스트와의 간격 */
   margin-bottom: 0; /* 아래 여백 초기화 */
 }
 
@@ -166,11 +168,12 @@ body {
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
+  margin-top: 10px;
   transition: background-color 0.3s ease;
 }
 
 .actionButton:hover {
-  background-color: #1f3775;
+  background-color: #333;
   transform: scale(1);
 }
 
@@ -315,3 +318,12 @@ body {
   background: #444444;
     transform: scale(1.1);
 }
+
+.statusContainer {
+  display: flex; /* Flexbox로 설정 */
+  justify-content: space-between; /* 두 요소를 양 끝으로 정렬 */
+  align-items: center; /* 세로축 가운데 정렬 */
+  width: 100%; /* 부모 요소의 너비를 가득 채우도록 설정 */
+  margin-bottom: 10px; /* 요소 간의 간격 */
+}
+

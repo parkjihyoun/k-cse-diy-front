@@ -64,18 +64,20 @@ const KeyPage = () => {
 
       {/* 중앙 박스 */}
       <div className={styles.centerBox}>
-        <h2 className={styles.roomTitle}>
-          D.I.Y실
-          <span 
-            className={`${styles.statusCircle2} ${
-              status === "대여가능"
-                ? styles.canlentCircle
-                : status === "대여중"
-                ? styles.usingCircle
-                : styles.didntreturnCircle
-            }`} 
-          />
-        </h2>
+        <div className={styles.statusContainer}>
+          <h2 className={styles.roomTitle}>
+            D.I.Y실</h2>
+            <span 
+              className={`${styles.statusCircle2} ${
+                status === "대여가능"
+                  ? styles.canlentCircle
+                  : status === "대여중"
+                  ? styles.usingCircle
+                  : styles.didntreturnCircle
+              }`} 
+            />
+          
+        </div>
         <p className={styles.roomSubtitle}>D.I.Y Room’s key</p>
         <hr className={styles.separator} />
         <p className={styles.lastUserTitle}>Last User</p>
