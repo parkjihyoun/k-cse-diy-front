@@ -20,11 +20,13 @@ body {
 }
 /*규칙*/
 .rules {
+
   font-size: 14px;
   color: #ffffff;
   border-bottom: 0.3px solid #ffffff;
   cursor: pointer; /* 마우스 커서를 포인터로 변경 */
   background-color: transparent;
+
   margin-top: 20px;
 
 }
@@ -105,10 +107,8 @@ body {
 }
 
 .checkkey {
-  position: absolute;
-  top: 120px; /* 위쪽에서 떨어진 거리 */
-  left: 40px; /* 페이지 왼쪽에 고정 */
   margin-top: 30px;
+  margin-right: 1310px;
 }
 
 .separator {
@@ -326,3 +326,4 @@ body {
   width: 100%; /* 부모 요소의 너비를 가득 채우도록 설정 */
   margin-bottom: 10px; /* 요소 간의 간격 */
 }
+

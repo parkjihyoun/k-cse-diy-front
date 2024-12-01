@@ -6,15 +6,17 @@ html, body {
   }
   
   .tutorialPage {
-    position: fixed; /* 뷰포트 기준으로 고정 */
+    display: flex;
     margin-top: 96px;
     top: 0;
     left: 0;
     width: 100vw; /* 화면 너비 */
-    height: 100vh; /* 화면 높이 */
+    height: 70vh;
     
   }
-
+  .imageContainer {
+    height: 1300px;
+  }
   
   .mainImage {
     position: absolute; /* 부모를 기준으로 절대 위치 */
@@ -29,21 +31,46 @@ html, body {
 
 .skipButton {
     position: absolute;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0);
     color: white;
     border: none;
-    width: 40px;
-
+    width: 60px;
+    margin-top: -90px;
+    margin-left: 10px;
     border-radius: 5px;
-    padding: 10px 10px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
     z-index: 1;
   }
   
   .skipButton:hover {
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: (0, 0, 0, 0.9);
+  }
+
+  /* 점(Dots) 컨테이너 */
+.dotsContainer {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px; /* 점 간격 */
+    z-index: 2; /* 이미지 위에 표시 */
+  }
+  
+  /* 점 스타일 */
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%; /* 원형 */
+    background-color: rgba(255, 255, 255, 0.5); /* 비활성 점 색상 */
+    transition: background-color 0.3s ease;
+  }
+  
+  /* 활성화된 점 */
+  .activeDot {
+    background-color: rgba(255, 255, 255, 1); /* 활성화된 점 색상 */
   }
 
   
