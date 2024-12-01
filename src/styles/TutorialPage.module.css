@@ -11,11 +11,11 @@ html, body {
     top: 0;
     left: 0;
     width: 100vw; /* 화면 너비 */
-    height: 70vh; /* 화면 높이 */
+    height: 70vh;
     
   }
   .imageContainer {
-    margin-top: 96px;
+    height: 1300px;
   }
   
   .mainImage {
@@ -46,6 +46,31 @@ html, body {
   
   .skipButton:hover {
     background-color: (0, 0, 0, 0.9);
+  }
+
+  /* 점(Dots) 컨테이너 */
+.dotsContainer {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px; /* 점 간격 */
+    z-index: 2; /* 이미지 위에 표시 */
+  }
+  
+  /* 점 스타일 */
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%; /* 원형 */
+    background-color: rgba(255, 255, 255, 0.5); /* 비활성 점 색상 */
+    transition: background-color 0.3s ease;
+  }
+  
+  /* 활성화된 점 */
+  .activeDot {
+    background-color: rgba(255, 255, 255, 1); /* 활성화된 점 색상 */
   }
 
   
