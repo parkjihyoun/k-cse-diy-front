@@ -1,14 +1,45 @@
-.rulepage {
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box; /* 여백 포함 크기 계산 */
+.Rules {
+    padding-top: 90px;
+    padding-left: 80px;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #ffffff;
   }
-  
-  .rule1,
-  .rule2 {
-    white-space: normal; /* 줄바꿈 허용 */
-    margin-bottom: 10px; /* 각 줄 간의 간격 */
-    font-size: 1rem; /* 글자 크기 */
-    line-height: 1.5; /* 줄 간 간격 */
+
+  .Rules li {
+    margin-bottom: 10px; /* 규칙들 사이의 간격 */
+    line-height: 1.6; /* 줄 간격 */
   }
-  
+
+  .penalty h2{
+    font-size: 24px;
+    margin-top: 15px;
+    margin-left: -40px;
+    color: #d99c9c;
+  }
+  .penalty {
+    margin-left: 80px;
+    font-size: 18px;
+    line-height: 1.5;
+    color: #d99c9c;
+    font-weight: 500;
+    
+  }
+  .penalty li {
+    margin-bottom: 10px; /* 규칙들 사이의 간격 */
+    line-height: 1.6; /* 줄 간격 */
+    width: 1000px;
+  }
+
+  .line {
+    width: 50px;
+    height: 4px;
+    background-color: #d99c9c;
+    margin-left: -40px;
+    margin-top: -5px;
+}
+
+.penaltyTitle {
+    margin-bottom: 20px;
+}
