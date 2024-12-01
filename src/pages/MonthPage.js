@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/MonthPage.module.css";
+import ReservationModal from "../components/ReservationModal";
 
 const MonthPage = () => {
-  const [month, setMonth] = useState(10); // November (0-indexed)
-  const [year, setYear] = useState(2024);
-  const [selectedView, setSelectedView] = useState("Month"); // Default view
-  const [selectedDate, setSelectedDate] = useState(null); // Tracks selected date
-  const navigate = useNavigate(); // For navigation to other pages
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 
+  const [month, setMonth] = useState(today.getMonth()); // 현재 달로 초기화
+  const [year, setYear] = useState(today.getFullYear()); // 현재 연도로 초기화
+  const [selectedView, setSelectedView] = useState("Month");
+  const [selectedDate, setSelectedDate] = useState(todayStr); // 오늘 날짜로 초기화
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
   const [reservations, setReservations] = useState([
     { id: 1, date: "2024-11-13", status: "complete" },
     { id: 2, date: "2024-11-13", status: "pending" },
@@ -18,6 +21,8 @@ const MonthPage = () => {
     { id: 6, date: "2024-11-23", status: "complete" },
     { id: 7, date: "2024-11-26", status: "complete" },
   ]);
+
+  const navigate = useNavigate();
 
   const handleMonthChange = (direction) => {
     if (direction === "prev") {
@@ -39,15 +44,35 @@ const MonthPage = () => {
 
   const handleViewChange = (view) => {
     if (view === "Week") {
-      navigate("/week"); 
+      navigate("/week");
     } else {
-      setSelectedView(view); // Keep current view (Month)
+      setSelectedView(view);
     }
+  };
+
+  const handleOpenModal = () => {
+    if (!selectedDate) {
+      alert("날짜를 선택해주세요!");
+      return;
+    }
+    setIsModalOpen(true); // 모달 열기
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // 모달 닫기
+  };
+
+  const handleSaveReservation = (data) => {
+    setReservations((prev) => [
+      ...prev,
+      { ...data, date: selectedDate, id: prev.length + 1, status: "pending" },
+    ]);
+    alert("예약이 신청되었습니다!");
   };
 
   const renderDays = () => {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const firstDayOfMonth = new Date(year, month, 1).getDay(); // 1일의 요일
+    const firstDayOfMonth = new Date(year, month, 1).getDay();
     const calendar = [];
     let currentDay = 1;
 
@@ -61,18 +86,21 @@ const MonthPage = () => {
         } else {
           const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(currentDay).padStart(2, "0")}`;
           const isSelected = selectedDate === dateStr;
+          const isToday = todayStr === dateStr; // 오늘 날짜인지 확인
 
           weekRow.push(
             <td
               key={`day-${currentDay}`}
-              className={`${styles.dayCell} ${isSelected ? styles.selected : ""}`}
-              onClick={() => setSelectedDate(dateStr)} // Change color on click
+              className={`${styles.dayCell} ${isSelected ? styles.selected : ""} ${
+                isToday ? styles.today : ""
+              }`}
+              onClick={() => setSelectedDate(dateStr)}
             >
               <div className={styles.dateNumber}>{currentDay}</div>
               <div className={styles.dotsContainer}>
                 {reservations
                   .filter((r) => r.date === dateStr)
-                  .slice(0, 2) // 최대 2개만 표시
+                  .slice(0, 2)
                   .map((r, index) => (
                     <div
                       key={`status-${r.id}`}
@@ -98,7 +126,9 @@ const MonthPage = () => {
   return (
     <div className={styles.page}>
       <div className={styles.rightControls}>
-        <button className={styles.reserveButton}>예약하기</button>
+        <button className={styles.reserveButton} onClick={handleOpenModal}>
+          예약하기
+        </button>
         <div className={styles.dropdown}>
           <button className={styles.dropdownButton}>{selectedView}</button>
           <ul className={styles.dropdownMenu}>
@@ -108,16 +138,28 @@ const MonthPage = () => {
         </div>
       </div>
       <div className={styles.header}>
-        <div className={styles.navigation}>
-          <button onClick={() => handleMonthChange("prev")} className={styles.navButton}>
-            &lt;
-          </button>
-          <span className={styles.navText}>
-            {year} {String(month + 1).padStart(2, "0")}
-          </span>
-          <button onClick={() => handleMonthChange("next")} className={styles.navButton}>
-            &gt;
-          </button>
+        <div className={styles.headerRow}>
+          <div className={styles.navigation}>
+            <button onClick={() => handleMonthChange("prev")} className={styles.navButton}>
+              ◀
+            </button>
+            <span className={styles.navText}>
+              {year} {String(month + 1).padStart(2, "0")}
+            </span>
+            <button onClick={() => handleMonthChange("next")} className={styles.navButton}>
+              ▶
+            </button>
+          </div>
+          <div className={styles.statusLegend}>
+            <div className={styles.statusItem}>
+              <div className={styles.completeDot}></div>
+              <span>예약 완료</span>
+            </div>
+            <div className={styles.statusItem}>
+              <div className={styles.pendingDot}></div>
+              <span>예약 대기</span>
+            </div>
+          </div>
         </div>
       </div>
       <div className={styles.calendar}>
@@ -136,6 +178,13 @@ const MonthPage = () => {
           <tbody>{renderDays()}</tbody>
         </table>
       </div>
+      {isModalOpen && (
+        <ReservationModal
+          selectedDate={selectedDate}
+          onClose={handleCloseModal}
+          handleSave={handleSaveReservation}
+        />
+      )}
     </div>
   );
 };

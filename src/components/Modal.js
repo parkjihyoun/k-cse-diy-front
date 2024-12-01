@@ -5,7 +5,8 @@ import styles from "../styles/Modal.module.css";
 import editIcon from "../img/edit.png";
 
 const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
-  const [authCodeInput, setAuthCodeInput] = useState(""); // 인증번호 입력 상태 추가
+  const [authCodeInput, setAuthCodeInput] = useState("");
+  const [step, setStep] = useState(type);
   const [editedReservation, setEditedReservation] = useState({
     date: reservation?.date ? new Date(reservation.date) : new Date(),
     startTime: reservation?.startTime || reservation?.time?.split(" ~ ")[0] || "09:00",
@@ -25,17 +26,25 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
     setEditedReservation({ ...editedReservation, endTime: e.target.value });
   };
 
-  const handleSave = () => {
-    const updatedReservation = {
-      ...reservation,
-      date: editedReservation.date.toISOString().slice(0, 10),
-      startTime: editedReservation.startTime,
-      endTime: editedReservation.endTime,
-      title: editedReservation.title,
-    };
+  const handleSaveClick = () => {
+    setStep("auth"); // 인증 화면으로 전환
+  };
 
-    onSave(updatedReservation);
-    onClose();
+  const handleAuthSubmit = () => {
+    const isAuthenticated = onAuthenticate(authCodeInput); // 인증번호 확인
+    if (isAuthenticated) {
+      const updatedReservation = {
+        ...reservation,
+        date: editedReservation.date.toISOString().slice(0, 10),
+        startTime: editedReservation.startTime,
+        endTime: editedReservation.endTime,
+        title: editedReservation.title,
+      };
+      onSave(updatedReservation);
+      onClose();
+    } else {
+      alert("인증번호가 올바르지 않습니다.");
+    }
   };
 
   const generateTimeOptions = () => {
@@ -50,32 +59,11 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
   return (
     <div className={styles.modalBackdrop}>
       <div className={styles.modalContent}>
-        {type === "auth" ? (
-          <>
-            <h2 className={styles.modalTitle}>인증번호를 입력해주세요</h2>
-            <input
-              type="text"
-              value={authCodeInput} // 인증번호 입력 필드 상태 사용
-              onChange={(e) => setAuthCodeInput(e.target.value)}
-              placeholder="인증번호 입력"
-              className={styles.input}
-            />
-            <div className={styles.actions}>
-              <button
-                className={styles.confirmBtn}
-                onClick={() => onAuthenticate(authCodeInput)} // 인증번호 전달
-              >
-                확인
-              </button>
-              <button className={styles.cancelBtn} onClick={onClose}>
-                취소
-              </button>
-            </div>
-          </>
-        ) : (
+        {step === "edit" ? (
           <>
             <h2 className={styles.modalTitle}>
-              예약 수정<img src={editIcon} alt="Edit Icon" className={styles.editIcon} />
+              예약 수정
+              <img src={editIcon} alt="Edit Icon" className={styles.editIcon} />
             </h2>
             <div className={styles.inputGroup}>
               <DatePicker
@@ -123,8 +111,30 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
               />
             </div>
             <div className={styles.actions}>
-              <button className={styles.saveBtn} onClick={handleSave}>
+              <button className={styles.saveBtn} onClick={handleSaveClick}>
                 저장
+              </button>
+              <button className={styles.cancelBtn} onClick={onClose}>
+                취소
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <h2 className={styles.modalTitle}>인증번호를 입력해주세요</h2>
+            <input
+              type="text"
+              value={authCodeInput}
+              onChange={(e) => setAuthCodeInput(e.target.value)}
+              placeholder="인증번호 입력"
+              className={styles.input}
+            />
+            <div className={styles.actions}>
+              <button
+                className={styles.confirmBtn}
+                onClick={handleAuthSubmit}
+              >
+                확인
               </button>
               <button className={styles.cancelBtn} onClick={onClose}>
                 취소

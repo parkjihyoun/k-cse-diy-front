@@ -37,7 +37,7 @@ body {
 .centerBox {
   width: 410px;
   padding: 25px;
-  margin-top: -90px;
+  margin-top: 30px;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
   color: white;
@@ -90,7 +90,7 @@ body {
 }
 
 .date {
-  font-size: 13px; /* 글자 크기 */
+  font-size: 14px; /* 글자 크기 */
   color: #aaa; /* 날짜 글자 색상 */
   margin-bottom: -3px;
 }
@@ -120,8 +120,7 @@ body {
   width: 15px;
   height: 15px;
   border-radius: 50%; /* 원 모양 */
-  display: inline-block; /* 인라인 블록으로 표시 */
-  margin-left: 15px; /* 텍스트와의 간격 */
+  margin-left: 10px; /* 텍스트와의 간격 */
 }
 
 .statusCircle2 {
@@ -151,15 +150,15 @@ body {
 .buttonContainer {
   display: flex;
   justify-content: space-between;
-  width: 450px;
+  width: 410px;
   margin-top: 20px;
+  gap:10px;
 }
 
 .actionButton {
   flex: 1;
   padding: 14px 20px;
-  margin: 0 20px;
-  gap: 10px;
+  margin: 0;
   border: none;
   border-radius: 5px;
   background-color: #000000;
@@ -172,6 +171,7 @@ body {
 
 .actionButton:hover {
   background-color: #1f3775;
+  transform: scale(1);
 }
 
 /* 규칙 모달 스타일 */

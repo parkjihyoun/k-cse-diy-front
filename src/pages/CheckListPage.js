@@ -1,3 +1,5 @@
+
+
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import styles from "../styles/CheckListPage.module.css";
@@ -57,17 +59,60 @@ const CheckListPage = () => {
       date: "2024-11-14",
       day: "THU",
       time: "12:00 ~ 14:00",
-      title: "산사랑 연극 연습",
+      title: "산사랑 연극 111",
       status: "승인",
       authCode: "1233",
       name: "박지현",
       studentId: "2023000001",
     },
+    {
+      reservationNum: 6,
+      date: "2024-11-14",
+      day: "THU",
+      time: "12:00 ~ 14:00",
+      title: "산사랑 22",
+      status: "승인",
+      authCode: "1231",
+      name: "박지현",
+      studentId: "2023000001",
+    },
+    {
+      reservationNum: 7,
+      date: "2024-11-25",
+      day: "THU",
+      time: "11:00 ~ 16:00",
+      title: "공부해라",
+      status: "대기",
+      authCode: "0000",
+      name: "호예찬",
+      studentId: "2023000004",
+    },
   ]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState("auth");
+  const [modalType, setModalType] = useState("edit"); // 기본 모달은 수정 화면으로 시작
   const [selectedReservation, setSelectedReservation] = useState(null);
+
+  // 요일 계산 함수
+  const calculateDay = (date) => {
+    const dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+    const dateObj = new Date(date);
+    return dayNames[dateObj.getDay()];
+  };
+
+  // 요일을 자동으로 업데이트
+  const updateReservationsWithDay = () => {
+    const updatedReservations = reservations.map((res) => ({
+      ...res,
+      day: calculateDay(res.date), // date 값을 기준으로 day 업데이트
+    }));
+    setReservations(updatedReservations);
+  };
+
+  // 컴포넌트가 렌더링될 때 요일 계산
+  React.useEffect(() => {
+    updateReservationsWithDay();
+  }, []);
 
   const filteredReservations = reservations.filter(
     (reservation) =>
@@ -76,7 +121,7 @@ const CheckListPage = () => {
 
   const handleEditClick = (reservation) => {
     setSelectedReservation(reservation);
-    setModalType("auth");
+    setModalType("edit"); // 수정 화면부터 시작
     setIsModalOpen(true);
   };
 
@@ -89,16 +134,14 @@ const CheckListPage = () => {
   };
 
   const handleAuthentication = (inputCode) => {
-    if (inputCode === selectedReservation.authCode) {
-      setModalType("edit");
-    } else {
-      alert("인증번호가 올바르지 않습니다.");
+    if (String(inputCode) === String(selectedReservation?.authCode)) {
+      return true; // 인증 성공
     }
+    return false; // 인증 실패
   };
 
   const handleSave = (updatedReservation) => {
-    const dayMap = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-    const updatedDay = dayMap[new Date(updatedReservation.date).getDay()];
+    const updatedDay = calculateDay(updatedReservation.date);
 
     setReservations((prevReservations) =>
       prevReservations.map((res) =>
@@ -106,7 +149,7 @@ const CheckListPage = () => {
           ? {
               ...res,
               date: updatedReservation.date,
-              day: updatedDay,
+              day: updatedDay, // 저장 시 요일 업데이트
               time: `${updatedReservation.startTime} ~ ${updatedReservation.endTime}`,
               title: updatedReservation.title,
               status: "대기",
@@ -119,7 +162,7 @@ const CheckListPage = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setModalType("auth");
+    setModalType("edit");
     setSelectedReservation(null);
   };
 

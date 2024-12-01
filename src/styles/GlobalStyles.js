@@ -10,10 +10,23 @@ const GlobalStyles = createGlobalStyle`
 
   body {
     font-family: 'Inter', sans-serif;
-    background: url(${backgroundImage}) no-repeat center center fixed;
-    background-size: cover;
     min-height: 100vh;
     color: #fff; /* 기본 텍스트 색상 */
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url(${backgroundImage}) no-repeat center center fixed;
+    background-size: cover;
+    filter: grayscale(70%); /* 흑백 필터 추가 */
+    z-index: -1; /* 다른 콘텐츠보다 뒤에 배치 */
   }
 
   a {

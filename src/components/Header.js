@@ -34,9 +34,6 @@ const Header = () => {
                         <Link to="/month" style={styles.navLink}>예약하기</Link>
                     </li>
                     <li style={styles.navItem}>
-                        <Link to="/week" style={styles.navLink}>주</Link>
-                    </li>
-                    <li style={styles.navItem}>
                         <Link to="/key" style={styles.navLink}>열쇠 대여/반납</Link>
                     </li>
                     <li style={styles.navItem}>
