@@ -1,45 +1,103 @@
 .Rules {
-    padding-top: 90px;
-    padding-left: 80px;
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 1.5;
-    color: #ffffff;
-  }
+  padding-top: 90px;
+  padding-left: 80px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #ffffff;
+}
 
-  .Rules li {
-    margin-bottom: 10px; /* 규칙들 사이의 간격 */
-    line-height: 1.6; /* 줄 간격 */
-  }
+.Rules li {
+  margin-bottom: 10px; /* 규칙들 사이의 간격 */
+  line-height: 1.6; /* 줄 간격 */
+}
 
-  .penalty h2{
-    font-size: 24px;
-    margin-top: 15px;
-    margin-left: -40px;
-    color: #d99c9c;
-  }
-  .penalty {
-    margin-left: 80px;
-    font-size: 18px;
-    line-height: 1.5;
-    color: #d99c9c;
-    font-weight: 500;
-    
-  }
-  .penalty li {
-    margin-bottom: 10px; /* 규칙들 사이의 간격 */
-    line-height: 1.6; /* 줄 간격 */
-    width: 1000px;
-  }
+.penalty h2 {
+  font-size: 24px;
+  margin-top: 15px;
+  margin-left: -40px;
+  color: #d99c9c;
+}
 
-  .line {
-    width: 50px;
-    height: 4px;
-    background-color: #d99c9c;
-    margin-left: -40px;
-    margin-top: -5px;
+.penalty {
+  margin-left: 80px;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #d99c9c;
+  font-weight: 500;
+}
+
+.penalty li {
+  margin-bottom: 10px; /* 규칙들 사이의 간격 */
+  line-height: 1.6; /* 줄 간격 */
+  width: 1000px; /* 너비 조정 필요 */
+}
+
+.line {
+  width: 50px;
+  height: 4px;
+  background-color: #d99c9c;
+  margin-left: -40px;
+  margin-top: -5px;
 }
 
 .penaltyTitle {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
+
+/* 모바일 장치를 위한 미디어 쿼리 */
+@media (max-width: 600px) {
+  .Rules, .penalty {
+    padding-left: 20px; /* 패딩 조정 */
+    font-size: 16px; /* 글꼴 크기 조정 */
+    align-items: center;
+  }
+
+  .Rules li, .penalty li {
+    margin-bottom: 8px; /* 규칙 간격 조정 */
+    line-height: 1.4; /* 줄 간격 조정 */
+  }
+
+  .penalty li {
+    width: auto; /* 너비 자동 조정 */
+  }
+
+  .penalty h2, .penalty {
+    margin-left: 0; /* 왼쪽 마진 제거 */
+  }
+
+  .line {
+    margin-left: 0; /* 선의 위치 조정 */
+  }
+}
+
+/* 태블릿 장치를 위한 미디어 쿼리 */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .Rules, .penalty {
+    font-size: 17px; /* 글꼴 크기 조정 */
+  }
+
+  .Rules li, .penalty li {
+    margin-bottom: 9px; /* 규칙 간격 조정 */
+    line-height: 1.5; /* 줄 간격 조정 */
+    padding-right: 10px;
+  }
+
+  .penalty li {
+    width: 80%; /* 너비 조정 */
+  }
+
+  .penalty h2, .penalty {
+    margin-left: -20px; /* 왼쪽 마진 조정 */
+  }
+
+  .line {
+    margin-left: -20px; /* 선의 위치 조정 */
+  }
+  .textWithCircle {
+    text-align: right; 
+  }
+
+  
+}
+
