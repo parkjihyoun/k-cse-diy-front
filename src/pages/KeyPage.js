@@ -1,5 +1,3 @@
-Keypage
-
 import React, { useState } from 'react';
 import styles from '../styles/KeyPage.module.css';
 
@@ -166,4 +164,3 @@ const KeyPage = () => {
 };
 
 export default KeyPage;
-
