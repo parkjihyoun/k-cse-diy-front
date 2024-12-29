@@ -84,13 +84,18 @@
 }
 
 .dateHeader {
+  display: flex; /* Flexbox를 사용 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
   flex: 1;
   text-align: center;
   padding: 10px 0;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
   color: white;
-  
+  white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 설정 */
+  overflow: hidden; /* 넘치는 텍스트 숨김 */
+  text-overflow: ellipsis; /* 말줄임 표시 */
 }
 
 .weekGrid {
@@ -270,4 +275,66 @@
 
 .dropdownMenu li:hover {
   background-color: #f0f0f0;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 600px) {
+  .weekGrid {
+    display: grid;
+    grid-template-columns: 60px repeat(3, 1fr); /* 시간 열 + 3일 표시 */
+    margin-left: 20px;
+    margin-right: 50px;
+  }
+
+  .timeColumn {
+    display: block; /* 시간 축 유지 */
+    width: 60px;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .hourRow {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hourLabel {
+    font-size: 12px; /* 모바일에서 글씨 크기 줄이기 */
+    color: #ffffff;
+  }
+
+  .weekDaysContainer {
+    display: flex;
+    margin-left: 40px;
+    margin-right: 10px;
+  }
+
+  .weekDaysHeader {
+    display: flex;
+    grid-template-columns: repeat(3, 1fr); /* 3일 표시 */
+    width: 100%;
+  }
+
+  .dayColumn {
+    min-width: 100px; /* 날짜 열 최소 너비 설정 */
+  }
+
+  .navButton {
+    padding: 5px;
+    font-size: 12px;
+  }
+
+  .navText {
+    font-size: 18px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dateHeader {
+    font-size: 14px; /* 날짜 크기 조정 */
+  }
 }
