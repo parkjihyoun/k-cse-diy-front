@@ -78,6 +78,8 @@ const MonthPage = () => {
 
     for (let week = 0; week < 6; week++) {
       const weekRow = [];
+      let isWeekEmpty = true; // 주가 비어있는지 확인하는 변수
+
       for (let day = 0; day < 7; day++) {
         if (week === 0 && day < firstDayOfMonth) {
           weekRow.push(<td key={`empty-${week}-${day}`} className={styles.empty}></td>);
@@ -115,16 +117,23 @@ const MonthPage = () => {
               </div>
             </td>
           );
+          isWeekEmpty = false; // 비어있지 않음을 표시
           currentDay++;
         }
       }
-      calendar.push(<tr key={`week-${week}`}>{weekRow}</tr>);
+
+      // 주가 비어 있지 않을 경우에만 추가
+      if (!isWeekEmpty) {
+        calendar.push(<tr key={`week-${week}`}>{weekRow}</tr>);
+      }
     }
+
     return calendar;
   };
 
   return (
     <div className={styles.page}>
+      {/* Right Controls */}
       <div className={styles.rightControls}>
         <button className={styles.reserveButton} onClick={handleOpenModal}>
           예약하기
@@ -137,31 +146,38 @@ const MonthPage = () => {
           </ul>
         </div>
       </div>
+
       <div className={styles.header}>
         <div className={styles.headerRow}>
+          {/* Navigation */}
           <div className={styles.navigation}>
             <button onClick={() => handleMonthChange("prev")} className={styles.navButton}>
-              ◀
+            ❮
             </button>
             <span className={styles.navText}>
-              {year} {String(month + 1).padStart(2, "0")}
+              {year} . {String(month + 1).padStart(2, "0")}
             </span>
             <button onClick={() => handleMonthChange("next")} className={styles.navButton}>
-              ▶
+            ❯
             </button>
           </div>
-          <div className={styles.statusLegend}>
-            <div className={styles.statusItem}>
-              <div className={styles.completeDot}></div>
-              <span>예약 완료</span>
-            </div>
-            <div className={styles.statusItem}>
-              <div className={styles.pendingDot}></div>
-              <span>예약 대기</span>
+
+          {/* Status Legend */}
+          <div className={styles.statusLegendContainer}>
+            <div className={styles.statusLegend}>
+              <div className={styles.statusItem}>
+                <div className={styles.completeDot}></div>
+                <span>예약 완료</span>
+              </div>
+              <div className={styles.statusItem}>
+                <div className={styles.pendingDot}></div>
+                <span>예약 대기</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
       <div className={styles.calendar}>
         <table>
           <thead>

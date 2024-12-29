@@ -95,11 +95,11 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
             </div>
           </div>
           <div className={styles.modalFooter}>
-            <button type="submit" className={styles.submitButton}>
-              예약하기
-            </button>
             <button type="button" className={styles.cancelButton} onClick={onClose}>
               취소
+            </button>
+            <button type="submit" className={styles.submitButton}>
+              예약하기
             </button>
           </div>
         </form>
