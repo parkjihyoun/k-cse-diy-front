@@ -3,7 +3,7 @@ import styles from "../styles/ReservationModal.module.css";
 import editIcon from "../img/edit.png";
 
 // 요일을 계산하는 함수 (영어)
-const getDayName = (dateString) => {
+export const getDayName = (dateString) => {
   const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const date = new Date(dateString); // 전달받은 날짜를 Date 객체로 변환
   return days[date.getDay()]; // 영어 요일 반환

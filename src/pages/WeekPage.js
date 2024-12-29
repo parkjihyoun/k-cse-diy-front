@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/WeekPage.module.css";
 import ReservationModal from "../components/ReservationModal";
+import { getDayName } from "../components/ReservationModal";
 
 const WeekPage = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const WeekPage = () => {
   const [reservations, setReservations] = useState([
     {
       reservationNum: 1,
-      date: "2024-11-28",
+      date: "2024-12-05",
       day: "THU",
       time: "12:00 ~ 13:30",
       title: "산사랑 연극 연습",
@@ -24,7 +25,7 @@ const WeekPage = () => {
     },
     {
       reservationNum: 2,
-      date: "2024-11-28",
+      date: "2024-12-05",
       day: "THU",
       time: "16:30 ~ 17:30",
       title: "동아리 회의",
@@ -35,7 +36,7 @@ const WeekPage = () => {
     },
     {
       reservationNum: 3,
-      date: "2024-11-29",
+      date: "2024-12-06",
       day: "FRI",
       time: "10:00 ~ 11:30",
       title: "스터디 모임",
@@ -46,7 +47,7 @@ const WeekPage = () => {
     },
     {
       reservationNum: 4,
-      date: "2024-11-29",
+      date: "2024-12-06",
       day: "FRI",
       time: "15:00 ~ 17:00",
       title: "캡스톤 프로젝트 회의",
@@ -105,7 +106,17 @@ const WeekPage = () => {
   const handleSaveReservation = (data) => {
     setReservations((prev) => [
       ...prev,
-      { ...data, date: selectedDate, id: prev.length + 1, status: "pending" },
+      {
+        id: prev.length + 1,
+        date: selectedDate,
+        day: getDayName(selectedDate), // 요일
+        time: `${data.startTime} ~ ${data.endTime}`, // 시간 범위
+        title: data.reason, // 예약 사유
+        status: "pending",
+        authCode: data.password, // 인증번호
+        name: data.name, // 예약자 이름
+        studentId: data.studentId, // 학번
+      },
     ]);
     alert("예약이 저장되었습니다!");
   };
@@ -165,40 +176,38 @@ const WeekPage = () => {
   
 
   const renderWeekColumns = () => {
+    const todayStr = new Date().toISOString().split("T")[0]; // 오늘 날짜 문자열
+  
     return weekDates.map((day, index) => {
       const dateString = new Date(day).toISOString().split("T")[0];
-      const dayReservations = reservations.filter(
-        (r) => r.date === dateString
-      );
-
-      // 선택된 날짜와 비교
+      const dayReservations = reservations.filter((r) => r.date === dateString);
+  
       const isSelected =
         selectedDate &&
         new Date(selectedDate).toISOString().split("T")[0] === dateString;
-
-
+  
+      const isToday = todayStr === dateString; // 오늘 날짜인지 확인
+  
       return (
         <div
           key={index}
-          className={`${styles.dayColumn} ${isSelected ? styles.selected : ""}`}
-          onClick={() => setSelectedDate(day)} // Click handler
+          className={`${styles.dayColumn} ${isSelected ? styles.selected : ""} ${
+            isToday ? styles.today : ""
+          }`}
+          onClick={() => setSelectedDate(dateString)} // Click handler
         >
-          <div className={styles.dayGrid} >
+          <div className={styles.dayGrid}>
             {dayReservations.map((res) => {
-              const { top, height } = convertTimeToPosition(res.time);
+              const { top, height } = convertTimeToPosition(res.time); // 시간 위치 계산
               return (
                 <div
                   key={res.reservationNum}
                   className={styles.reservationItem}
                   style={{ top: `${top}px`, height: `${height}px` }}
                 >
+                  <span className={styles.reservationName}>{res.name}</span>
                   <span className={styles.reservationTitle}>{res.title}</span>
-                  <span className={styles.reservationDetails}>
-                    {res.time}
-                  </span>
-                  <span className={styles.reservationDetails}>
-                    {res.name}
-                  </span>
+                  <span className={styles.reservationTime}>{res.time}</span>
                 </div>
               );
             })}
@@ -207,7 +216,7 @@ const WeekPage = () => {
       );
     });
   };
-
+  
   return (
     <div className={styles.page}>
       {/* 상단 버튼 */}
@@ -228,8 +237,20 @@ const WeekPage = () => {
       <div className={styles.header}>
         <span className={styles.navText}>
           {currentDate.getFullYear()} {currentDate.getMonth() + 1}
-          </span>
+        </span>
+
+        <div className={styles.statusLegend}>
+          <div className={styles.statusItem}>
+            <div className={styles.completeDot}></div>
+            <span>예약 완료</span>
+          </div>
+          <div className={styles.statusItem}>
+            <div className={styles.pendingDot}></div>
+            <span>예약 대기</span>
+          </div>
+        </div>
       </div>
+
 
       {/* 날짜 */}
       <div className={styles.weekDaysContainer}>
@@ -244,10 +265,7 @@ const WeekPage = () => {
           {weekDates.map((day, index) => (
             <div key={index} className={styles.dateHeader}>
               <div>
-                {new Date(day).toLocaleDateString("en-US", { weekday: "short" })}
-              </div>
-              <div>
-                {new Date(day).toLocaleDateString("en-US", { month: "numeric", day: "numeric" })}
+                {new Date(day).toLocaleDateString("en-US", { day: "numeric" ,weekday: "short" })}
               </div>
             </div>
           ))}
