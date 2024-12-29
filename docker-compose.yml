@@ -1,0 +1,12 @@
+services:
+    kp-web:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: k-cse-diy-web
+        environment:
+            NODE_ENV: production
+            PORT: 
+        ports:
+            - "42000:42000"
+        restart: always
