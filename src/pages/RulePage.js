@@ -3,6 +3,7 @@ import styles from '../styles/RulePage.module.css';
 
 const RulePage = () => {
   return (
+    <div>
     <div className={styles.RulePage}>
       <div className={styles.Rules}>
         <ol>
@@ -27,7 +28,10 @@ const RulePage = () => {
         </ol>
       </div>
     </div>
+  </div>
   );
+  
 };
 
 export default RulePage;
+
