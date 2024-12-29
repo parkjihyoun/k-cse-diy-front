@@ -1,13 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 const Header = () => {
     const location = useLocation();
     const [activeStyle, setActiveStyle] = useState({ left: 0, width: 0 });
-    const navRef = useRef(null);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
+    const [menuOpen, setMenuOpen] = useState(false);
 
+    // 화면 크기 변경 감지
     useEffect(() => {
-        const navItems = Array.from(navRef.current?.children || []);
+        const handleResize = () => setIsMobile(window.innerWidth <= 600);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    // 활성화된 메뉴 아이템에 따라 activeLine 위치 계산
+    useEffect(() => {
+        const navItems = Array.from(document.querySelectorAll('.nav-item'));
         const activeIndex = navItems.findIndex(
             (item) => item.firstChild.getAttribute('href') === location.pathname
         );
@@ -19,38 +28,115 @@ const Header = () => {
         }
     }, [location]);
 
+    const toggleMenu = () => setMenuOpen(!menuOpen);
+
     return (
         <header style={styles.header}>
             <div style={styles.logo}>
-                <Link to="/" style={styles.logoLink}>K:DIY</Link>
+                <Link to="/" style={styles.logoLink}>
+                    K:DIY
+                </Link>
             </div>
 
-            <nav style={styles.nav}>
-                <ul ref={navRef} style={styles.navList}>
-                    <li style={styles.navItem}>
-                        <Link to="/" style={styles.navLink}>메인</Link>
-                    </li>
-                    <li style={styles.navItem}>
-                        <Link to="/month" style={styles.navLink}>예약하기</Link>
-                    </li>
-                    <li style={styles.navItem}>
-                        <Link to="/key" style={styles.navLink}>열쇠 대여/반납</Link>
-                    </li>
-                    <li style={styles.navItem}>
-                        <Link to="/check" style={styles.navLink}>예약 확인/수정</Link>
-                    </li>
-                    <li style={styles.navItem}>
-                        <Link to="/help" style={styles.navLink}>이용 안내</Link>
-                    </li>
-                </ul>
-                <div
-                    style={{
-                        ...styles.activeLine,
-                        left: activeStyle.left,
-                        width: activeStyle.width,
-                    }}
-                />
-            </nav>
+            {isMobile ? (
+                <>
+                    <div style={styles.menuIcon} onClick={toggleMenu}>
+                        <div style={styles.hamburger}></div>
+                        <div style={styles.hamburger}></div>
+                        <div style={styles.hamburger}></div>
+                    </div>
+                    <div
+                        style={{
+                            ...styles.drawer,
+                            transform: menuOpen ? 'translateX(0)' : 'translateX(100%)',
+                        }}
+                    >
+                        <ul style={styles.drawerList}>
+                            <li style={styles.drawerItem}>
+                                <Link
+                                    to="/"
+                                    style={styles.drawerLink}
+                                    onClick={() => setMenuOpen(false)}
+                                >
+                                    메인
+                                </Link>
+                            </li>
+                            <li style={styles.drawerItem}>
+                                <Link
+                                    to="/month"
+                                    style={styles.drawerLink}
+                                    onClick={() => setMenuOpen(false)}
+                                >
+                                    예약하기
+                                </Link>
+                            </li>
+                            <li style={styles.drawerItem}>
+                                <Link
+                                    to="/key"
+                                    style={styles.drawerLink}
+                                    onClick={() => setMenuOpen(false)}
+                                >
+                                    열쇠 대여/반납
+                                </Link>
+                            </li>
+                            <li style={styles.drawerItem}>
+                                <Link
+                                    to="/check"
+                                    style={styles.drawerLink}
+                                    onClick={() => setMenuOpen(false)}
+                                >
+                                    예약 확인/수정
+                                </Link>
+                            </li>
+                            <li style={styles.drawerItem}>
+                                <Link
+                                    to="/help"
+                                    style={styles.drawerLink}
+                                    onClick={() => setMenuOpen(false)}
+                                >
+                                    이용 안내
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+                    {menuOpen && (
+                        <div
+                            style={styles.overlay}
+                            onClick={() => setMenuOpen(false)}
+                        ></div>
+                    )}
+                </>
+            ) : (
+                <nav style={styles.nav}>
+                    <ul style={styles.navList}>
+                        <li className="nav-item" style={styles.navItem}>
+                            <Link to="/" style={styles.navLink}>
+                                메인
+                            </Link>
+                        </li>
+                        <li className="nav-item" style={styles.navItem}>
+                            <Link to="/month" style={styles.navLink}>
+                                예약하기
+                            </Link>
+                        </li>
+                        <li className="nav-item" style={styles.navItem}>
+                            <Link to="/key" style={styles.navLink}>
+                                열쇠 대여/반납
+                            </Link>
+                        </li>
+                        <li className="nav-item" style={styles.navItem}>
+                            <Link to="/check" style={styles.navLink}>
+                                예약 확인/수정
+                            </Link>
+                        </li>
+                        <li className="nav-item" style={styles.navItem}>
+                            <Link to="/help" style={styles.navLink}>
+                                이용 안내
+                            </Link>
+                        </li>
+                    </ul>
+                </nav>
+            )}
         </header>
     );
 };
@@ -58,50 +144,81 @@ const Header = () => {
 const styles = {
     header: {
         display: 'flex',
-        color: '#fff',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '20px 40px',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        color: 'white',
         position: 'fixed',
         width: '100%',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '30px 40px',
-        backgroundColor: 'rgba(0,0,0,0.4)',
-        zIndex: '1000',
+        zIndex: 1000,
     },
     logo: {
-        fontSize: '30px',
-        fontWeight: '700',
+        fontSize: '24px',
+        fontWeight: 'bold',
     },
-    nav: {
-        position: 'relative',
-    },
-    navList: {
-        display: 'flex',
-        listStyle: 'none',
-        margin: 0,
-        padding: 0,
-        gap: '30px',
-        position: 'relative',
-
-    },
-    navItem: {
-        margin: 0,
-        position: 'relative',
+    menuIcon: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
+        gap: '5px',
+        cursor: 'pointer',
     },
-    navLink: {
+    hamburger: {
+        width: '30px',
+        height: '3px',
+        backgroundColor: 'white',
+    },
+    drawer: {
+        position: 'fixed',
+        top: 0,
+        right: 0,
+        width: '250px',
+        height: '100%',
+        backgroundColor: '#333',
+        color: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '20px',
+        boxShadow: '-2px 0 6px rgba(0, 0, 0, 0.3)',
+        transition: 'transform 0.3s ease',
+        zIndex: 1500,
+    },
+    drawerList: {
+        listStyle: 'none',
+        padding: 0,
+        margin: 0,
+    },
+    drawerItem: {
+        marginBottom: '20px',
+    },
+    drawerLink: {
         color: '#fff',
         textDecoration: 'none',
-        fontSize: '15px',
-        fontWeight: '500',
+        fontSize: '18px',
     },
-    activeLine: {
-        position: 'absolute',
-        bottom: '-10px',
-        height: '2px',
-        backgroundColor: '#fff',
-        transition: 'all 0.3s ease',
+    overlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 1400,
+    },
+    nav: {
+        display: 'flex',
+    },
+    navList: {
+        listStyle: 'none',
+        display: 'flex',
+        gap: '20px',
+        padding: 0,
+        margin: 0,
+    },
+    navItem: {},
+    navLink: {
+        color: 'white',
+        textDecoration: 'none',
     },
 };
 

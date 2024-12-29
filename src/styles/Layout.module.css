@@ -1,0 +1,67 @@
+.layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 0; /* 여백 제거 */
+    margin: 0; /* 여백 제거 */
+    align-items: stretch; /* 필요하면 stretch로 변경 */
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-top: 96px;
+    position: relative;
+    padding: 0 20px; /* 페이지 내부에 여백 추가 */
+}
+
+.titleWrapper {
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    width: 300px;
+}
+
+.titleWrapperMobile {
+    top: 0px;
+    left: 15px;
+    width: 100%;
+}
+
+.title {
+    font-family: 'Inter, sans-serif';
+    color: white;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.titleMobile {
+    font-size: 18px;
+}
+
+.line {
+    width: 50px;
+    height: 4px;
+    background-color: white;
+    margin-top: 20px;
+}
+
+.lineMobile {
+    margin-top: 10px;
+    width: 35px;
+    height: 2px;
+}
+
+/* 모바일 화면에서 추가적인 조정 */
+@media (max-width: 600px) {
+    .layout {
+        padding: 0 0 5px 0; /* 모바일에서 상하 여백 조정 */
+    }
+
+    .main {
+        margin-top: 90px; /* 콘텐츠 아래로 밀기 */
+        padding :0px;
+    }
+}
