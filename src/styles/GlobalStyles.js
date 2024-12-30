@@ -25,7 +25,7 @@ const GlobalStyles = createGlobalStyle`
     height: 100%;
     background: url(${backgroundImage}) no-repeat center center fixed;
     background-size: cover;
-    filter: grayscale(70%); /* 흑백 필터 추가 */
+    filter:  grayscale(80%) brightness(0.8); /* 흑백 필터 추가 */
     z-index: -1; /* 다른 콘텐츠보다 뒤에 배치 */
   }
 
