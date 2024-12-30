@@ -146,7 +146,7 @@ const styles = {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '20px 40px',
+        padding: '20px 25px',
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
         color: 'white',
         position: 'fixed',
@@ -172,13 +172,16 @@ const styles = {
         position: 'fixed',
         top: 0,
         right: 0,
-        width: '250px',
+        width: '300px',
         height: '100%',
-        backgroundColor: '#fff', // 배경색 흰색으로 변경
-        color: '#000',
+        backgroundColor: '#fff', // 배경색 흰색
+        color: '#000', // 글자색 검정
         display: 'flex',
         flexDirection: 'column',
-        padding: '20px',
+        justifyContent: 'flex-start', // 위쪽 정렬
+        paddingTop: '100px', // 로고 아래 여백 확보
+        paddingRight: '20px',
+        paddingLeft: '20px', 
         boxShadow: '-2px 0 6px rgba(0, 0, 0, 0.3)',
         transition: 'transform 0.3s ease',
         zIndex: 1500,
@@ -187,12 +190,15 @@ const styles = {
         listStyle: 'none',
         padding: 0,
         margin: 0,
+        textAlign: 'right', 
     },
     drawerItem: {
         marginBottom: '20px',
+        paddingBottom: '10px',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.1)', // 구분선 색 옅게 설정
     },
     drawerLink: {
-        color: '#000', // 글자색 검정으로 변경
+        color: '#000', // 글자색 검정
         textDecoration: 'none',
         fontSize: '18px',
     },

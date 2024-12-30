@@ -163,3 +163,70 @@
   background: #000000; /* 드롭다운 내부 옵션 배경 */
   color: #ffffff;
 }
+
+
+@media (max-width: 600px) {
+  .modalContent {
+    width: 80%; /* 너비를 화면에 맞게 조정 */
+    padding: 20px; /* 패딩 감소 */
+    margin-bottom: 10px;
+  }
+
+  .modalHeader{
+    padding: 0;
+  }
+
+  .modalTitle {
+    font-size: 26px; /* 제목 크기 축소 */
+    margin-top: 10px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .editIcon{
+    width: 25px;
+    height: 25px;
+    margin-bottom: 3px;
+    }
+
+  .formGrid {
+  
+    grid-template-columns: 1fr; /* 단일 열로 변경 */
+    gap: 15px; /* 간격 줄이기 */
+  }
+
+  .inputGroup {
+    margin: 0; /* 좌우 마진 제거 */
+  }
+
+  .inputGroup input,
+  .inputGroup textarea {
+    width: 100%; /* 너비를 부모 요소에 맞춤 */
+    font-size: 12px; /* 글꼴 크기 축소 */
+    height: 35px; /* 입력 필드 높이 감소 */
+  }
+
+  .inputGroup textarea {
+    height: 70px; /* 텍스트 영역 높이 감소 */
+  }
+
+  .passwordHint {
+    font-size: 10px; /* 힌트 글꼴 크기 축소 */
+  }
+
+  .timeGroup select {
+    width: 100%; /* 드롭다운 너비를 조정 */
+    font-size: 12px; /* 글꼴 크기 축소 */
+  }
+
+  .modalFooter {
+    gap: 10px; /* 버튼 간 간격 감소 */
+  }
+
+  .submitButton,
+  .cancelButton {
+    width: 50%; /* 버튼 너비를 부모 요소에 맞춤 */
+    font-size: 14px; /* 글꼴 크기 축소 */
+    padding: 8px; /* 패딩 감소 */
+  }
+}
