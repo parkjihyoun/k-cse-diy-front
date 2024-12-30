@@ -36,6 +36,8 @@ const WeekPage = () => {
   const [selectedDate, setSelectedDate] = useState(null); // 선택한 날짜 상태
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
   const [isMobileView, setIsMobileView] = useState(false); // 모바일 뷰 상태
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 상태
+  const [selectedReservation, setSelectedReservation] = useState(null); // 선택한 예약 정보
   const [reservations, setReservations] = useState([
     {
       reservationNum: 1,
@@ -194,18 +196,23 @@ const WeekPage = () => {
   
 
   const convertTimeToPosition = (time) => {
+    const rowHeight = isMobileView ? 40 : 50; // 반응형 여부에 따라 높이 결정
+    const startHour = 9; // 시작 시간 기준 (9:00 AM)
+  
     const [start, end] = time.split(" ~ ");
-    const [startHour, startMinute] = start.split(":").map((t) => parseInt(t, 10));
-    const [endHour, endMinute] = end.split(":").map((t) => parseInt(t, 10));
+    const [startHourNum, startMinute] = start.split(":").map(Number);
+    const [endHourNum, endMinute] = end.split(":").map(Number);
   
-    // Offset start time relative to 9:00 AM
-    const top = ((startHour - 9) * 50) + (startMinute / 60) * 50;
+    // 시작 시간 위치 계산
+    const top =
+      (startHourNum - startHour) * rowHeight +
+      (startMinute / 60) * rowHeight + 15;
   
-    // Calculate duration in minutes and convert to height
-    const durationInMinutes = (endHour - startHour) * 60 + (endMinute - startMinute);
-    const height = (durationInMinutes / 60) * 50;
+    // 지속 시간 계산
+    const durationInMinutes =
+      (endHourNum - startHourNum) * 60 + (endMinute - startMinute);
+    const height = (durationInMinutes / 60) * rowHeight;
   
-    console.log(`Time: ${time}, Top: ${top}px, Height: ${height}px`);
     return { top, height };
   };
 
@@ -223,7 +230,7 @@ const WeekPage = () => {
   
 
   const renderWeekColumns = () => {
-    const todayStr = new Date().toISOString().split("T")[0]; // 오늘 날짜 문자열
+    const todayStr = new Date().toISOString().split("T")[0];
   
     return centeredWeekDates.map((day, index) => {
       const dateString = day.toISOString().split("T")[0];
@@ -233,7 +240,7 @@ const WeekPage = () => {
         selectedDate &&
         new Date(selectedDate).toISOString().split("T")[0] === dateString;
   
-      const isToday = todayStr === dateString; // 오늘 날짜인지 확인
+      const isToday = todayStr === dateString;
   
       return (
         <div
@@ -241,16 +248,17 @@ const WeekPage = () => {
           className={`${styles.dayColumn} ${isSelected ? styles.selected : ""} ${
             isToday ? styles.today : ""
           }`}
-          onClick={() => setSelectedDate(dateString)} // Click handler
+          onClick={() => setSelectedDate(dateString)}
         >
           <div className={styles.dayGrid}>
             {dayReservations.map((res) => {
-              const { top, height } = convertTimeToPosition(res.time); // 시간 위치 계산
+              const { top, height } = convertTimeToPosition(res.time);
               return (
                 <div
                   key={res.reservationNum}
                   className={styles.reservationItem}
                   style={{ top: `${top}px`, height: `${height}px` }}
+                  onClick={() => handleOpenPopup(res)} // 클릭 핸들러 추가
                 >
                   <span className={styles.reservationName}>{res.name}</span>
                   <span className={styles.reservationTitle}>{res.title}</span>
@@ -262,6 +270,40 @@ const WeekPage = () => {
         </div>
       );
     });
+  };
+
+  const handleOpenPopup = (reservation) => {
+    setSelectedReservation(reservation);
+    setIsPopupOpen(true);
+  };
+  
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+    setSelectedReservation(null);
+  };
+
+  const Popup = ({ reservation, onClose }) => {
+    if (!reservation) return null;
+  
+    return (
+      <div className={styles.popupOverlay}>
+        <div className={styles.popup}>
+          <div className={styles.popupLabel}>예약 정보</div>
+          <p>
+            <div className={styles.popupName}>예약자 {reservation.name}</div>
+          </p>
+          <p>
+            <div className={styles.popupTitle}>예약 사유 {reservation.title}</div>
+          </p>
+          <p>
+            <div className={styles.popupTime}>예약 시간 {reservation.time}</div>
+          </p>
+          <button className={styles.closeButton} onClick={onClose}>
+            닫기
+          </button>
+        </div>
+      </div>
+    );
   };
   
   return (
@@ -281,9 +323,10 @@ const WeekPage = () => {
       </div>
 
 
+      {/*년월 + status*/}
       <div className={styles.header}>
         <span className={styles.navText}>
-          {currentDate.getFullYear()} {currentDate.getMonth() + 1}
+          {currentDate.getFullYear()} . {currentDate.getMonth() + 1}
         </span>
 
         <div className={styles.statusLegend}>
@@ -336,6 +379,10 @@ const WeekPage = () => {
           onClose={handleCloseModal}
           handleSave={handleSaveReservation}
         />
+      )}
+
+      {isPopupOpen && (
+        <Popup reservation={selectedReservation} onClose={handleClosePopup} />
       )}
     </div>
   );
