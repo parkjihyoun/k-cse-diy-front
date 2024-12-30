@@ -174,8 +174,8 @@ const styles = {
         right: 0,
         width: '250px',
         height: '100%',
-        backgroundColor: '#333',
-        color: '#fff',
+        backgroundColor: '#fff', // 배경색 흰색으로 변경
+        color: '#000',
         display: 'flex',
         flexDirection: 'column',
         padding: '20px',
@@ -192,7 +192,7 @@ const styles = {
         marginBottom: '20px',
     },
     drawerLink: {
-        color: '#fff',
+        color: '#000', // 글자색 검정으로 변경
         textDecoration: 'none',
         fontSize: '18px',
     },
@@ -202,7 +202,7 @@ const styles = {
         left: 0,
         width: '100%',
         height: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
         zIndex: 1400,
     },
     nav: {
