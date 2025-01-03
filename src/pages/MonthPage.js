@@ -13,14 +13,151 @@ const MonthPage = () => {
   const [selectedDate, setSelectedDate] = useState(todayStr); // 오늘 날짜로 초기화
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
   const [reservations, setReservations] = useState([
-    { id: 1, date: "2024-11-13", status: "complete" },
-    { id: 2, date: "2024-11-13", status: "pending" },
-    { id: 3, date: "2024-11-14", status: "complete" },
-    { id: 4, date: "2024-11-18", status: "pending" },
-    { id: 5, date: "2024-11-18", status: "complete" },
-    { id: 6, date: "2024-11-23", status: "complete" },
-    { id: 7, date: "2024-11-26", status: "complete" },
+    {
+      reservationNum: 1,
+      date: "2024-11-14",
+      day: "THU",
+      time: "12:00 ~ 14:00",
+      title: "산사랑 연극 연습",
+      status: "승인",
+      authCode: "1234",
+      name: "박지현",
+      studentId: "2023000001",
+    },
+    {
+      reservationNum: 2,
+      date: "2024-11-14",
+      day: "THU",
+      time: "15:00 ~ 17:00",
+      title: "동아리 회의",
+      status: "대기",
+      authCode: "5678",
+      name: "최예윤",
+      studentId: "2023000002",
+    },
+    {
+      reservationNum: 3,
+      date: "2024-11-15",
+      day: "FRI",
+      time: "09:00 ~ 11:00",
+      title: "스터디 모임",
+      status: "승인",
+      authCode: "9101",
+      name: "최원아",
+      studentId: "2023000003",
+    },
+    {
+      reservationNum: 4,
+      date: "2024-11-16",
+      day: "SAT",
+      time: "14:00 ~ 16:00",
+      title: "프로젝트 회의",
+      status: "대기",
+      authCode: "0000",
+      name: "호예찬",
+      studentId: "2023000004",
+    },
+    {
+      reservationNum: 5,
+      date: "2024-11-17",
+      day: "SUN",
+      time: "10:00 ~ 12:00",
+      title: "운동 모임",
+      status: "승인",
+      authCode: "2222",
+      name: "박지현",
+      studentId: "2023000001",
+    },
+    {
+      reservationNum: 6,
+      date: "2024-11-18",
+      day: "MON",
+      time: "13:00 ~ 15:00",
+      title: "프로젝트 리뷰",
+      status: "대기",
+      authCode: "3333",
+      name: "최예윤",
+      studentId: "2023000002",
+    },
+    {
+      reservationNum: 7,
+      date: "2024-11-19",
+      day: "TUE",
+      time: "16:00 ~ 18:00",
+      title: "스터디 발표 준비",
+      status: "승인",
+      authCode: "4444",
+      name: "최원아",
+      studentId: "2023000003",
+    },
+    {
+      reservationNum: 8,
+      date: "2024-11-20",
+      day: "WED",
+      time: "11:00 ~ 13:00",
+      title: "팀 회의",
+      status: "대기",
+      authCode: "5555",
+      name: "호예찬",
+      studentId: "2023000004",
+    },
+    {
+      reservationNum: 9,
+      date: "2024-11-21",
+      day: "THU",
+      time: "08:00 ~ 10:00",
+      title: "아침 조깅",
+      status: "승인",
+      authCode: "6666",
+      name: "박지현",
+      studentId: "2023000001",
+    },
+    {
+      reservationNum: 10,
+      date: "2024-11-22",
+      day: "FRI",
+      time: "14:00 ~ 16:00",
+      title: "개발 스터디",
+      status: "대기",
+      authCode: "7777",
+      name: "최예윤",
+      studentId: "2023000002",
+    },
+    {
+      reservationNum: 11,
+      date: "2024-11-23",
+      day: "SAT",
+      time: "09:00 ~ 11:00",
+      title: "스터디 회의",
+      status: "승인",
+      authCode: "8888",
+      name: "최원아",
+      studentId: "2023000003",
+    },
+    {
+      reservationNum: 12,
+      date: "2024-11-24",
+      day: "SUN",
+      time: "10:00 ~ 12:00",
+      title: "독서 모임",
+      status: "대기",
+      authCode: "9999",
+      name: "호예찬",
+      studentId: "2023000004",
+    },
+    {
+      reservationNum: 13,
+      date: "2024-11-14",
+      day: "THU",
+      time: "12:00 ~ 13:00",
+      title: "뭐할까요",
+      status: "대기",
+      authCode: "5678",
+      name: "박지현",
+      studentId: "2023000001",
+    },
   ]);
+  const [selectedReservations, setSelectedReservations] = useState([]); // 선택된 날짜의 예약 정보
 
   const navigate = useNavigate();
 
@@ -65,9 +202,15 @@ const MonthPage = () => {
   const handleSaveReservation = (data) => {
     setReservations((prev) => [
       ...prev,
-      { ...data, date: selectedDate, id: prev.length + 1, status: "pending" },
+      { ...data, date: selectedDate, reservationNum: prev.length + 1, status: "대기" },
     ]);
     alert("예약이 신청되었습니다!");
+  };
+
+  const handleDateClick = (dateStr) => {
+    setSelectedDate(dateStr);
+    const filteredReservations = reservations.filter((r) => r.date === dateStr);
+    setSelectedReservations(filteredReservations);
   };
 
   const renderDays = () => {
@@ -96,7 +239,7 @@ const MonthPage = () => {
               className={`${styles.dayCell} ${isSelected ? styles.selected : ""} ${
                 isToday ? styles.today : ""
               }`}
-              onClick={() => setSelectedDate(dateStr)}
+              onClick={() => handleDateClick(dateStr)}
             >
               <div className={styles.dateNumber}>{currentDay}</div>
               <div className={styles.dotsContainer}>
@@ -105,8 +248,8 @@ const MonthPage = () => {
                   .slice(0, 2)
                   .map((r, index) => (
                     <div
-                      key={`status-${r.id}`}
-                      className={r.status === "complete" ? styles.completeDot : styles.pendingDot}
+                      key={`status-${r.reservationNum}`}
+                      className={r.status === "승인" ? styles.completeDot : styles.pendingDot}
                     ></div>
                   ))}
                 {reservations.filter((r) => r.date === dateStr).length > 2 && (
@@ -152,13 +295,13 @@ const MonthPage = () => {
           {/* Navigation */}
           <div className={styles.navigation}>
             <button onClick={() => handleMonthChange("prev")} className={styles.navButton}>
-            ❮
+              ❮
             </button>
             <span className={styles.navText}>
               {year} . {String(month + 1).padStart(2, "0")}
             </span>
             <button onClick={() => handleMonthChange("next")} className={styles.navButton}>
-            ❯
+              ❯
             </button>
           </div>
 
@@ -167,7 +310,7 @@ const MonthPage = () => {
             <div className={styles.statusLegend}>
               <div className={styles.statusItem}>
                 <div className={styles.completeDot}></div>
-                <span>예약 완료</span>
+                <span>예약 승인</span>
               </div>
               <div className={styles.statusItem}>
                 <div className={styles.pendingDot}></div>
@@ -194,6 +337,7 @@ const MonthPage = () => {
           <tbody>{renderDays()}</tbody>
         </table>
       </div>
+
       {isModalOpen && (
         <ReservationModal
           selectedDate={selectedDate}
@@ -201,6 +345,25 @@ const MonthPage = () => {
           handleSave={handleSaveReservation}
         />
       )}
+
+      <div className={styles.reservationDetails}>
+        <h3>{selectedDate} 예약 정보</h3>
+        {selectedReservations.length > 0 ? (
+          <ul className={styles.reservationList}>
+            {selectedReservations.map((res) => (
+              <li key={res.reservationNum} className={styles.reservationItem}>
+                <p>예약자 이름 | {res.name}</p>
+                <p>예약자 학번 | {res.studentId}</p>
+                <p>예약 정보 | {res.title}</p>
+                <p>예약 시간 | {res.time}</p>
+                <p>상태 | {res.status}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>예약이 없습니다.</p>
+        )}
+      </div>
     </div>
   );
 };

@@ -77,10 +77,17 @@
   background-color: rgba(0, 0, 0, 0.8);
   z-index: 1000;
 }
+.popupTitle {
+  font-size: 20px;
+  font-weight: bold;
+  color: black; /* 제목 강조 */
+  margin-top:10px;
+  margin-bottom: 10px; /* 제목과 내용 간격 */
+}
 
 .popupContent {
   background: white;
-  padding: 40px 20px;
+  padding: 20px 10px;
   border-radius: 5px;
   text-align: center;
   color: black;
@@ -92,7 +99,7 @@
 
 
 .closeButton {
-  margin-top: 38px;
+  margin-top: 30px;
   padding: 10px 20px;
   background-color: black;
   color: white;
@@ -105,4 +112,27 @@
 .closeButton:hover {
   background-color: #333;
   transform:scale(1);
+}
+
+@media (max-width:600px)
+{
+  .popupContent{
+    width:80%;
+    font-size:16px;
+  }
+  .closeButton {
+    width: 95%;
+  }
+
+  .input {
+    width: 90%;
+  }
+  .button {
+    width: 90%;
+  }
+  .label {
+    margin-left:20px;
+    font-size:20px;
+  }
+
 }
