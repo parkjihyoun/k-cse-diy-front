@@ -154,7 +154,7 @@ const styles = {
         zIndex: 1000,
     },
     logo: {
-        fontSize: '24px',
+        fontSize: '28px',
         fontWeight: 'bold',
     },
     menuIcon: {

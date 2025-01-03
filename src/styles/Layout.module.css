@@ -15,7 +15,7 @@
     flex-direction: column;
     margin-top: 96px;
     position: relative;
-    padding: 0 20px; /* 페이지 내부에 여백 추가 */
+    padding: 0; /* 페이지 내부에 여백 추가 */
 }
 
 .titleWrapper {

@@ -106,15 +106,16 @@
 
 @media (max-width: 870px) {
     .maintitle {
-        font-size: 5.6vw;
+        font-size: 5.7vw;
     }
     .mainsubtitle {
-        font-size: 3vw;
+        font-size: 4vw;
     }
     .mainbutton {
-        font-size: 14px;
-        padding: 15px;
+        font-size: 15px;
+        padding: 10px;
         width: 150px;
+        height: 40px;
         margin-bottom: 200px;
     }
     .statustitle {
