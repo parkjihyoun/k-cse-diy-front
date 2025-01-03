@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/MonthPage.module.css";
 import ReservationModal from "../components/ReservationModal";
@@ -12,154 +12,42 @@ const MonthPage = () => {
   const [selectedView, setSelectedView] = useState("Month");
   const [selectedDate, setSelectedDate] = useState(todayStr); // 오늘 날짜로 초기화
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-  const [reservations, setReservations] = useState([
-    {
-      reservationNum: 1,
-      date: "2024-11-14",
-      day: "THU",
-      time: "12:00 ~ 14:00",
-      title: "산사랑 연극 연습",
-      status: "승인",
-      authCode: "1234",
-      name: "박지현",
-      studentId: "2023000001",
-    },
-    {
-      reservationNum: 2,
-      date: "2024-11-14",
-      day: "THU",
-      time: "15:00 ~ 17:00",
-      title: "동아리 회의",
-      status: "대기",
-      authCode: "5678",
-      name: "최예윤",
-      studentId: "2023000002",
-    },
-    {
-      reservationNum: 3,
-      date: "2024-11-15",
-      day: "FRI",
-      time: "09:00 ~ 11:00",
-      title: "스터디 모임",
-      status: "승인",
-      authCode: "9101",
-      name: "최원아",
-      studentId: "2023000003",
-    },
-    {
-      reservationNum: 4,
-      date: "2024-11-16",
-      day: "SAT",
-      time: "14:00 ~ 16:00",
-      title: "프로젝트 회의",
-      status: "대기",
-      authCode: "0000",
-      name: "호예찬",
-      studentId: "2023000004",
-    },
-    {
-      reservationNum: 5,
-      date: "2024-11-17",
-      day: "SUN",
-      time: "10:00 ~ 12:00",
-      title: "운동 모임",
-      status: "승인",
-      authCode: "2222",
-      name: "박지현",
-      studentId: "2023000001",
-    },
-    {
-      reservationNum: 6,
-      date: "2024-11-18",
-      day: "MON",
-      time: "13:00 ~ 15:00",
-      title: "프로젝트 리뷰",
-      status: "대기",
-      authCode: "3333",
-      name: "최예윤",
-      studentId: "2023000002",
-    },
-    {
-      reservationNum: 7,
-      date: "2024-11-19",
-      day: "TUE",
-      time: "16:00 ~ 18:00",
-      title: "스터디 발표 준비",
-      status: "승인",
-      authCode: "4444",
-      name: "최원아",
-      studentId: "2023000003",
-    },
-    {
-      reservationNum: 8,
-      date: "2024-11-20",
-      day: "WED",
-      time: "11:00 ~ 13:00",
-      title: "팀 회의",
-      status: "대기",
-      authCode: "5555",
-      name: "호예찬",
-      studentId: "2023000004",
-    },
-    {
-      reservationNum: 9,
-      date: "2024-11-21",
-      day: "THU",
-      time: "08:00 ~ 10:00",
-      title: "아침 조깅",
-      status: "승인",
-      authCode: "6666",
-      name: "박지현",
-      studentId: "2023000001",
-    },
-    {
-      reservationNum: 10,
-      date: "2024-11-22",
-      day: "FRI",
-      time: "14:00 ~ 16:00",
-      title: "개발 스터디",
-      status: "대기",
-      authCode: "7777",
-      name: "최예윤",
-      studentId: "2023000002",
-    },
-    {
-      reservationNum: 11,
-      date: "2024-11-23",
-      day: "SAT",
-      time: "09:00 ~ 11:00",
-      title: "스터디 회의",
-      status: "승인",
-      authCode: "8888",
-      name: "최원아",
-      studentId: "2023000003",
-    },
-    {
-      reservationNum: 12,
-      date: "2024-11-24",
-      day: "SUN",
-      time: "10:00 ~ 12:00",
-      title: "독서 모임",
-      status: "대기",
-      authCode: "9999",
-      name: "호예찬",
-      studentId: "2023000004",
-    },
-    {
-      reservationNum: 13,
-      date: "2024-11-14",
-      day: "THU",
-      time: "12:00 ~ 13:00",
-      title: "뭐할까요",
-      status: "대기",
-      authCode: "5678",
-      name: "박지현",
-      studentId: "2023000001",
-    },
-  ]);
-  const [selectedReservations, setSelectedReservations] = useState([]); // 선택된 날짜의 예약 정보
+
+  const [reservations, setReservations] = useState([]); // 예약 데이터 상태
+  const [loading, setLoading] = useState(false); // 로딩 상태
+  const [error, setError] = useState(null); // 에러 상태
+
 
   const navigate = useNavigate();
+
+  // 예약 데이터 가져오기
+  useEffect(() => {
+    const fetchReservations = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetch(`/application/reservation/date/${year}/${month + 1}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch reservations");
+        }
+
+        const result = await response.json();
+        console.log(result); // 반환된 전체 데이터를 확인
+        if (result.response && Array.isArray(result.response)) {
+          setReservations(result.response); // response 필드에서 예약 데이터를 추출
+        } else {
+          setReservations([]); // response 필드가 없거나 데이터가 배열이 아닐 경우 빈 배열로 설정
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReservations();
+  }, [year, month]);
 
   const handleMonthChange = (direction) => {
     if (direction === "prev") {
@@ -202,7 +90,9 @@ const MonthPage = () => {
   const handleSaveReservation = (data) => {
     setReservations((prev) => [
       ...prev,
-      { ...data, date: selectedDate, reservationNum: prev.length + 1, status: "대기" },
+
+      { ...data, reservationDate: selectedDate, id: prev.length + 1, status: "PENDING" },
+
     ]);
     alert("예약이 신청되었습니다!");
   };
@@ -236,25 +126,28 @@ const MonthPage = () => {
           weekRow.push(
             <td
               key={`day-${currentDay}`}
-              className={`${styles.dayCell} ${isSelected ? styles.selected : ""} ${
-                isToday ? styles.today : ""
-              }`}
-              onClick={() => handleDateClick(dateStr)}
+
+              className={`${styles.dayCell} ${isSelected ? styles.selected : ""} ${isToday ? styles.today : ""
+                }`}
+              onClick={() => setSelectedDate(dateStr)}
+
             >
               <div className={styles.dateNumber}>{currentDay}</div>
               <div className={styles.dotsContainer}>
                 {reservations
-                  .filter((r) => r.date === dateStr)
+                  .filter((r) => r.reservationDate === dateStr)
                   .slice(0, 2)
                   .map((r, index) => (
                     <div
-                      key={`status-${r.reservationNum}`}
-                      className={r.status === "승인" ? styles.completeDot : styles.pendingDot}
+
+                      key={`status-${r.id}`}
+                      className={r.status === "APPROVED" ? styles.completeDot : styles.pendingDot}
+
                     ></div>
                   ))}
-                {reservations.filter((r) => r.date === dateStr).length > 2 && (
+                {reservations.filter((r) => r.reservationDate === dateStr).length > 2 && (
                   <span className={styles.extraDots}>
-                    +{reservations.filter((r) => r.date === dateStr).length - 2}
+                    +{reservations.filter((r) => r.reservationDate === dateStr).length - 2}
                   </span>
                 )}
               </div>
@@ -273,6 +166,9 @@ const MonthPage = () => {
 
     return calendar;
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className={styles.page}>

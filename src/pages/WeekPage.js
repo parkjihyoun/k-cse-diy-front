@@ -13,7 +13,7 @@ const WeekPage = () => {
       const todayIndex = 1; // 가운데에 오늘 날짜
       const startDate = new Date(date);
       startDate.setDate(date.getDate() - todayIndex);
-  
+
       return Array.from({ length: 3 }, (_, i) => {
         const newDate = new Date(startDate);
         newDate.setDate(startDate.getDate() + i);
@@ -121,14 +121,14 @@ const WeekPage = () => {
   const [centeredWeekDates, setCenteredWeekDates] = useState(
     getWeekDates(currentDate, isMobileView)
   );
-  
+
   useEffect(() => {
     const handleResize = () => {
       const isMobile = window.innerWidth <= 600;
       setIsMobileView(isMobile);
       setCenteredWeekDates(getWeekDates(currentDate, isMobile));
     };
-  
+
     handleResize(); // 초기 로드 시 실행
     window.addEventListener("resize", handleResize); // 리사이즈 이벤트 리스너 추가
     return () => window.removeEventListener("resize", handleResize); // 리스너 정리
@@ -193,32 +193,32 @@ const WeekPage = () => {
     setCurrentDate(newDate);
     setCenteredWeekDates(getWeekDates(newDate, isMobileView));
   };
-  
+
 
   const convertTimeToPosition = (time) => {
     const rowHeight = isMobileView ? 40 : 50; // 반응형 여부에 따라 높이 결정
     const startHour = 9; // 시작 시간 기준 (9:00 AM)
-  
+
     const [start, end] = time.split(" ~ ");
     const [startHourNum, startMinute] = start.split(":").map(Number);
     const [endHourNum, endMinute] = end.split(":").map(Number);
-  
+
     // 시작 시간 위치 계산
     const top =
       (startHourNum - startHour) * rowHeight +
       (startMinute / 60) * rowHeight + 15;
-  
+
     // 지속 시간 계산
     const durationInMinutes =
       (endHourNum - startHourNum) * 60 + (endMinute - startMinute);
     const height = (durationInMinutes / 60) * rowHeight;
-  
+
     return { top, height };
   };
 
   const renderGrid = () => {
     const hours = Array.from({ length: 24 }, (_, i) => (9 + i) % 24);
-    
+
     return hours.map((hour) => (
       <div key={hour} className={styles.hourRow}>
         <span className={styles.hourLabel}>
@@ -227,27 +227,26 @@ const WeekPage = () => {
       </div>
     ));
   };
-  
+
 
   const renderWeekColumns = () => {
     const todayStr = new Date().toISOString().split("T")[0];
-  
+
     return centeredWeekDates.map((day, index) => {
       const dateString = day.toISOString().split("T")[0];
       const dayReservations = reservations.filter((r) => r.date === dateString);
-  
+
       const isSelected =
         selectedDate &&
         new Date(selectedDate).toISOString().split("T")[0] === dateString;
-  
+
       const isToday = todayStr === dateString;
-  
+
       return (
         <div
           key={index}
-          className={`${styles.dayColumn} ${isSelected ? styles.selected : ""} ${
-            isToday ? styles.today : ""
-          }`}
+          className={`${styles.dayColumn} ${isSelected ? styles.selected : ""} ${isToday ? styles.today : ""
+            }`}
           onClick={() => setSelectedDate(dateString)}
         >
           <div className={styles.dayGrid}>
@@ -276,7 +275,7 @@ const WeekPage = () => {
     setSelectedReservation(reservation);
     setIsPopupOpen(true);
   };
-  
+
   const handleClosePopup = () => {
     setIsPopupOpen(false);
     setSelectedReservation(null);
@@ -284,7 +283,7 @@ const WeekPage = () => {
 
   const Popup = ({ reservation, onClose }) => {
     if (!reservation) return null;
-  
+
     return (
       <div className={styles.popupOverlay}>
         <div className={styles.popup}>
@@ -305,7 +304,7 @@ const WeekPage = () => {
       </div>
     );
   };
-  
+
   return (
     <div className={styles.page}>
       {/* 상단 버튼 */}
