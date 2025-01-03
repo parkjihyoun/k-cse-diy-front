@@ -12,7 +12,7 @@ const MonthPage = () => {
   const [selectedView, setSelectedView] = useState("Month");
   const [selectedDate, setSelectedDate] = useState(todayStr); // 오늘 날짜로 초기화
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-  const [selectedReservations, setSelectedReservations] = useState([]);
+const [selectedReservations, setSelectedReservations] = useState([]);
   const [reservations, setReservations] = useState([]); // 예약 데이터 상태
   const [loading, setLoading] = useState(false); // 로딩 상태
   const [error, setError] = useState(null); // 에러 상태
@@ -22,12 +22,24 @@ const MonthPage = () => {
 
   // 예약 데이터 가져오기
   useEffect(() => {
+    const currentPath = window.location.pathname;
+  const pathParts = currentPath.split("/");
+
+  if (pathParts[1] === "month" && pathParts.length === 4) {
+    const urlYear = parseInt(pathParts[2], 10);
+    const urlMonth = parseInt(pathParts[3], 10) - 1; // 월은 0부터 시작하므로 -1
+
+    if (!isNaN(urlYear) && !isNaN(urlMonth)) {
+      setYear(urlYear);
+      setMonth(urlMonth);
+    }
+  }
     const fetchReservations = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        const response = await fetch(`https://diy.knucse.site/api/v1/application/reservation/date/${year}/${month + 1}`);
+        const response = await fetch(`/application/reservation/date/${year}/${month + 1}`);
         if (!response.ok) {
           throw new Error("Failed to fetch reservations");
         }
@@ -50,6 +62,8 @@ const MonthPage = () => {
   }, [year, month]);
 
   const handleMonthChange = (direction) => {
+    let newMonth = month;
+  let newYear = year;
     if (direction === "prev") {
       if (month === 0) {
         setMonth(11);
@@ -65,6 +79,11 @@ const MonthPage = () => {
         setMonth((prev) => prev + 1);
       }
     }
+
+    setMonth(newMonth);
+  setYear(newYear);
+  navigate(`/month/${newYear}/${newMonth + 1}`);
+
   };
 
   const handleViewChange = (view) => {
@@ -265,3 +284,4 @@ const MonthPage = () => {
 };
 
 export default MonthPage;
+

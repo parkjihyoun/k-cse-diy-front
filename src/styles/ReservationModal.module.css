@@ -163,7 +163,8 @@
 }
 
 
-@media (max-width: 600px) {
+
+@media (max-width: 976px) {
   .modalContent {
     width: 80%; /* 너비를 화면에 맞게 조정 */
     padding: 20px; /* 패딩 감소 */
@@ -196,7 +197,9 @@
   .inputGroup {
     margin: 0; /* 좌우 마진 제거 */
   }
-
+  .textareaPlaceholder::placeholder {
+    white-space: pre-line; /* 줄바꿈 적용 */
+  }
   .inputGroup input,
   .inputGroup textarea {
     width: 100%; /* 너비를 부모 요소에 맞춤 */
