@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/MonthPage.module.css";
 import ReservationModal from "../components/ReservationModal";
@@ -12,17 +12,40 @@ const MonthPage = () => {
   const [selectedView, setSelectedView] = useState("Month");
   const [selectedDate, setSelectedDate] = useState(todayStr); // 오늘 날짜로 초기화
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-  const [reservations, setReservations] = useState([
-    { id: 1, date: "2024-11-13", status: "complete" },
-    { id: 2, date: "2024-11-13", status: "pending" },
-    { id: 3, date: "2024-11-14", status: "complete" },
-    { id: 4, date: "2024-11-18", status: "pending" },
-    { id: 5, date: "2024-11-18", status: "complete" },
-    { id: 6, date: "2024-11-23", status: "complete" },
-    { id: 7, date: "2024-11-26", status: "complete" },
-  ]);
+  const [reservations, setReservations] = useState([]); // 예약 데이터 상태
+  const [loading, setLoading] = useState(false); // 로딩 상태
+  const [error, setError] = useState(null); // 에러 상태
 
   const navigate = useNavigate();
+
+  // 예약 데이터 가져오기
+  useEffect(() => {
+    const fetchReservations = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetch(`/application/reservation/date/${year}/${month + 1}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch reservations");
+        }
+
+        const result = await response.json();
+        console.log(result); // 반환된 전체 데이터를 확인
+        if (result.response && Array.isArray(result.response)) {
+          setReservations(result.response); // response 필드에서 예약 데이터를 추출
+        } else {
+          setReservations([]); // response 필드가 없거나 데이터가 배열이 아닐 경우 빈 배열로 설정
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReservations();
+  }, [year, month]);
 
   const handleMonthChange = (direction) => {
     if (direction === "prev") {
@@ -65,7 +88,7 @@ const MonthPage = () => {
   const handleSaveReservation = (data) => {
     setReservations((prev) => [
       ...prev,
-      { ...data, date: selectedDate, id: prev.length + 1, status: "pending" },
+      { ...data, reservationDate: selectedDate, id: prev.length + 1, status: "PENDING" },
     ]);
     alert("예약이 신청되었습니다!");
   };
@@ -93,25 +116,24 @@ const MonthPage = () => {
           weekRow.push(
             <td
               key={`day-${currentDay}`}
-              className={`${styles.dayCell} ${isSelected ? styles.selected : ""} ${
-                isToday ? styles.today : ""
-              }`}
+              className={`${styles.dayCell} ${isSelected ? styles.selected : ""} ${isToday ? styles.today : ""
+                }`}
               onClick={() => setSelectedDate(dateStr)}
             >
               <div className={styles.dateNumber}>{currentDay}</div>
               <div className={styles.dotsContainer}>
                 {reservations
-                  .filter((r) => r.date === dateStr)
+                  .filter((r) => r.reservationDate === dateStr)
                   .slice(0, 2)
                   .map((r, index) => (
                     <div
                       key={`status-${r.id}`}
-                      className={r.status === "complete" ? styles.completeDot : styles.pendingDot}
+                      className={r.status === "APPROVED" ? styles.completeDot : styles.pendingDot}
                     ></div>
                   ))}
-                {reservations.filter((r) => r.date === dateStr).length > 2 && (
+                {reservations.filter((r) => r.reservationDate === dateStr).length > 2 && (
                   <span className={styles.extraDots}>
-                    +{reservations.filter((r) => r.date === dateStr).length - 2}
+                    +{reservations.filter((r) => r.reservationDate === dateStr).length - 2}
                   </span>
                 )}
               </div>
@@ -130,6 +152,9 @@ const MonthPage = () => {
 
     return calendar;
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className={styles.page}>
@@ -152,13 +177,13 @@ const MonthPage = () => {
           {/* Navigation */}
           <div className={styles.navigation}>
             <button onClick={() => handleMonthChange("prev")} className={styles.navButton}>
-            ❮
+              ❮
             </button>
             <span className={styles.navText}>
               {year} . {String(month + 1).padStart(2, "0")}
             </span>
             <button onClick={() => handleMonthChange("next")} className={styles.navButton}>
-            ❯
+              ❯
             </button>
           </div>
 
@@ -167,7 +192,7 @@ const MonthPage = () => {
             <div className={styles.statusLegend}>
               <div className={styles.statusItem}>
                 <div className={styles.completeDot}></div>
-                <span>예약 완료</span>
+                <span>예약 승인</span>
               </div>
               <div className={styles.statusItem}>
                 <div className={styles.pendingDot}></div>
