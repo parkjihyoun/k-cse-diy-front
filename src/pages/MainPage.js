@@ -10,7 +10,7 @@ const MainPage = () => {
   // API 호출 함수
   const fetchReservations = async () => {
     try {
-      const response = await fetch('application/reservation/closest'); // API 엔드포인트 호출
+      const response = await fetch('https://diy.knucse.site/api/v1/application/reservation/closest'); // API 엔드포인트 호출
       if (!response.ok) {
         throw new Error('Failed to fetch reservations');
       }
