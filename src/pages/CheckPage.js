@@ -65,6 +65,7 @@ const CheckPage = () => {
       {showPopup && (
         <div className={styles.popup}>
           <div className={styles.popupContent}>
+            <h2 className={styles.popupTitle}>경고</h2> {/* 경고 제목 추가 */}
             {popupMessage.split("\n").map((line, index) => (
               <p key={index}>{line}</p>
             ))}

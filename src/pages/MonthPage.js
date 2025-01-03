@@ -12,9 +12,11 @@ const MonthPage = () => {
   const [selectedView, setSelectedView] = useState("Month");
   const [selectedDate, setSelectedDate] = useState(todayStr); // 오늘 날짜로 초기화
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
+
   const [reservations, setReservations] = useState([]); // 예약 데이터 상태
   const [loading, setLoading] = useState(false); // 로딩 상태
   const [error, setError] = useState(null); // 에러 상태
+
 
   const navigate = useNavigate();
 
@@ -88,9 +90,17 @@ const MonthPage = () => {
   const handleSaveReservation = (data) => {
     setReservations((prev) => [
       ...prev,
+
       { ...data, reservationDate: selectedDate, id: prev.length + 1, status: "PENDING" },
+
     ]);
     alert("예약이 신청되었습니다!");
+  };
+
+  const handleDateClick = (dateStr) => {
+    setSelectedDate(dateStr);
+    const filteredReservations = reservations.filter((r) => r.date === dateStr);
+    setSelectedReservations(filteredReservations);
   };
 
   const renderDays = () => {
@@ -116,9 +126,11 @@ const MonthPage = () => {
           weekRow.push(
             <td
               key={`day-${currentDay}`}
+
               className={`${styles.dayCell} ${isSelected ? styles.selected : ""} ${isToday ? styles.today : ""
                 }`}
               onClick={() => setSelectedDate(dateStr)}
+
             >
               <div className={styles.dateNumber}>{currentDay}</div>
               <div className={styles.dotsContainer}>
@@ -127,8 +139,10 @@ const MonthPage = () => {
                   .slice(0, 2)
                   .map((r, index) => (
                     <div
+
                       key={`status-${r.id}`}
                       className={r.status === "APPROVED" ? styles.completeDot : styles.pendingDot}
+
                     ></div>
                   ))}
                 {reservations.filter((r) => r.reservationDate === dateStr).length > 2 && (
@@ -219,6 +233,7 @@ const MonthPage = () => {
           <tbody>{renderDays()}</tbody>
         </table>
       </div>
+
       {isModalOpen && (
         <ReservationModal
           selectedDate={selectedDate}
@@ -226,6 +241,25 @@ const MonthPage = () => {
           handleSave={handleSaveReservation}
         />
       )}
+
+      <div className={styles.reservationDetails}>
+        <h3>{selectedDate} 예약 정보</h3>
+        {selectedReservations.length > 0 ? (
+          <ul className={styles.reservationList}>
+            {selectedReservations.map((res) => (
+              <li key={res.reservationNum} className={styles.reservationItem}>
+                <p>예약자 이름 | {res.name}</p>
+                <p>예약자 학번 | {res.studentId}</p>
+                <p>예약 정보 | {res.title}</p>
+                <p>예약 시간 | {res.time}</p>
+                <p>상태 | {res.status}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>예약이 없습니다.</p>
+        )}
+      </div>
     </div>
   );
 };

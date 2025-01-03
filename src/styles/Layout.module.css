@@ -26,8 +26,8 @@
 }
 
 .titleWrapperMobile {
-    top: 0px;
-    left: 15px;
+    top: 5px;
+    left: 20px;
     width: 100%;
 }
 
@@ -39,7 +39,7 @@
 }
 
 .titleMobile {
-    font-size: 20px;
+    font-size: 22px;
 }
 
 .line {
@@ -50,8 +50,8 @@
 }
 
 .lineMobile {
-    margin-top: 15px;
-    width: 35px;
+    margin-top: 12px;
+    width: 45px;
     height: 2px;
 }
 
