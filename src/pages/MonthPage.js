@@ -12,7 +12,7 @@ const MonthPage = () => {
   const [selectedView, setSelectedView] = useState("Month");
   const [selectedDate, setSelectedDate] = useState(todayStr); // 오늘 날짜로 초기화
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-
+const [selectedReservations, setSelectedReservations] = useState([]);
   const [reservations, setReservations] = useState([]); // 예약 데이터 상태
   const [loading, setLoading] = useState(false); // 로딩 상태
   const [error, setError] = useState(null); // 에러 상태
