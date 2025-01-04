@@ -6,6 +6,8 @@ const Header = () => {
     const [activeStyle, setActiveStyle] = useState({ left: 0, width: 0 });
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [submenuOpen, setSubmenuOpen] = useState(false); // 예약하기 하위 메뉴 상태
+    const [desktopDrawerOpen, setDesktopDrawerOpen] = useState(false); // 기본형 drawer 상태 추가
 
     // 화면 크기 변경 감지
     useEffect(() => {
@@ -29,6 +31,8 @@ const Header = () => {
     }, [location]);
 
     const toggleMenu = () => setMenuOpen(!menuOpen);
+    const toggleSubmenu = () => setSubmenuOpen(!submenuOpen); // 하위 메뉴 토글
+    const toggleDesktopDrawer = () => setDesktopDrawerOpen(!desktopDrawerOpen); // 기본형 drawer 토글
 
     return (
         <header style={styles.header}>
@@ -62,13 +66,34 @@ const Header = () => {
                                 </Link>
                             </li>
                             <li style={styles.drawerItem}>
-                                <Link
-                                    to="/month"
+                                <div
                                     style={styles.drawerLink}
-                                    onClick={() => setMenuOpen(false)}
+                                    onClick={toggleSubmenu} // 예약하기 클릭 시 하위 메뉴 토글
                                 >
                                     예약하기
-                                </Link>
+                                </div>
+                                {submenuOpen && (
+                                    <ul style={styles.submenuList}>
+                                        <li style={styles.submenuItem}>
+                                            <Link
+                                                to="/month"
+                                                style={styles.submenuLink}
+                                                onClick={() => setMenuOpen(false)}
+                                            >
+                                                Month
+                                            </Link>
+                                        </li>
+                                        <li style={styles.submenuItem}>
+                                            <Link
+                                                to="/week"
+                                                style={styles.submenuLink}
+                                                onClick={() => setMenuOpen(false)}
+                                            >
+                                                Week
+                                            </Link>
+                                        </li>
+                                    </ul>
+                                )}
                             </li>
                             <li style={styles.drawerItem}>
                                 <Link
@@ -115,9 +140,12 @@ const Header = () => {
                             </Link>
                         </li>
                         <li className="nav-item" style={styles.navItem}>
-                            <Link to="/month" style={styles.navLink}>
+                            <div
+                                style={styles.navLink}
+                                onClick={toggleDesktopDrawer} // 기본형 예약하기 클릭 시 drawer 열기
+                            >
                                 예약하기
-                            </Link>
+                            </div>
                         </li>
                         <li className="nav-item" style={styles.navItem}>
                             <Link to="/key" style={styles.navLink}>
@@ -135,6 +163,30 @@ const Header = () => {
                             </Link>
                         </li>
                     </ul>
+                    {desktopDrawerOpen && (
+                        <div style={styles.drawer}>
+                            <ul style={styles.drawerList}>
+                                <li style={styles.drawerItem}>
+                                    <Link
+                                        to="/month"
+                                        style={styles.drawerLink}
+                                        onClick={toggleDesktopDrawer}
+                                    >
+                                        Month
+                                    </Link>
+                                </li>
+                                <li style={styles.drawerItem}>
+                                    <Link
+                                        to="/week"
+                                        style={styles.drawerLink}
+                                        onClick={toggleDesktopDrawer}
+                                    >
+                                        Week
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+                    )}
                 </nav>
             )}
         </header>
@@ -174,14 +226,14 @@ const styles = {
         right: 0,
         width: '300px',
         height: '100%',
-        backgroundColor: '#fff', // 배경색 흰색
-        color: '#000', // 글자색 검정
+        backgroundColor: '#fff',
+        color: '#000',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'flex-start', // 위쪽 정렬
-        paddingTop: '100px', // 로고 아래 여백 확보
+        justifyContent: 'flex-start',
+        paddingTop: '100px',
         paddingRight: '20px',
-        paddingLeft: '20px', 
+        paddingLeft: '20px',
         boxShadow: '-2px 0 6px rgba(0, 0, 0, 0.3)',
         transition: 'transform 0.3s ease',
         zIndex: 1500,
@@ -190,17 +242,30 @@ const styles = {
         listStyle: 'none',
         padding: 0,
         margin: 0,
-        textAlign: 'right', 
+        textAlign: 'right',
     },
     drawerItem: {
         marginBottom: '20px',
         paddingBottom: '10px',
-        borderBottom: '1px solid rgba(0, 0, 0, 0.1)', // 구분선 색 옅게 설정
+        borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
     },
     drawerLink: {
-        color: '#000', // 글자색 검정
+        color: '#000',
         textDecoration: 'none',
         fontSize: '18px',
+    },
+    submenuList: {
+        listStyle: 'none',
+        margin: 0,
+        padding: '10px 0 0 20px',
+    },
+    submenuItem: {
+        marginBottom: '10px',
+    },
+    submenuLink: {
+        color: '#000',
+        textDecoration: 'none',
+        fontSize: '16px',
     },
     overlay: {
         position: 'fixed',
@@ -218,7 +283,6 @@ const styles = {
         listStyle: 'none',
         display: 'flex',
         gap: '20px',
-        padding: 0,
         margin: 0,
     },
     navItem: {},
