@@ -34,7 +34,7 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const formData = {
       studentName: e.target.name.value,
       studentNumber: e.target.studentId.value,
@@ -44,13 +44,19 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
       reason: e.target.reason.value,
       authCode: e.target.password.value,
     };
-
+  
+    // 시작 시간이 끝나는 시간보다 크거나 같은 경우 검증
+    if (formData.startTime >= formData.endTime) {
+      alert("예약 시간이 잘못 설정되었습니다. 시작 시간은 끝나는 시간보다 이전이어야 합니다!");
+      return;
+    }
+  
     // 인증번호 유효성 검사
     if (formData.authCode.length !== 4 || isNaN(Number(formData.authCode))) {
       alert("인증번호는 반드시 4자리 숫자여야 합니다!");
       return;
     }
-
+  
     try {
       const response = await fetch("https://diy.knucse.site/api/v1/application/reservation/create", {
         method: "POST",
@@ -59,7 +65,7 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
         },
         body: JSON.stringify(formData),
       });
-
+  
       if (response.ok) {
         const result = await response.json();
         alert("예약이 성공적으로 생성되었습니다!");
@@ -67,7 +73,27 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
         onClose(); // 모달 닫기
       } else {
         const errorData = await response.json();
-        alert(`예약 실패: ${errorData.message}`);
+        switch (response.status) {
+          case 404:
+            alert("학생을 찾을 수 없습니다. 이름과 학번을 확인해주세요 (code: STUDENT_NOT_FOUND)");
+            break;
+          case 409:
+            if (errorData.code === "RESERVATION_DUPLICATED") {
+              alert("시간이 중복되는 예약이 존재합니다. (code: RESERVATION_DUPLICATED)");
+            } else if (errorData.code === "DAILY_LIMIT_REACHED") {
+              alert("하루에 하나의 예약만 가능합니다. (code: DAILY_LIMIT_REACHED)");
+            }
+            break;
+          case 400:
+            if (errorData.code === "AUTHENTICATION_CODE_MUST_BE_4_DIGITS") {
+              alert("인증 코드는 4자리 숫자여야 합니다. (code: AUTHENTICATION_CODE_MUST_BE_4_DIGITS)");
+            } else if (errorData.code === "INVALID_RESERVATION_TIME") {
+              alert("예약 시간이 잘못 설정되었습니다. (code: INVALID_RESERVATION_TIME)");
+            }
+            break;
+          default:
+            alert(`예약 실패: ${errorData.message}`);
+        }
       }
     } catch (error) {
       alert(`예약 중 오류가 발생했습니다: ${error.message}`);
@@ -89,6 +115,10 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
               <input type="text" name="name" placeholder="이름을 입력하세요" required />
             </div>
             <div className={styles.inputGroup}>
+              <label>학번</label>
+              <input type="text" name="studentId" placeholder="ex) 2024XXXXXX" required />
+            </div>
+            <div className={styles.inputGroup}>
               <label>예약 시간</label>
               <div className={styles.timeGroup}>
                 <select name="startTime" required>{generateTimeOptions()}</select>
@@ -96,18 +126,14 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
                 <select name="endTime" required>{generateTimeOptions()}</select>
               </div>
             </div>
-            <div className={styles.inputGroup}>
-              <label>학번</label>
-              <input type="text" name="studentId" placeholder="ex) 2024XXXXXX" required />
-            </div>
             <div className={`${styles.inputGroup} ${styles.textareaGroup}`}>
               <label>예약 사유</label>
               <textarea
-  className={styles.textareaPlaceholder}
-  name="reason"
-  placeholder={`예약 사유를 구체적으로 적어주세요\nex) 창의융합설계 팀 프로젝트`}
-  required
-/>
+                className={styles.textareaPlaceholder}
+                name="reason"
+                placeholder={`예약 사유를 구체적으로 적어주세요\nex) 창의융합설계 팀 프로젝트`}
+                required
+              />
             </div>
             <div className={styles.inputGroup}>
               <label>비밀번호</label>
@@ -130,5 +156,3 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
 };
 
 export default ReservationModal;
-
-
