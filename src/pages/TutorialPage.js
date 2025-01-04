@@ -1,68 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styles from '../styles/TutorialPage.module.css';
-import mainImage from '../img/main.png'; // 첫 번째 이미지
-import calendarImage from '../img/calendar.png'; // 두 번째 이미지
-import calendarImage2 from '../img/calendar2.png'; // 세 번째 이미지
-import timeImage from '../img/time.png'; // 네 번째 이미지
+import React, { useState } from "react";
+import styles from "../styles/TutorialPage.module.css";
 
 const TutorialPage = () => {
-  const images = [mainImage, calendarImage, calendarImage2, timeImage]; // 이미지 배열
-  const [currentImageIndex, setCurrentImageIndex] = useState(0); // 현재 이미지 인덱스
-  const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate
-
-  useEffect(() => {
-    // 자동 전환 기능
-    if (currentImageIndex < images.length) {
-      const interval = setInterval(() => {
-        setCurrentImageIndex((prevIndex) => prevIndex + 1);
-      }, 3000);
-      return () => clearInterval(interval); // 컴포넌트 언마운트 시 정리
-    } else {
-      // 이미지 전환이 끝나면 HelpPage로 이동
-      navigate('/help');
-    }
-  }, [currentImageIndex, images.length, navigate]);
-
-  // 스킵 버튼 클릭 시 HelpPage로 이동
-  const handleSkip = () => {
-    navigate('/help');
-  };
-
-  // 특정 점 클릭 시 해당 이미지로 이동
-  const handleDotClick = (index) => {
-    setCurrentImageIndex(index);
-  };
+  const [isExpanded, setIsExpanded] = useState(false); // 열고 닫기 상태
 
   return (
-    <div className={styles.tutorialPage}>
-      {/* 점 표시 */}
-      <div className={styles.dotsContainer}>
-        {images.map((_, index) => (
-          <span
-            key={index}
-            className={`${styles.dot} ${
-              index === currentImageIndex ? styles.activeDot : ''
-            }`}
-            onClick={() => handleDotClick(index)} // 점 클릭 이벤트 핸들러
-          />
-        ))}
-      </div>
+    <div className={styles.RulePage}>
+      <div className={styles.RulesContainer}>
+        {/* 제목 클릭 시 열고 닫기 */}
+        <div className={styles.RulesHeader}>
+          <h2>예약 방법</h2>
+        </div>
+        {/* 열려 있을 때만 표시 */}
 
-      {/* 스킵 버튼 */}
-      <button className={styles.skipButton} onClick={handleSkip}>
-        Skip&gt;&gt;
-      </button>
-
-      {/* 이미지 전환 */}
-      <div className={styles.imageContainer}>
-        {currentImageIndex < images.length && (
-          <img
-            src={images[currentImageIndex]}
-            alt={`Slide ${currentImageIndex + 1}`}
-            className={styles.mainImage}
-          />
-        )}
+          <div className={styles.Rules}>
+            <ol>
+              <li>메인 페이지의 '지금 예약하기' 클릭(또는 상단 오른쪽의 예약 버튼 클릭)</li>
+              <li>달력에서 빈 시간과 날짜 확인 후 날짜 선택, 예약하기 버튼 클릭</li>
+              <li>이름과 학번, 예약 시간, 예약 사유를 작성합니다.</li>
+              <li>초기 비밀번호 설정 후 예약하기 클릭, 비밀번호는 예약 확인, 취소 시 필요하니 꼭 기억해 주세요.</li>
+              <li>해당 날짜의 예약 대기 표시가 예약 완료로 변경되면 예약 확정입니다.</li>
+            </ol>
+          </div>
       </div>
     </div>
   );

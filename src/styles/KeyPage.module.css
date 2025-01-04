@@ -350,7 +350,7 @@ body {
     width: 90%; /* 전체 화면의 90% 사용 */
     padding: 10px;
     height: 260px;
-    margin-top: 30px;
+    margin-top: 35px;
   }
 
   .roomTitle, .roomSubtitle, .lastUserTitle {
@@ -363,14 +363,15 @@ body {
   }
 
   .buttonContainer {
-    flex-direction: column; /* 버튼을 세로로 배치 */
-    width: 100%; /* 너비를 100%로 조정 */
+    flex-direction: row; /* 버튼을 세로로 배치 */
+    width:88%; /* 너비를 100%로 조정 */
     align-items: center;
   }
 
   .actionButton {
     width: 90%; /* 버튼 너비 조정 */
     margin-bottom: -2px; /* 버튼 간 간격 추가 */
+    
   }
 
   .modalContent, .ruleModalContent {
@@ -379,10 +380,12 @@ body {
   }
 
   .closeButton {
-    width: 100%; /* 닫기 버튼 너비를 조정 */
+    width: auto; /* 닫기 버튼 너비를 조정 */
+    align-self: center;
+    margin: 0 auto; 
   }
   .rules {
-    margin-top: 10px;
+    margin-bottom: 10px;
   
   }
   .page {
@@ -402,6 +405,7 @@ body {
 
   .statusCircle2 {
     margin-left: 20px;
+    margin-bottom: 2px;
   }
   .locationBox {
     margin-left: 20px;
@@ -413,6 +417,14 @@ body {
   }
   .ruleModalContent {
     padding-left: 30px;
+  }
+  .modalButtonContainer {
+    display: flex;
+    margin-top: 10px;
+    gap: 40px;
+    justify-content: center; /* 버튼을 가로 중앙 정렬 */
+    align-items: center; /* 버튼을 세로로도 정렬 */
+    justify-content: center;
   }
 
 }
