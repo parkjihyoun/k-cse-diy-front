@@ -17,7 +17,6 @@ const MonthPage = () => {
   const [loading, setLoading] = useState(false); // 로딩 상태
   const [error, setError] = useState(null); // 에러 상태
 
-
   const navigate = useNavigate();
 
   // 예약 데이터 가져오기
@@ -25,28 +24,33 @@ const MonthPage = () => {
     const fetchReservations = async () => {
       setLoading(true);
       setError(null);
-
+  
       try {
-        const response = await fetch(`https://diy.knucse.site/api/v1/application/reservation/date/${year}/${month + 1}`);
+        const response = await fetch(
+          `https://diy.knucse.site/api/v1/application/reservation/date/${year}/${month + 1}`
+        );
+  
         if (!response.ok) {
-          throw new Error("Failed to fetch reservations");
+          throw new Error("예약 정보를 가져오는데 실패했습니다.");
         }
-
+  
         const result = await response.json();
-        console.log(result); // 반환된 전체 데이터를 확인
+        console.log(result); // API 반환 데이터 확인
+  
+        // API 데이터가 존재하고 배열 형태일 때만 상태에 저장
         if (result.response && Array.isArray(result.response)) {
-          setReservations(result.response); // response 필드에서 예약 데이터를 추출
+          setReservations(result.response); // API 데이터를 그대로 상태에 저장
         } else {
-          setReservations([]); // response 필드가 없거나 데이터가 배열이 아닐 경우 빈 배열로 설정
+          setReservations([]); // 데이터가 없을 경우 빈 배열로 설정
         }
       } catch (err) {
-        setError(err.message);
+        setError(err.message); // 에러 메시지 저장
       } finally {
-        setLoading(false);
+        setLoading(false); // 로딩 상태 해제
       }
     };
-
-    fetchReservations();
+  
+    fetchReservations(); // 예약 데이터를 가져오는 함수 호출
   }, [year, month]);
 
   const handleMonthChange = (direction) => {
@@ -90,17 +94,20 @@ const MonthPage = () => {
   const handleSaveReservation = (data) => {
     setReservations((prev) => [
       ...prev,
-
       { ...data, reservationDate: selectedDate, id: prev.length + 1, status: "PENDING" },
-
     ]);
     alert("예약이 신청되었습니다!");
   };
 
   const handleDateClick = (dateStr) => {
     setSelectedDate(dateStr);
-    const filteredReservations = reservations.filter((r) => r.date === dateStr);
-    setSelectedReservations(filteredReservations);
+  
+    // 선택된 날짜에 맞는 예약 정보를 필터링
+    const filteredReservations = reservations.filter(
+      (r) => r.reservationDate === dateStr
+    );
+  
+    setSelectedReservations(filteredReservations); // 상태 업데이트
   };
 
   const renderDays = () => {
@@ -126,23 +133,18 @@ const MonthPage = () => {
           weekRow.push(
             <td
               key={`day-${currentDay}`}
-
-              className={`${styles.dayCell} ${isSelected ? styles.selected : ""} ${isToday ? styles.today : ""
-                }`}
-              onClick={() => setSelectedDate(dateStr)}
-
+              className={`${styles.dayCell} ${isSelected ? styles.selected : ""} ${isToday ? styles.today : ""}`}
+              onClick={() => handleDateClick(dateStr)}
             >
               <div className={styles.dateNumber}>{currentDay}</div>
               <div className={styles.dotsContainer}>
                 {reservations
                   .filter((r) => r.reservationDate === dateStr)
                   .slice(0, 2)
-                  .map((r, index) => (
+                  .map((r) => (
                     <div
-
                       key={`status-${r.id}`}
                       className={r.status === "APPROVED" ? styles.completeDot : styles.pendingDot}
-
                     ></div>
                   ))}
                 {reservations.filter((r) => r.reservationDate === dateStr).length > 2 && (
@@ -242,24 +244,24 @@ const MonthPage = () => {
         />
       )}
 
-      <div className={styles.reservationDetails}>
-        <h3>{selectedDate} 예약 정보</h3>
-        {selectedReservations.length > 0 ? (
-          <ul className={styles.reservationList}>
-            {selectedReservations.map((res) => (
-              <li key={res.reservationNum} className={styles.reservationItem}>
-                <p>예약자 이름 | {res.name}</p>
-                <p>예약자 학번 | {res.studentId}</p>
-                <p>예약 정보 | {res.title}</p>
-                <p>예약 시간 | {res.time}</p>
-                <p>상태 | {res.status}</p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>예약이 없습니다.</p>
-        )}
-      </div>
+<div className={styles.reservationDetails}>
+  <h3>{selectedDate} 예약 정보</h3>
+  {selectedReservations.length > 0 ? (
+    <ul className={styles.reservationList}>
+      {selectedReservations.map((res) => (
+        <li key={res.id} className={styles.reservationItem}>
+          <p>예약자 이름 | {res.studentName}</p>
+          <p>예약자 학번 | {res.studentNumber}</p>
+          <p>예약 사유 | {res.reason}</p>
+          <p>예약 시간 | {res.startTime} ~ {res.endTime}</p>
+          <p>상태 | {res.status}</p>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p>예약이 없습니다.</p>
+  )}
+</div>
     </div>
   );
 };
