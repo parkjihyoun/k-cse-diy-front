@@ -87,7 +87,7 @@
 .cardHeaderLeft {
   display: flex;
   align-items: center;
-  gap: 10px; 
+  gap: 8px; 
 }
 
 .cardHeader h3 {
@@ -100,11 +100,13 @@
   font-size: 24px;
   font-weight: bold; 
   color: white;
+  margin-left:0;
 }
 
 .time {
   font-size: 18px;
   margin-top: 5px; 
+  margin-left:0px;
   color: #e3e3e3;
 }
 
@@ -132,6 +134,7 @@
 .title {
   font-size: 16px;
   font-weight: bold;
+  margin:0;
   margin-top: auto; 
   color: #e3e3e3;
   overflow: hidden;
@@ -193,6 +196,10 @@
   margin-left: 40px;
 }
 
+p{
+  margin-left:10px;
+}
+
 .userInfo {
   font-weight: bold;
   font-size: 18px;
@@ -211,7 +218,7 @@
 }
 
 
-@media (max-width: 600px) {
+@media (max-width: 770px) {
   .page {
     margin-top: 0px; 
     padding: 20px; 
@@ -302,7 +309,7 @@
     font-size: 14px; 
     padding: 5px 10px; 
     border-radius: 5px; 
-    width: 80px;
+    width: 70px;
   }
 
   .header {

@@ -1,18 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import DatePicker from "react-datepicker";
+import { format } from "date-fns"; // date-fns를 사용해 요일을 대문자로 변환
 import "react-datepicker/dist/react-datepicker.css";
 import styles from "../styles/Modal.module.css";
-import editIcon from "../img/edit.png";
+
+// Custom Input 컴포넌트 정의
+const CustomDateInput = forwardRef(({ value, onClick }, ref) => {
+  // 날짜를 대문자로 변환
+  const formattedValue = value
+    ? value.replace(/Mon|Tue|Wed|Thu|Fri|Sat|Sun/g, (match) =>
+        match.toUpperCase()
+      )
+    : "날짜 선택";
+
+  return (
+    <button className={styles.customDateInput} onClick={onClick} ref={ref}>
+      {formattedValue}
+    </button>
+  );
+});
 
 const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
   const [authCodeInput, setAuthCodeInput] = useState("");
   const [step, setStep] = useState(type);
   const [editedReservation, setEditedReservation] = useState({
     date: reservation?.date ? new Date(reservation.date) : new Date(),
-    startTime: reservation?.startTime || reservation?.time?.split(" ~ ")[0] || "09:00",
-    endTime: reservation?.endTime || reservation?.time?.split(" ~ ")[1] || "10:00",
+    startTime: reservation?.startTime || reservation?.time?.split(" ~ ")[0] || "",
+    endTime: reservation?.endTime || reservation?.time?.split(" ~ ")[1] || "",
     title: reservation?.title || "",
   });
+
+  useEffect(() => {
+    if (reservation) {
+      setEditedReservation({
+        date: reservation.date ? new Date(reservation.date) : new Date(),
+        startTime: reservation.startTime || reservation.time?.split(" ~ ")[0] || "09:00",
+        endTime: reservation.endTime || reservation.time?.split(" ~ ")[1] || "10:00",
+        title: reservation.title || "",
+      });
+    }
+  }, [reservation]);
 
   const handleDateChange = (date) => {
     setEditedReservation({ ...editedReservation, date });
@@ -27,11 +54,15 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
   };
 
   const handleSaveClick = () => {
-    setStep("auth"); // 인증 화면으로 전환
+    if (editedReservation.startTime >= editedReservation.endTime) {
+      alert("시작 시간이 종료 시간보다 늦을 수 없습니다.");
+      return;
+    }
+    setStep("auth");
   };
 
   const handleAuthSubmit = () => {
-    const isAuthenticated = onAuthenticate(authCodeInput); // 인증번호 확인
+    const isAuthenticated = onAuthenticate(authCodeInput);
     if (isAuthenticated) {
       const updatedReservation = {
         ...reservation,
@@ -49,9 +80,9 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
 
   const generateTimeOptions = () => {
     const times = [];
-    for (let i = 0; i <= 24; i++) {
+    for (let i = 0; i < 24; i++) {
       times.push(`${String(i).padStart(2, "0")}:00`);
-      if (i < 24) times.push(`${String(i).padStart(2, "0")}:30`);
+      times.push(`${String(i).padStart(2, "0")}:30`);
     }
     return times;
   };
@@ -61,15 +92,13 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
       <div className={styles.modalContent}>
         {step === "edit" ? (
           <>
-            <h2 className={styles.modalTitle}>
-              예약 수정
-              <img src={editIcon} alt="Edit Icon" className={styles.editIcon} />
-            </h2>
+            <h2 className={styles.modalTitle}>예약 수정</h2>
             <div className={styles.inputGroup}>
               <DatePicker
                 selected={editedReservation.date}
                 onChange={handleDateChange}
-                dateFormat="yyyy-MM-dd"
+                dateFormat="yyyy-MM-dd EEE" // 요일 약어를 표시
+                customInput={<CustomDateInput />}
                 className={styles.inputedit}
                 placeholderText="날짜 선택"
               />
@@ -111,11 +140,11 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
               />
             </div>
             <div className={styles.actions}>
-              <button className={styles.saveBtn} onClick={handleSaveClick}>
-                저장
-              </button>
               <button className={styles.cancelBtn} onClick={onClose}>
                 취소
+              </button>
+              <button className={styles.saveBtn} onClick={handleSaveClick}>
+                저장
               </button>
             </div>
           </>
@@ -130,14 +159,11 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
               className={styles.input}
             />
             <div className={styles.actions}>
-              <button
-                className={styles.confirmBtn}
-                onClick={handleAuthSubmit}
-              >
-                확인
-              </button>
               <button className={styles.cancelBtn} onClick={onClose}>
                 취소
+              </button>
+              <button className={styles.confirmBtn} onClick={handleAuthSubmit}>
+                확인
               </button>
             </div>
           </>

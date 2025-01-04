@@ -13,7 +13,6 @@ const CheckListPage = () => {
   const [modalType, setModalType] = useState("edit");
   const [selectedReservation, setSelectedReservation] = useState(null);
   const [loading, setLoading] = useState(false); // 로딩 상태
-  const [error, setError] = useState(null); // 에러 상태
 
   const handleBackClick = () => {
     navigate("/check"); // /check 페이지로 이동
@@ -26,14 +25,18 @@ const CheckListPage = () => {
     return dayNames[dateObj.getDay()];
   };
 
+  // 날짜와 요일 포함한 포맷
+  const calculateDayWithDate = (date) => {
+    const day = calculateDay(date);
+    return `${date} (${day})`; // "YYYY-MM-DD (DAY)" 형식
+  };
+
   // API 호출 (fetch 사용)
   useEffect(() => {
     const fetchReservations = async () => {
       if (!name || !studentId) return; // 이름과 학번이 없으면 API 호출 안 함
       setLoading(true);
-      setError(null);
       try {
-        // API 호출
         const response = await fetch(
           `https://diy.knucse.site/api/v1/application/reservation/student/${name}/${studentId}`
         );
@@ -45,6 +48,8 @@ const CheckListPage = () => {
           reservationNum: res.id,
           date: res.reservationDate,
           day: calculateDay(res.reservationDate), // 요일 계산
+          startTime: res.startTime, // 시작 시간
+          endTime: res.endTime, // 종료 시간
           time: `${res.startTime} ~ ${res.endTime}`, // 시간 포맷팅
           title: res.reason,
           status: res.status,
@@ -54,21 +59,37 @@ const CheckListPage = () => {
         setReservations(reservationData); // 상태 업데이트
       } catch (err) {
         console.error(err);
-        setError("예약 정보를 불러오는 데 실패했습니다."); // 에러 메시지 설정
+        setReservations([]); // 에러 발생 시 빈 배열로 설정
       } finally {
         setLoading(false); // 로딩 종료
       }
     };
 
-
     fetchReservations(); // 함수 호출
   }, [name, studentId]); // name, studentId가 변경될 때 호출
+
+  const handleDeleteClick = (reservationNum) => {
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      setReservations((prev) =>
+        prev.filter((res) => res.reservationNum !== reservationNum)
+      );
+    }
+  };
+
+  const handleEditClick = (reservation) => {
+    setSelectedReservation({
+      ...reservation,
+      dateWithDay: calculateDayWithDate(reservation.date), // 날짜와 요일 추가
+    });
+    setModalType("edit");
+    setIsModalOpen(true);
+  };
 
   return (
     <div className={styles.page}>
       <div className={styles.header}>
         <p className={styles.userInfo}>
-          {name}{"\n"}{studentId} 님의 예약 정보
+          {name} 님의 예약 정보 {"\n"} | {studentId}
         </p>
         <div className={styles.legend}>
           <span className={styles.legendItem}>
@@ -87,18 +108,44 @@ const CheckListPage = () => {
       </div>
       {loading ? (
         <p>로딩 중...</p> // 로딩 중 메시지
-      ) : error ? (
-        <p className={styles.error}>{error}</p> // 에러 메시지 표시
       ) : reservations.length > 0 ? (
         <div className={styles.container}>
           <div className={styles.grid}>
             {reservations.map((reservation) => (
               <div key={reservation.reservationNum} className={styles.card}>
-                <p>날짜: {reservation.date}</p>
-                <p>요일: {reservation.day}</p>
-                <p>시간: {reservation.time}</p>
-                <p>제목: {reservation.title}</p>
-                <p>상태: {reservation.status}</p>
+                <div className={styles.cardHeader}>
+                  <div className={styles.cardHeaderLeft}>
+                    <h3>{reservation.date}</h3>
+                    <p className={styles.day}>{reservation.day}</p>
+                  </div>
+                  <span
+                    className={`${styles.statusCircle} ${
+                      reservation.status === "APPROVED"
+                        ? styles.approved
+                        : reservation.status === "PENDING"
+                        ? styles.pending
+                        : styles.rejected
+                    }`}
+                  />
+                </div>
+                <p className={styles.time}>{reservation.time}</p>
+                <div className={styles.titleAndActions}>
+                  <p className={styles.title}>{reservation.title}</p>
+                  <div className={styles.actions}>
+                    <button
+                      className={styles.editBtn}
+                      onClick={() => handleEditClick(reservation)}
+                    >
+                      수정
+                    </button>
+                    <button
+                      className={styles.deleteBtn}
+                      onClick={() => handleDeleteClick(reservation.reservationNum)}
+                    >
+                      삭제
+                    </button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -121,21 +168,51 @@ const CheckListPage = () => {
           onAuthenticate={(inputCode) =>
             String(inputCode) === String(selectedReservation?.authCode)
           }
-          onSave={(updatedReservation) => {
-            const updatedDay = calculateDay(updatedReservation.date);
-            setReservations((prev) =>
-              prev.map((res) =>
-                res.reservationNum === updatedReservation.reservationNum
-                  ? {
-                    ...res,
-                    ...updatedReservation,
-                    day: updatedDay,
-                    status: "대기",
-                  }
-                  : res
-              )
-            );
-            setIsModalOpen(false);
+          onSave={async (updatedReservation) => {
+            try {
+              const response = await fetch(
+                `https://diy.knucse.site/api/v1/application/reservation/update/${updatedReservation.reservationNum}`,
+                {
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    date: updatedReservation.date,
+                    startTime: updatedReservation.startTime,
+                    endTime: updatedReservation.endTime,
+                    reason: updatedReservation.title,
+                  }),
+                }
+              );
+          
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+          
+              const updatedData = await response.json();
+          
+              // 로컬 상태 갱신
+              setReservations((prev) =>
+                prev.map((res) =>
+                  res.reservationNum === updatedData.id
+                    ? {
+                        ...res,
+                        date: updatedData.reservationDate,
+                        day: calculateDay(updatedData.reservationDate),
+                        startTime: updatedData.startTime,
+                        endTime: updatedData.endTime,
+                        title: updatedData.reason,
+                        status: "PENDING", // 수정 후 기본 상태는 "대기"
+                      }
+                    : res
+                )
+              );
+              setIsModalOpen(false);
+            } catch (error) {
+              console.error("Reservation update failed:", error);
+              alert("예약 수정에 실패했습니다. 다시 시도해주세요.");
+            }
           }}
           onClose={() => setIsModalOpen(false)}
         />
