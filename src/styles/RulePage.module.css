@@ -52,8 +52,17 @@
   .Rules {
     margin-top: 40px;
     padding: 30px;
+
     font-size: 16px; /* 글꼴 크기 조정 */
     align-items: center;
+  }
+
+.penalty {
+    padding: 30px;
+
+    font-size: 16px; /* 글꼴 크기 조정 */
+    align-items: center;
+    margin-top: -40px;
   }
 
 .penalty {
@@ -84,4 +93,6 @@
     margin-top: -10px;
     margin-bottom: 20px;
   }
+
 }
+
