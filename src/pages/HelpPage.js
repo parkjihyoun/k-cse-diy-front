@@ -15,7 +15,7 @@ const HelpPage = () => {
   return (
     <div className={styles.helppage}> {/* styles.클래스명으로 참조 */}
         <div className={styles.tutorial}>
-          <button className={styles.helpButton} onClick={handleNavigateToTutorial}>예약 방법</button>
+          <button className={styles.helpButton} onClick={handleNavigateToTutorial}>예약 방법 및 FAQ</button>
        </div>
        <div className={styles.rule}>
           <button className={styles.helpButton} onClick={handleNavigateToRule}>사용 규칙</button>
