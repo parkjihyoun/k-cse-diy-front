@@ -16,7 +16,7 @@ body {
 .label {
   font-size: 14px;
   color: #ffffff; /* 텍스트 색상 */
-  margin-bottom: 5px; /* 입력 상자와의 간격 */ 
+  margin-bottom: 15px; /* 입력 상자와의 간격 */ 
 }
 /*규칙*/
 .rules {
@@ -25,6 +25,7 @@ body {
   border-bottom: 0.3px solid #ffffff;
   cursor: pointer; /* 마우스 커서를 포인터로 변경 */
   margin-top: 20px;
+  margin-bottom: 20px;
 
 }
 .rules:hover {
