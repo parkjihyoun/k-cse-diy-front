@@ -28,6 +28,10 @@
   background: none;
 }
 
+.navButton img {
+  width: 8px;
+}
+
 .navText {
   font-size: 30px;
   font-weight: bold;
@@ -71,6 +75,72 @@
   border-radius: 50%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
+
+
+
+.dateContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  margin-top: 20px;
+  color: white;
+  font-size: 12px;
+}
+
+.dateItem {
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.dateItem.selected {
+  background-color: rgba(255, 255, 255, 0.3); /* 선택된 날짜 배경 강조 */
+  font-weight: bold;
+}
+
+.dateItem.today {
+  border: 0.5px solid #fff;
+  font-weight: bold;
+}
+
+.timelineContainer {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  grid-template-columns: repeat(3, 1fr); /* 3일 표시 */
+  width: 100%;
+  gap: 0px;
+  margin-top: 20px;
+  color: white;
+  font-size: 14px;
+  padding-left: 60px;
+  padding-right: 30px;
+}
+
+
+
+.timelineItem {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+}
+
+.timelineItem.timelineToday {
+}
+
+.timelineDate {
+  display: block;
+}
+
 
 .weekDaysContainer {
   display: flex;
@@ -354,11 +424,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center; /* 전체 헤더 가운데 정렬 */
-    padding-left: 115px;
+    padding-left: 100px;
   }
 
   .navText {
-    font-size: 20px;
+    font-size: 22px;
     color: white;
     text-align: center; /* 텍스트 중앙 정렬 */
     margin-top: 0px; /* 텍스트와 버튼 사이 간격 */
@@ -497,6 +567,10 @@
   .navButton {
     padding: 5px;
     font-size: 12px;
+  }
+
+  .navButton img {
+    width: 8px;
   }
 
   .dateHeader {
