@@ -24,6 +24,11 @@
     color: #ffffff;
     margin-bottom: 20px;
   }
+
+  .inputGroup button{
+    width:300px;
+    border:none;
+  }
   
   .input {
     width: 300px;
@@ -87,8 +92,7 @@
     margin-top:20px;
     background: transparent;
     color: #ffffff;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 16px;
     border: none;
     text-align: center;
   }

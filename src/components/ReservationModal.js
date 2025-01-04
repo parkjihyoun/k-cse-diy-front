@@ -75,20 +75,20 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
         const errorData = await response.json();
         switch (response.status) {
           case 404:
-            alert("학생을 찾을 수 없습니다. 이름과 학번을 확인해주세요 (code: STUDENT_NOT_FOUND)");
+            alert("학생을 찾을 수 없습니다. 이름과 학번을 확인해주세요. ");
             break;
           case 409:
             if (errorData.code === "RESERVATION_DUPLICATED") {
-              alert("시간이 중복되는 예약이 존재합니다. (code: RESERVATION_DUPLICATED)");
+              alert("시간이 중복되는 예약이 존재합니다. ");
             } else if (errorData.code === "DAILY_LIMIT_REACHED") {
-              alert("하루에 하나의 예약만 가능합니다. (code: DAILY_LIMIT_REACHED)");
+              alert("하루에 하나의 예약만 가능합니다. ");
             }
             break;
           case 400:
             if (errorData.code === "AUTHENTICATION_CODE_MUST_BE_4_DIGITS") {
-              alert("인증 코드는 4자리 숫자여야 합니다. (code: AUTHENTICATION_CODE_MUST_BE_4_DIGITS)");
+              alert("인증 코드는 4자리 숫자여야 합니다. ");
             } else if (errorData.code === "INVALID_RESERVATION_TIME") {
-              alert("예약 시간이 잘못 설정되었습니다. (code: INVALID_RESERVATION_TIME)");
+              alert("예약 시간이 잘못 설정되었습니다. 시작 시간은 끝나는 시간보다 이전이어야 합니다.");
             }
             break;
           default:
@@ -136,9 +136,9 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
               />
             </div>
             <div className={styles.inputGroup}>
-              <label>비밀번호</label>
+              <label>인증번호</label>
               <input type="password" name="password" placeholder="네 자리를 입력해주세요" required />
-              <span className={styles.passwordHint}>비밀번호를 꼭 기억해 주세요!</span>
+              <span className={styles.passwordHint}>인증번호를 꼭 기억해 주세요!</span>
             </div>
           </div>
           <div className={styles.modalFooter}>
