@@ -52,7 +52,7 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
     }
 
     try {
-      const response = await fetch("https://diy.knucse.site/api/v1/application/reservation/create", {
+      const response = await fetch("application/reservation/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -103,14 +103,14 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
             <div className={`${styles.inputGroup} ${styles.textareaGroup}`}>
               <label>예약 사유</label>
               <textarea
-                className={styles.textareaPlaceholder}
-                name="reason"
-                placeholder={`예약 사유를 구체적으로 적어주세요\nex) 창의융합설계 팀 프로젝트`}
-                required
-              />
+  className={styles.textareaPlaceholder}
+  name="reason"
+  placeholder={`예약 사유를 구체적으로 적어주세요\nex) 창의융합설계 팀 프로젝트`}
+  required
+/>
             </div>
             <div className={styles.inputGroup}>
-              <label>인증번호</label>
+              <label>비밀번호</label>
               <input type="password" name="password" placeholder="네 자리를 입력해주세요" required />
               <span className={styles.passwordHint}>비밀번호를 꼭 기억해 주세요!</span>
             </div>
@@ -130,4 +130,5 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
 };
 
 export default ReservationModal;
+
 
