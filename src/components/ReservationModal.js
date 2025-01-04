@@ -52,7 +52,7 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
     }
 
     try {
-      const response = await fetch("application/reservation/create", {
+      const response = await fetch("https://diy.knucse.site/api/v1/application/reservation/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
