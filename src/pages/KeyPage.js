@@ -112,6 +112,7 @@ const KeyPage = () => {
         <div className={styles.ruleModal}>
           <div className={styles.ruleModalContent}>
             <h2>열쇠 대여 및 반납 규칙</h2>
+            <div className={styles.ruleModalContentOi}>
             <ol>
               <li> <strong>IT4호관 사무실 방문</strong></li>
               <li>사이트의 열쇠 대여/반납 페이지에서 <strong>열쇠 대여하기</strong> 클릭</li>
@@ -119,6 +120,7 @@ const KeyPage = () => {
               <li>사용 후 <strong>IT4호관 사무실에 열쇠 반납</strong></li>
               <li>열쇠 반납 후 열쇠 대여/반납 페이지에서 <strong>열쇠 반납하기</strong> 클릭</li>
             </ol>
+            </div>
             <button className={styles.actionButton} onClick={toggleRulesModal}>
               닫기
             </button>
@@ -131,22 +133,29 @@ const KeyPage = () => {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <h2>{actionType} 정보 입력</h2>
-            <label className={styles.label}>이름</label>
-            <input
-              type="text"
-              className={styles.input}
-              placeholder="이름을 입력하세요"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <label className={styles.label}>학번</label>
-            <input
-              type="text"
-              className={styles.input}
-              placeholder="학번을 입력하세요"
-              value={studentId}
-              onChange={(e) => setStudentId(e.target.value)}
-            />
+            <div className={styles.inputContainer}>
+  <label className={styles.label} htmlFor="name">이름</label>
+  <input
+    type="text"
+    id="name"
+    className={styles.input}
+    placeholder="이름을 입력하세요"
+    value={name}
+    onChange={(e) => setName(e.target.value)}
+  />
+</div>
+<div className={styles.inputContainer}>
+  <label className={styles.label} htmlFor="studentId">학번</label>
+  <input
+    type="text"
+    id="studentId"
+    className={styles.input}
+    placeholder="학번을 입력하세요"
+    value={studentId}
+    onChange={(e) => setStudentId(e.target.value)}
+  />
+</div>
+
             <div className={styles.modalButtonContainer}>
               <button className={styles.closeButton} onClick={handleSubmit}>
                 확인
