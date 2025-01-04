@@ -1,153 +1,153 @@
 .modalBackdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 
-  }
-  
-  .modalContent {
-    padding: 30px;
-    text-align: center;
-    
-  }
-  
-  h2 {
-    font-size: 30px;
-    font-weight: bold;
-    color: #ffffff;
-    margin-bottom: 20px;
-  }
+}
 
-  .inputGroup button{
-    width:300px;
-    border:none;
-  }
+.modalContent {
+  padding: 30px;
+  text-align: center;
   
-  .input {
-    width: 300px;
-    height: 45px;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1.3px solid #ffffff;
-    border-radius: 5px;
-    background: #000000;
-    color: #ffffff;
-    font-size: 16px;
-  }
-  
-  .input::placeholder {
-    color: #999999;
-  }
-  
-  .actions {
-    display: flex;
-    justify-content: space-between;
-    width: 300px;
-    margin-top: 20px;
-  }
-  
-  button {
-    padding: 10px 0;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 45%;
-    background: black;
-    color: white;
-    font-size: 16px;
-    border: 1.3px solid #ffffff; 
-    transition: background 0.3s, transform 0.3s;
-  }
-  
-  .confirmBtn:hover,
-  .saveBtn:hover {
-    background: #333;
-    transform: scale(1.0);
-  }
-  
-  .confirmBtn,
-  .cancelBtn,
-  .saveBtn {
-    background: black;
-    color: white;
-    border: 1.3px solid #ffffff; /* 개별 스타일 대신 공통 버튼 스타일 적용 */
-  }
+}
 
-  .cancelBtn:hover {
-    background: #c9302c;
-    transform: scale(1.0);
-  }
-  
-  .inputedit {
-    width: 300px;
-    height: 40px;
-    padding: 10px;
-    margin-bottom: 10px;
-    margin-top:20px;
-    background: transparent;
-    color: #ffffff;
-    font-size: 16px;
-    border: none;
-    text-align: center;
-  }
-  
-  .react-datepicker {
-    font-size: 14px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-  }
-  
-  .react-datepicker__header {
-    background-color: #444;
-    color: white;
-  }
-  
-  .react-datepicker__day--selected {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  .timeGroup {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    margin-top: 10px;
-  }
-  
-  .timeSelect {
-    width: 40%; 
-    height: 40px;
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    background: transparent;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    color: #ffffff;
-    text-align: center;
-    font-weight: 300;
-    appearance: none;
-  }
+h2 {
+  font-size: 30px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
 
-  .timeSeparator {
-    font-size: 16px;
-    font-weight: bold;
-    color: #ffffff; 
-    text-align: center;
-  }
+.inputGroup button{
+  width:300px;
+  border:none;
+}
 
-  .editIcon {
-    width: 33px; 
-    height: 33px;
-    margin-left: 5px; 
-    vertical-align: middle; 
-    margin-bottom:3px;
-  }
+.input {
+  width: 300px;
+  height: 45px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1.3px solid #ffffff;
+  border-radius: 5px;
+  background: #000000;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.input::placeholder {
+  color: #999999;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  width: 300px;
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 45%;
+  background: black;
+  color: white;
+  font-size: 16px;
+  border: 1.3px solid #ffffff; 
+  transition: background 0.3s, transform 0.3s;
+}
+
+.confirmBtn:hover,
+.saveBtn:hover {
+  background: #333;
+  transform: scale(1.0);
+}
+
+.confirmBtn,
+.cancelBtn,
+.saveBtn {
+  background: black;
+  color: white;
+  border: 1.3px solid #ffffff; /* 개별 스타일 대신 공통 버튼 스타일 적용 */
+}
+
+.cancelBtn:hover {
+  background: #c9302c;
+  transform: scale(1.0);
+}
+
+.inputedit {
+  width: 300px;
+  height: 40px;
+  padding: 10px;
+  margin-bottom: 10px;
+  margin-top:20px;
+  background: transparent;
+  color: #ffffff;
+  font-size: 16px;
+  border: none;
+  text-align: center;
+}
+
+.react-datepicker {
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.react-datepicker__header {
+  background-color: #444;
+  color: white;
+}
+
+.react-datepicker__day--selected {
+  background-color: #007bff;
+  color: white;
+}
+
+.timeGroup {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.timeSelect {
+  width: 40%; 
+  height: 40px;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  color: #ffffff;
+  text-align: center;
+  font-weight: 300;
+  appearance: none;
+}
+
+.timeSeparator {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff; 
+  text-align: center;
+}
+
+.editIcon {
+  width: 33px; 
+  height: 33px;
+  margin-left: 5px; 
+  vertical-align: middle; 
+  margin-bottom:3px;
+}

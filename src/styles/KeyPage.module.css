@@ -14,9 +14,9 @@ body {
 }
 
 .label {
-  align-self: flex-start; /* 레이블 왼쪽 정렬 */
   font-size: 14px;
-  margin-left: 30px;
+  color: #ffffff; /* 텍스트 색상 */
+  margin-bottom: 5px; /* 입력 상자와의 간격 */ 
 }
 /*규칙*/
 .rules {
@@ -24,7 +24,6 @@ body {
   color: #ffffff;
   border-bottom: 0.3px solid #ffffff;
   cursor: pointer; /* 마우스 커서를 포인터로 변경 */
-  background-color: #00000096;
   margin-top: 20px;
 
 }
@@ -37,7 +36,7 @@ body {
 .centerBox {
   width: 410px;
   padding: 25px;
-  margin-top: -50px;
+  margin-top: 50px;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
   color: white;
@@ -95,23 +94,18 @@ body {
   margin-bottom: -3px;
 }
 
-.item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  white-space: nowrap;
-  margin-bottom: 8px;
-}
-
 .checkkey {
   margin-top: 30px;
-  margin-right: 1310px;
+  position:absolute;
+  top:100px;
+  left:40px;
+  gap: 10px;
 }
 
 .separator {
   border: none; /* 기본 테두리를 제거 */
   height: 1px; /* 선의 두께 */
-  background: rgba(255, 255, 255, 0.8); /* 흰색 반투명 배경 */
+  background: rgba(69, 58, 58, 0.8); /* 흰색 반투명 배경 */
   width: 100%; /* 선의 길이를 부모 요소에 맞춤 */
   margin: 15px 0; /* 위아래 간격 설정 */
 }
@@ -122,6 +116,7 @@ body {
   border-radius: 50%; /* 원 모양 */
   display: inline-block; /* 크기를 유지하며 인라인 요소로 처리 */
   margin-left: 10px; /* 텍스트와의 간격 */
+
 }
 
 .textWithCircle {
@@ -129,6 +124,7 @@ body {
   justify-content: flex-end; /* 오른쪽 정렬 */
   align-items: center; /* 수직 가운데 정렬 */
   width: 100%; /* 부모 요소 전체를 차지 */
+  margin-bottom: 5px;
 }
 .statusCircle2 {
   width: 15px;
@@ -136,7 +132,6 @@ body {
   border-radius: 50%; /* 원 모양 */
   display: inline-block; /* 인라인 블록으로 표시 */
   margin-left: 250px; /* 텍스트와의 간격 */
-  margin-bottom: 0; /* 아래 여백 초기화 */
 }
 
 .canlentCircle {
@@ -219,8 +214,9 @@ body {
   margin-bottom: 10px;
   color: #555;
 }
-
-
+.ruleModalContentOi {
+  margin-bottom: 20px;
+}
 .closeButton {
   display: inline-block;
   padding: 10px 20px;
@@ -272,6 +268,15 @@ body {
   font-weight: bold;
   text-align: center;
   margin-bottom: 20px;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column; /* 레이블과 입력 상자를 세로로 배치 */
+  align-items: flex-start; /* 왼쪽 정렬 */
+  margin-bottom: 20px; /* 컨테이너 간 간격 */
+  width: 100%; /* 반응형을 위한 너비 설정 */
+  max-width: 300px; /* 최대 너비 설정 */
 }
 
 /* 입력 필드 */
@@ -340,17 +345,17 @@ body {
     flex-direction:column; /* 가로 방향으로 아이템을 배열 */
     justify-content: center; /* 아이템을 중앙에 배치 */
     width: 100%; /* 전체 너비를 사용 */
-    margin-right: 0; /* 오른쪽 마진 제거 */
-    margin-bottom: -20px; /* 하단 여백 추가 */
-    margin-right: 42px;
-  }
+    padding-right: 80px; /* 오른쪽 마진 제거 */
+    margin-top: -65px;
+    gap: 0px;
 
+  }
 
   .centerBox {
     width: 90%; /* 전체 화면의 90% 사용 */
     padding: 10px;
     height: 260px;
-    margin-top: 35px;
+    margin-top: 135px;
   }
 
   .roomTitle, .roomSubtitle, .lastUserTitle {
@@ -369,8 +374,9 @@ body {
   }
 
   .actionButton {
-    width: 90%; /* 버튼 너비 조정 */
+    width: 95%; /* 버튼 너비 조정 */
     margin-bottom: -2px; /* 버튼 간 간격 추가 */
+    margin-top: -5px;
     
   }
 
@@ -393,7 +399,7 @@ body {
   }
 
 .roomTitle {
-  margin-top: 8px;
+  margin-top: 5px;
   margin-left: 20px;
 }
   .roomSubtitle,
@@ -403,9 +409,20 @@ body {
     margin-left: 20px;
   }
 
+  .statusCircle {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%; /* 원 모양 */
+    display: inline-block; /* 크기를 유지하며 인라인 요소로 처리 */
+    margin-left: 8px; /* 텍스트와의 간격 */
+    
+  }
+
   .statusCircle2 {
+    width: 13px;
+    height: 13px;
     margin-left: 20px;
-    margin-bottom: 2px;
+    margin-bottom: 5px;
   }
   .locationBox {
     margin-left: 20px;
@@ -427,5 +444,5 @@ body {
     justify-content: center;
   }
 
-}
 
+}

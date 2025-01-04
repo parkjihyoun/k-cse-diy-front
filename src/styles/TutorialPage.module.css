@@ -1,107 +1,109 @@
-.Rules {
+.RulePage {
+  display: flex; /* 가로 배열 */
+  justify-content: space-between; /* 간격 균등 배치 */
+  align-items: stretch; /* 높이를 동일하게 조정 */
+  gap: 20px; /* 컨테이너 간격 */
+  padding: 20px; /* 여백 추가 */
+}
+
+.Rules
+.Edit
+.Faq {
   margin-top: 15px;
-  padding-left: 20px; /* 내부 여백 */
+  padding-left: 10px; /* 내부 여백 */
   font-size: 16px;
   line-height: 1.5;
   color: #ffffff;
 }
 
-.RulesContainer {
-  background-color: rgba(207, 207, 207, 0.507); /* 배경색 */
-  padding: 25px; /* 내부 여백 */
-  border-radius: 5px; /* 모서리를 둥글게 */
-  margin: 20px; /* 외부 여백 */
-  margin-top: 120px;
+.RulesContainer,
+.EditContainer,
+.FaqContainer {
+  background-color: rgba(255, 255, 255, 0.2); /* 배경색 */
+  width: 100%;
+  margin-top: 100px;
+  flex: 1;
+  padding: 10px;
+  padding-left: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
-  cursor: pointer; /* 클릭 가능하도록 */
+  flex-direction: column;
+  justify-content: space-between; 
 }
 
-.RulesHeader {
+
+.RulesHeader h2,
+.EditHeader h2,
+.FaqHeader h2 {
   display: flex;
-  justify-content: space-between; /* 제목과 화살표 간격 조정 */
-  align-items: center; /* 수직 정렬 */
-}
-
-.arrow {
-  font-size: 16px;
+  align-items: center; /* 수직 정렬 (중앙) */
+  justify-content: center; /* 가로 정렬 (중앙) */
+  text-align: center; /* 텍스트 가운데 정렬 */
+  margin-top: 20px;
+  margin-bottom: 40px;
+  font-size: 25px; /* 글씨 크기 */
   color: #ffffff;
 }
-
-.RulesHeader h2 {
-  margin: 0; /* 여백 제거 */
-  font-size: 20px; /* 글씨 크기 */
-  color: #ffffff;
+.FaqSHeader h2 {
+  font-size: 18px; /* 글씨 크기 */
+  margin-bottom: 5px;
+  margin-left: 10px;
 }
-.Rules li {
-  margin-bottom: 10px; /* 규칙들 사이의 간격 */
+
+.Rules li,
+.Edit li{
+  margin-bottom: 20px; /* 규칙들 사이의 간격 */
+  margin-left: 15px;
   line-height: 1.6; /* 줄 간격 */
+  list-style-type: none;
 }
-
-.penalty h2 {
-  font-size: 24px;
-  margin-top: 15px;
-  margin-left: -40px;
-  color: #d99c9c;
-}
-
-.penalty {
-  margin-left: 80px;
-  font-size: 18px;
-  line-height: 1.5;
-  color: #d99c9c;
-  font-weight: 500;
-}
-
-.penalty li {
-  margin-top: 10px; /* 규칙들 사이의 간격 */
+.Faq li {
+  margin-bottom: 25px; /* 규칙들 사이의 간격 */
+  margin-left: 15px;
   line-height: 1.6; /* 줄 간격 */
-  font-weight: 700;
-  width: 1000px; /* 너비 조정 필요 */
-  list-style-type: none; /* 동그라미 제거 */
-  margin: 0; /* 필요에 따라 여백 조정 */
-  padding: 0;
+  list-style-type: none;
 }
 
-.line {
-  width: 50px;
-  height: 4px;
-  background-color: #d99c9c;
-  margin-left: -40px;
-  margin-top: -5px;
-}
-
-.penaltyTitle {
-  margin-bottom: 20px;
-}
-
-/* 모바일 장치를 위한 미디어 쿼리 */
 @media (max-width: 600px) {
-  .Rules, .penalty {
-    padding-left: 30px; /* 패딩 조정 */
-    padding-right: 20px;
-    font-size: 16px; /* 글꼴 크기 조정 */
-    align-items: center;
-    margin-top: -20px;
+  .RulePage {
+    flex-direction: column; /* 세로 배치 */
+    gap: 10px; /* 컨테이너 간격 축소 */
+    padding: 0; /* 전체 여백 제거 */
   }
 
-  .Rules li, .penalty li {
-    margin-bottom: 8px; /* 규칙 간격 조정 */
-    line-height: 1.4; /* 줄 간격 조정 */
+  .RulesContainer {
+    width: 100%; /* 화면 전체 너비 */
+    margin: 0; /* 외부 여백 제거 */
+    margin-top: 60px; /* 위쪽 여백 축소 */
   }
 
-  .penalty li {
-    width: auto; /* 너비 자동 조정 */
-    margin-bottom: 40px;
-    margin-top: 50px;
+  .EditContainer,
+  .FaqContainer {
+    width: 100%; /* 컨테이너 너비를 화면 전체로 설정 */
+    margin-top: 25px; /* 위쪽 여백 축소 */
   }
 
-  .penalty {
-    margin-left: 0; /* 왼쪽 마진 제거 */
-    margin-bottom: 20px;
+  .RulesHeader h2,
+  .EditHeader h2,
+  .FaqHeader h2 {
+    font-size: 22px; /* 제목 크기 축소 */
+    margin-top: 10px; /* 위쪽 여백 축소 */
+    margin-bottom: 20px; /* 아래쪽 여백 축소 */
   }
 
-  .line {
-    margin-left: 0; /* 선의 위치 조정 */
+  .FaqSHeader h2 {
+    font-size: 16px; /* FAQ 제목 크기 축소 */
+    margin-bottom: 5px;
+    margin-left: 10px;
+  }
+
+  .Rules li,
+  .Edit li {
+    font-size: 14px; /* 글씨 크기 축소 */
+    margin-bottom: 15px; /* 간격 축소 */
+    margin-left: 10px; /* 왼쪽 여백 축소 */
+  }
+
+  .FaqWrapper {
+    padding-left: 10px; /* FAQ 내부 여백 축소 */
   }
 }
-
