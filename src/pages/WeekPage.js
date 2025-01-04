@@ -49,34 +49,65 @@ const WeekPage = () => {
   const [isMobileView, setIsMobileView] = useState(false); // 모바일 뷰 상태
   const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 상태
   const [selectedReservation, setSelectedReservation] = useState(null); // 선택한 예약 정보
-  const [reservations, setReservations] = useState([
-    {
-      reservationNum: 1,
-      date: "2024-12-05",
-      day: "THU",
-      time: "12:00 ~ 13:30",
-      title: "산사랑 연극 연습",
-      status: "승인",
-      authCode: "1234",
-      name: "박지현",
-      studentId: "2023000001",
-    },
-    {
-      reservationNum: 2,
-      date: "2024-12-05",
-      day: "THU",
-      time: "16:30 ~ 17:30",
-      title: "동아리 회의",
-      status: "승인",
-      authCode: "5678",
-      name: "홍길동",
-      studentId: "2023000002",
-    },
-  ]);
-
+  const [reservations, setReservations] = useState([]);
   const [centeredWeekDates, setCenteredWeekDates] = useState(
     getWeekDates(currentDate, isMobileView)
   );
+
+
+  // API 호출
+  useEffect(() => {
+    const fetchReservations = async () => {
+      let url = "";
+      let targetDate = isMobileView ? new Date(selectedDate) : new Date(currentDate);
+  
+      if (isMobileView) {
+        // 반응형일 때
+        const year = targetDate.getFullYear();
+        const month = String(targetDate.getMonth() + 1).padStart(2, "0");
+        const day = String(targetDate.getDate()).padStart(2, "0");
+        url = `https://diy.knucse.site/api/v1/application/reservation/limit/${year}/${month}/${day}?minusDay=1&plusDay=1`;
+      } else {
+        // 큰 화면일 때
+        const startOfWeek = getStartOfWeek(targetDate); // 주의 시작일 (일요일)
+        const year = startOfWeek.getFullYear();
+        const month = String(startOfWeek.getMonth() + 1).padStart(2, "0");
+        const day = String(startOfWeek.getDate()).padStart(2, "0");
+        url = `https://diy.knucse.site/api/v1/application/reservation/limit/${year}/${month}/${day}?minusDay=0&plusDay=6`;
+      }
+  
+      console.log("API 호출 URL:", url);
+  
+      try {
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error("예약 데이터를 가져오는 데 실패했습니다.");
+        }
+  
+        const data = await response.json();
+        console.log("API 응답 데이터:", data);
+  
+        if (data.response && Array.isArray(data.response)) {
+          setReservations(data.response);
+        } else {
+          console.error("API 응답 형식이 올바르지 않습니다:", data);
+          setReservations([]);
+        }
+      } catch (error) {
+        console.error("API 호출 오류:", error);
+        setReservations([]);
+      }
+    };
+  
+    fetchReservations();
+  }, [currentDate, selectedDate, isMobileView]);
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -98,7 +129,10 @@ const WeekPage = () => {
     }
   }, [currentDate, isMobileView]);
 
-
+  const formatTime = (time) => {
+    const [hours, minutes] = time.split(":"); // 시간과 분만 추출
+    return `${hours}:${minutes}`; // HH:mm 형식으로 반환
+  };
 
 
   const handleOpenModal = () => {
@@ -160,9 +194,9 @@ const WeekPage = () => {
 
   const handleDateSelect = (date) => {
     if (!(date instanceof Date)) {
-      date = new Date(date); // Ensure date is a Date object
+      date = new Date(date);
     }
-    setSelectedDate(new Date(date.getTime())); // Update the selected date
+    setSelectedDate(date);
   };
 
 
@@ -172,29 +206,29 @@ const WeekPage = () => {
 
 
   const convertTimeToPosition = (time) => {
-    const rowHeight = isMobileView ? 40 : 50; // 반응형 여부에 따라 높이 결정
-    const startHour = 9; // 시작 시간 기준 (9:00 AM)
-
+    const rowHeight = isMobileView ? 50 : 50; // 반응형 여부에 따라 높이 결정
+    const startHour = 0; // 시작 시간 기준 (0:00 AM)
+  
     const [start, end] = time.split(" ~ ");
     const [startHourNum, startMinute] = start.split(":").map(Number);
     const [endHourNum, endMinute] = end.split(":").map(Number);
-
+  
     // 시작 시간 위치 계산
     const top =
       (startHourNum - startHour) * rowHeight +
-      (startMinute / 60) * rowHeight + 15;
-
-    // 지속 시간 계산
+      (startMinute / 60) * rowHeight + 20;
+  
+    // 지속 시간 계산 (분 단위)
     const durationInMinutes =
       (endHourNum - startHourNum) * 60 + (endMinute - startMinute);
-    const height = (durationInMinutes / 60) * rowHeight;
-
-    return { top, height };
+    const height = (durationInMinutes / 60) * rowHeight - 5;
+  
+    return { top, height, durationInMinutes };
   };
 
   const renderGrid = () => {
-    const hours = Array.from({ length: 24 }, (_, i) => (9 + i) % 24);
-
+    const hours = Array.from({ length: 24 }, (_, i) => i); // 0부터 23까지
+  
     return hours.map((hour) => (
       <div key={hour} className={styles.hourRow}>
         <span className={styles.hourLabel}>
@@ -207,37 +241,79 @@ const WeekPage = () => {
 
   const renderWeekColumns = () => {
     const displayedDates = isMobileView ? threeDays : centeredWeekDates;
-
+  
     return displayedDates.map((day, index) => {
       const dateString = day.toISOString().split("T")[0];
-      const dayReservations = reservations.filter((r) => r.date === dateString);
-
+      const dayReservations = reservations.filter(
+        (r) => r.reservationDate === dateString
+      );
+  
       const isSelected =
-        selectedDate &&
-        selectedDate.toISOString().split("T")[0] === dateString;
-
+        selectedDate && selectedDate.toISOString().split("T")[0] === dateString;
       const isToday = todayStr === dateString;
-
+  
       return (
         <div
           key={index}
-          className={`${styles.dayColumn} ${isSelected ? styles.selected : ""} ${isToday ? styles.today : ""
-            }`}
+          className={`${styles.dayColumn} ${isSelected ? styles.selected : ""} ${
+            isToday ? styles.today : ""
+          }`}
           onClick={() => setSelectedDate(day)}
         >
           <div className={styles.dayGrid}>
             {dayReservations.map((res) => {
-              const { top, height } = convertTimeToPosition(res.time);
+              const { top, height, durationInMinutes } = convertTimeToPosition(
+                `${res.startTime} ~ ${res.endTime}`
+              );
+  
+              const isThirtyMinutes = durationInMinutes === 30;
+  
               return (
                 <div
-                  key={res.reservationNum}
+                  key={res.id}
                   className={styles.reservationItem}
                   style={{ top: `${top}px`, height: `${height}px` }}
-                  onClick={() => handleOpenPopup(res)} // 클릭 핸들러 추가
+                  onClick={() => handleOpenPopup(res)}
                 >
-                  <span className={styles.reservationName}>{res.name}</span>
-                  <span className={styles.reservationTitle}>{res.title}</span>
-                  <span className={styles.reservationTime}>{res.time}</span>
+                  {isThirtyMinutes && (
+                    <div className={styles.reservationDetails}>
+                      <span className={styles.reservationName}>
+                        {res.studentName}
+                      </span>
+                      <span
+                        className={`${styles.statusCircle} ${
+                          res.status === "APPROVED"
+                            ? styles.statusComplete
+                            : styles.statusPending
+                        }`}
+                      ></span>
+                    </div>
+                  )}
+  
+                  {!isThirtyMinutes && (
+                    <>
+                      <div className={styles.reservationDetails}>
+                        <span className={styles.reservationName}>
+                          {res.studentName}
+                        </span>
+                        <span
+                          className={`${styles.statusCircle} ${
+                            res.status === "APPROVED"
+                              ? styles.statusComplete
+                              : styles.statusPending
+                          }`}
+                        ></span>
+                      </div>
+                      <span className={styles.reservationTitle}>
+                        {res.reason}
+                      </span>
+                      <span className={styles.reservationTime}>
+                        {`${formatTime(res.startTime)} ~ ${formatTime(
+                          res.endTime
+                        )}`}
+                      </span>
+                    </>
+                  )}
                 </div>
               );
             })}
@@ -259,20 +335,17 @@ const WeekPage = () => {
 
   const Popup = ({ reservation, onClose }) => {
     if (!reservation) return null;
-
+  
     return (
       <div className={styles.popupOverlay}>
         <div className={styles.popup}>
           <div className={styles.popupLabel}>예약 정보</div>
-          <p>
-            <div className={styles.popupName}>예약자 {reservation.name}</div>
-          </p>
-          <p>
-            <div className={styles.popupTitle}>예약 사유 {reservation.title}</div>
-          </p>
-          <p>
-            <div className={styles.popupTime}>예약 시간 {reservation.time}</div>
-          </p>
+          <div className={styles.popupContent}>
+            <p>예약자 이름 | <span>{reservation.studentName}</span></p>
+            <p>예약 사유 | <span>{reservation.reason}</span></p>
+            <p>예약 시간 | <span>{`${reservation.startTime} ~ ${reservation.endTime}`}</span></p>
+            <p>상태 | <span>{reservation.status}</span></p>
+          </div>
           <button className={styles.closeButton} onClick={onClose}>
             닫기
           </button>
