@@ -1,173 +1,68 @@
-import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // useNavigate 추가
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "../styles/CheckListPage.module.css";
 import Modal from "../components/Modal";
 
 const CheckListPage = () => {
   const location = useLocation();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const { name, studentId } = location.state || {}; // 전달받은 이름과 학번
 
-  const [reservations, setReservations] = useState([
-    {
-      reservationNum: 1,
-      date: "2024-11-14",
-      day: "THU",
-      time: "12:00 ~ 14:00",
-      title: "산사랑 연극 연습",
-      status: "승인",
-      authCode: "1234",
-      name: "박지현",
-      studentId: "2023000001",
-    },
-    {
-      reservationNum: 2,
-      date: "2024-11-14",
-      day: "THU",
-      time: "15:00 ~ 17:00",
-      title: "동아리 회의",
-      status: "대기",
-      authCode: "5678",
-      name: "최예윤",
-      studentId: "2023000002",
-    },
-    {
-      reservationNum: 3,
-      date: "2024-11-15",
-      day: "FRI",
-      time: "09:00 ~ 11:00",
-      title: "스터디 모임",
-      status: "승인",
-      authCode: "9101",
-      name: "최원아",
-      studentId: "2023000003",
-    },
-    {
-      reservationNum: 4,
-      date: "2024-11-16",
-      day: "SAT",
-      time: "14:00 ~ 16:00",
-      title: "프로젝트 회의",
-      status: "대기",
-      authCode: "0000",
-      name: "호예찬",
-      studentId: "2023000004",
-    },
-    {
-      reservationNum: 5,
-      date: "2024-11-17",
-      day: "SUN",
-      time: "10:00 ~ 12:00",
-      title: "운동 모임",
-      status: "승인",
-      authCode: "2222",
-      name: "박지현",
-      studentId: "2023000001",
-    },
-    {
-      reservationNum: 6,
-      date: "2024-11-18",
-      day: "MON",
-      time: "13:00 ~ 15:00",
-      title: "프로젝트 리뷰",
-      status: "대기",
-      authCode: "3333",
-      name: "최예윤",
-      studentId: "2023000002",
-    },
-    {
-      reservationNum: 7,
-      date: "2024-11-19",
-      day: "TUE",
-      time: "16:00 ~ 18:00",
-      title: "스터디 발표 준비",
-      status: "승인",
-      authCode: "4444",
-      name: "최원아",
-      studentId: "2023000003",
-    },
-    {
-      reservationNum: 8,
-      date: "2024-11-20",
-      day: "WED",
-      time: "11:00 ~ 13:00",
-      title: "팀 회의",
-      status: "대기",
-      authCode: "5555",
-      name: "호예찬",
-      studentId: "2023000004",
-    },
-    {
-      reservationNum: 9,
-      date: "2024-11-21",
-      day: "THU",
-      time: "08:00 ~ 10:00",
-      title: "아침 조깅",
-      status: "승인",
-      authCode: "6666",
-      name: "박지현",
-      studentId: "2023000001",
-    },
-    {
-      reservationNum: 10,
-      date: "2024-11-22",
-      day: "FRI",
-      time: "14:00 ~ 16:00",
-      title: "개발 스터디",
-      status: "대기",
-      authCode: "7777",
-      name: "최예윤",
-      studentId: "2023000002",
-    },
-    {
-      reservationNum: 11,
-      date: "2024-11-23",
-      day: "SAT",
-      time: "09:00 ~ 11:00",
-      title: "스터디 회의",
-      status: "승인",
-      authCode: "8888",
-      name: "최원아",
-      studentId: "2023000003",
-    },
-    {
-      reservationNum: 12,
-      date: "2024-11-24",
-      day: "SUN",
-      time: "10:00 ~ 12:00",
-      title: "독서 모임",
-      status: "대기",
-      authCode: "9999",
-      name: "호예찬",
-      studentId: "2023000004",
-    },
-  ]);
-
+  const [reservations, setReservations] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState("edit");
   const [selectedReservation, setSelectedReservation] = useState(null);
+  const [loading, setLoading] = useState(false); // 로딩 상태
+  const [error, setError] = useState(null); // 에러 상태
 
   const handleBackClick = () => {
     navigate("/check"); // /check 페이지로 이동
   };
+
+  // 날짜에 따라 요일 계산
   const calculateDay = (date) => {
     const dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
     const dateObj = new Date(date);
     return dayNames[dateObj.getDay()];
   };
 
-  React.useEffect(() => {
-    const updatedReservations = reservations.map((res) => ({
-      ...res,
-      day: calculateDay(res.date),
-    }));
-    setReservations(updatedReservations);
-  }, []);
+  // API 호출 (fetch 사용)
+  useEffect(() => {
+    const fetchReservations = async () => {
+      if (!name || !studentId) return; // 이름과 학번이 없으면 API 호출 안 함
+      setLoading(true);
+      setError(null);
+      try {
+        // API 호출
+        const response = await fetch(
+          `https://diy.knucse.site/api/v1/application/reservation/student/${name}/${studentId}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json(); // JSON 데이터 파싱
+        const reservationData = data.response.map((res) => ({
+          reservationNum: res.id,
+          date: res.reservationDate,
+          day: calculateDay(res.reservationDate), // 요일 계산
+          time: `${res.startTime} ~ ${res.endTime}`, // 시간 포맷팅
+          title: res.reason,
+          status: res.status,
+          name: res.studentName,
+          studentId: res.studentNumber,
+        }));
+        setReservations(reservationData); // 상태 업데이트
+      } catch (err) {
+        console.error(err);
+        setError("예약 정보를 불러오는 데 실패했습니다."); // 에러 메시지 설정
+      } finally {
+        setLoading(false); // 로딩 종료
+      }
+    };
 
-  const filteredReservations = reservations.filter(
-    (reservation) =>
-      reservation.name === name && reservation.studentId === studentId
-  );
+
+    fetchReservations(); // 함수 호출
+  }, [name, studentId]); // name, studentId가 변경될 때 호출
 
   return (
     <div className={styles.page}>
@@ -190,12 +85,20 @@ const CheckListPage = () => {
           </span>
         </div>
       </div>
-      {filteredReservations.length > 0 ? (
+      {loading ? (
+        <p>로딩 중...</p> // 로딩 중 메시지
+      ) : error ? (
+        <p className={styles.error}>{error}</p> // 에러 메시지 표시
+      ) : reservations.length > 0 ? (
         <div className={styles.container}>
           <div className={styles.grid}>
-            {filteredReservations.map((reservation) => (
+            {reservations.map((reservation) => (
               <div key={reservation.reservationNum} className={styles.card}>
-                {/* 예약 정보 카드 */}
+                <p>날짜: {reservation.date}</p>
+                <p>요일: {reservation.day}</p>
+                <p>시간: {reservation.time}</p>
+                <p>제목: {reservation.title}</p>
+                <p>상태: {reservation.status}</p>
               </div>
             ))}
           </div>
@@ -224,11 +127,11 @@ const CheckListPage = () => {
               prev.map((res) =>
                 res.reservationNum === updatedReservation.reservationNum
                   ? {
-                      ...res,
-                      ...updatedReservation,
-                      day: updatedDay,
-                      status: "대기",
-                    }
+                    ...res,
+                    ...updatedReservation,
+                    day: updatedDay,
+                    status: "대기",
+                  }
                   : res
               )
             );
