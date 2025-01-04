@@ -32,26 +32,46 @@ const generateTimeOptions = () => {
 const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
   const dayName = getDayName(selectedDate); // 요일 계산
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = {
-      name: e.target.name.value,
+      studentName: e.target.name.value,
+      studentNumber: e.target.studentId.value,
+      reservationDate: selectedDate,
       startTime: e.target.startTime.value,
       endTime: e.target.endTime.value,
-      studentId: e.target.studentId.value,
       reason: e.target.reason.value,
-      password: e.target.password.value,
+      authCode: e.target.password.value,
     };
 
     // 인증번호 유효성 검사
-    if (formData.password.length !== 4 || isNaN(Number(formData.password))) {
+    if (formData.authCode.length !== 4 || isNaN(Number(formData.authCode))) {
       alert("인증번호는 반드시 4자리 숫자여야 합니다!");
       return;
     }
 
-    handleSave(formData); // 부모 컴포넌트의 저장 함수 호출
-    onClose(); // 모달 닫기
+    try {
+      const response = await fetch("application/reservation/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        alert("예약이 성공적으로 생성되었습니다!");
+        handleSave(result.response); // 부모 컴포넌트의 저장 함수 호출
+        onClose(); // 모달 닫기
+      } else {
+        const errorData = await response.json();
+        alert(`예약 실패: ${errorData.message}`);
+      }
+    } catch (error) {
+      alert(`예약 중 오류가 발생했습니다: ${error.message}`);
+    }
   };
 
   return (
@@ -83,13 +103,14 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
             <div className={`${styles.inputGroup} ${styles.textareaGroup}`}>
               <label>예약 사유</label>
               <textarea
-                name="reason"
-                placeholder="예약 사유를 구체적으로 적어주세요&#10;ex)창의융합설계 팀 프로젝트"
-                required
-              />
+  className={styles.textareaPlaceholder}
+  name="reason"
+  placeholder={`예약 사유를 구체적으로 적어주세요\nex) 창의융합설계 팀 프로젝트`}
+  required
+/>
             </div>
             <div className={styles.inputGroup}>
-              <label>인증번호</label>
+              <label>비밀번호</label>
               <input type="password" name="password" placeholder="네 자리를 입력해주세요" required />
               <span className={styles.passwordHint}>비밀번호를 꼭 기억해 주세요!</span>
             </div>
@@ -109,3 +130,5 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
 };
 
 export default ReservationModal;
+
+

@@ -10,11 +10,12 @@
 
 .main {
     flex: 1;
+    flex-grow:1;
     display: flex;
     flex-direction: column;
     margin-top: 96px;
     position: relative;
-    padding: 0 20px; /* 페이지 내부에 여백 추가 */
+    padding: 0; /* 페이지 내부에 여백 추가 */
 }
 
 .titleWrapper {
@@ -25,8 +26,8 @@
 }
 
 .titleWrapperMobile {
-    top: 0px;
-    left: 15px;
+    top: 5px;
+    left: 20px;
     width: 100%;
 }
 
@@ -38,7 +39,7 @@
 }
 
 .titleMobile {
-    font-size: 18px;
+    font-size: 22px;
 }
 
 .line {
@@ -49,8 +50,8 @@
 }
 
 .lineMobile {
-    margin-top: 10px;
-    width: 35px;
+    margin-top: 12px;
+    width: 45px;
     height: 2px;
 }
 

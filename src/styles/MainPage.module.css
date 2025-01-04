@@ -85,18 +85,49 @@
 
 .status h3 {
     font-size: 20px;
+    font-weight: 700;
     margin-bottom: 10px;
 }
 
 .status p {
     font-size: 16px;
+    font-weight: 700;
     margin-bottom: 10px;
+    color: #ccc;
 }
 
 .statusinfoline {
     width: 200px;
     height: 1px;
-    background-color: #fff;
+    background-color: #ccc;
     margin: 20px auto 0;
     margin-bottom: 20px;
+}
+
+@media (max-width: 870px) {
+    .maintitle {
+        font-size: 5.7vw;
+    }
+    .mainsubtitle {
+        font-size: 4vw;
+    }
+    .mainbutton {
+        font-size: 15px;
+        padding: 10px;
+        width: 150px;
+        height: 40px;
+        margin-bottom: 200px;
+    }
+    .statustitle {
+        font-size: 20px;
+        margin-left: 15px;
+    }
+    .statusline {
+        margin-left: 15px;
+    }
+    .statusbox {
+        padding: 40px;
+        flex-direction: column;
+        gap: 50px;
+    }
 }

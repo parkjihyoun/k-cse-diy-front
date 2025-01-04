@@ -48,25 +48,25 @@ const KeyPage = () => {
     <div className={styles.page}>
       {/* 상태 표시 */}
       <div className={styles.checkkey}>
-  <div className={styles.item}>
-    <div className={styles.textWithCircle}>
-      <span className={styles.canlent}>대여가능</span>
-      <span className={`${styles.statusCircle} ${styles.canlentCircle}`} />
-    </div>
-  </div>
-  <div className={styles.item}>
-    <div className={styles.textWithCircle}>
-      <span className={styles.using}>대여중</span>
-      <span className={`${styles.statusCircle} ${styles.usingCircle}`} />
-    </div>
-  </div>
-  <div className={styles.item}>
-    <div className={styles.textWithCircle}>
-      <span className={styles.didntreturn}>미반납</span>
-      <span className={`${styles.statusCircle} ${styles.didntreturnCircle}`} />
-    </div>
-  </div>
-</div>
+        <div className={styles.item}>
+          <div className={styles.textWithCircle}>
+            <span className={styles.canlent}>대여가능</span>
+            <span className={`${styles.statusCircle} ${styles.canlentCircle}`} />
+          </div>
+        </div>
+        <div className={styles.item}>
+          <div className={styles.textWithCircle}>
+            <span className={styles.using}>대여중</span>
+            <span className={`${styles.statusCircle} ${styles.usingCircle}`} />
+          </div>
+        </div>
+        <div className={styles.item}>
+          <div className={styles.textWithCircle}>
+            <span className={styles.didntreturn}>미반납</span>
+            <span className={`${styles.statusCircle} ${styles.didntreturnCircle}`} />
+          </div>
+        </div>
+      </div>
 
 
 
@@ -74,14 +74,13 @@ const KeyPage = () => {
       <div className={styles.centerBox}>
         <h2 className={styles.roomTitle}>
           D.I.Y실
-          <span 
-            className={`${styles.statusCircle2} ${
-              status === "대여가능"
+          <span
+            className={`${styles.statusCircle2} ${status === "대여가능"
                 ? styles.canlentCircle
                 : status === "대여중"
-                ? styles.usingCircle
-                : styles.didntreturnCircle
-            }`} 
+                  ? styles.usingCircle
+                  : styles.didntreturnCircle
+              }`}
           />
         </h2>
         <p className={styles.roomSubtitle}>D.I.Y Room’s key</p>
@@ -106,7 +105,7 @@ const KeyPage = () => {
       </div>
       <div className={styles.rules} onClick={toggleRulesModal}>
         &lt;열쇠 대여 및 반납 규칙&gt;
-      </div> 
+      </div>
 
       {/* 규칙 모달 */}
       {showRules && (
@@ -162,5 +161,4 @@ const KeyPage = () => {
     </div>
   );
 };
-
 export default KeyPage;

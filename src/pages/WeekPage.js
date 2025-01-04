@@ -3,39 +3,52 @@ import { useNavigate } from "react-router-dom";
 import styles from "../styles/WeekPage.module.css";
 import ReservationModal from "../components/ReservationModal";
 import { getDayName } from "../components/ReservationModal";
+import next from '../img/next.png';
+import prev from '../img/prev.png';
+
 
 const WeekPage = () => {
   const navigate = useNavigate();
 
-  const getWeekDates = (date, isMobile) => {
-    if (isMobile) {
-      // 모바일: 오늘 날짜 중심으로 3일 계산
-      const todayIndex = 1; // 가운데에 오늘 날짜
-      const startDate = new Date(date);
-      startDate.setDate(date.getDate() - todayIndex);
-  
-      return Array.from({ length: 3 }, (_, i) => {
-        const newDate = new Date(startDate);
-        newDate.setDate(startDate.getDate() + i);
-        return newDate;
-      });
-    } else {
-      // 큰 화면: 일주일 계산
-      const startOfWeek = new Date(date);
-      startOfWeek.setDate(date.getDate() - date.getDay()); // 주 시작일: 일요일
-      return Array.from({ length: 7 }, (_, i) => {
-        const newDate = new Date(startOfWeek);
-        newDate.setDate(startOfWeek.getDate() + i);
-        return newDate;
-      });
+  const getStartOfWeek = (date) => {
+    const day = date.getDay();
+    const diff = date.getDate() - day; // Start from Sunday
+    return new Date(date.setDate(diff));
+  };
+
+  const getWeekDates = (date) => {
+    const startOfWeek = getStartOfWeek(new Date(date));
+    return Array.from({ length: 7 }, (_, i) => {
+      const newDate = new Date(startOfWeek);
+      newDate.setDate(startOfWeek.getDate() + i);
+      return newDate;
+    });
+  };
+
+  const getThreeDays = (date) => {
+    // Ensure the date is a Date object
+    if (!(date instanceof Date)) {
+      date = new Date(date); // Convert if not a Date object
     }
+  
+    const todayIndex = 1; // 오늘을 기준으로 왼쪽 하루, 오른쪽 하루 추가
+    const startDate = new Date(date);
+    startDate.setDate(date.getDate() - todayIndex);
+  
+    return Array.from({ length: 3 }, (_, i) => {
+      const newDate = new Date(startDate);
+      newDate.setDate(startDate.getDate() + i);
+      return newDate;
+    });
   };
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedView, setSelectedView] = useState("Week");
-  const [selectedDate, setSelectedDate] = useState(null); // 선택한 날짜 상태
+  const [selectedDate, setSelectedDate] = useState(new Date()); // 선택한 날짜 상태
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
   const [isMobileView, setIsMobileView] = useState(false); // 모바일 뷰 상태
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 상태
+  const [selectedReservation, setSelectedReservation] = useState(null); // 선택한 예약 정보
   const [reservations, setReservations] = useState([
     {
       reservationNum: 1,
@@ -59,78 +72,31 @@ const WeekPage = () => {
       name: "홍길동",
       studentId: "2023000002",
     },
-    {
-      reservationNum: 3,
-      date: "2024-12-06",
-      day: "FRI",
-      time: "10:00 ~ 11:30",
-      title: "스터디 모임",
-      status: "승인",
-      authCode: "9012",
-      name: "이영희",
-      studentId: "2023000003",
-    },
-    {
-      reservationNum: 4,
-      date: "2024-12-06",
-      day: "FRI",
-      time: "15:00 ~ 17:00",
-      title: "캡스톤 프로젝트 회의",
-      status: "승인",
-      authCode: "3456",
-      name: "최민수",
-      studentId: "2023000004",
-    },
-    {
-      reservationNum: 5,
-      date: "2024-11-30",
-      day: "SAT",
-      time: "09:00 ~ 10:00",
-      title: "헬스클럽 트레이닝",
-      status: "승인",
-      authCode: "7890",
-      name: "김수영",
-      studentId: "2023000005",
-    },
-    {
-      reservationNum: 6,
-      date: "2024-11-30",
-      day: "SAT",
-      time: "11:30 ~ 14:00",
-      title: "보컬 트레이닝",
-      status: "승인",
-      authCode: "6543",
-      name: "오하늘",
-      studentId: "2023000006",
-    },
-    {
-      reservationNum: 7,
-      date: "2024-11-24",
-      day: "SUN",
-      time: "18:00 ~ 20:30",
-      title: "영화 감상회",
-      status: "승인",
-      authCode: "4321",
-      name: "이지은",
-      studentId: "2023000007",
-    },
   ]);
 
   const [centeredWeekDates, setCenteredWeekDates] = useState(
     getWeekDates(currentDate, isMobileView)
   );
-  
+
   useEffect(() => {
     const handleResize = () => {
       const isMobile = window.innerWidth <= 600;
       setIsMobileView(isMobile);
-      setCenteredWeekDates(getWeekDates(currentDate, isMobile));
     };
-  
+
     handleResize(); // 초기 로드 시 실행
     window.addEventListener("resize", handleResize); // 리사이즈 이벤트 리스너 추가
     return () => window.removeEventListener("resize", handleResize); // 리스너 정리
-  }, [currentDate]);
+
+    setSelectedDate(new Date());
+  }, []);
+
+  // useEffect to update centeredWeekDates when currentDate changes
+  useEffect(() => {
+    if (!isMobileView) {
+      setCenteredWeekDates(getWeekDates(currentDate));
+    }
+  }, [currentDate, isMobileView]);
 
 
 
@@ -152,7 +118,7 @@ const WeekPage = () => {
       ...prev,
       {
         id: prev.length + 1,
-        date: selectedDate,
+        date: formatDateToLocalString(selectedDate),
         day: getDayName(selectedDate), // 요일
         time: `${data.startTime} ~ ${data.endTime}`, // 시간 범위
         title: data.reason, // 예약 사유
@@ -173,45 +139,62 @@ const WeekPage = () => {
     }
   };
 
-  const getStartOfWeek = (date) => {
-    const day = date.getDay();
-    const diff = date.getDate() - day; // Start from Sunday
-    return new Date(date.setDate(diff));
-  };
+  
 
   const startOfWeek = getStartOfWeek(new Date(currentDate));
-  const weekDates = Array.from({ length: isMobileView ? 3 : 7 }, (_, i) =>
-    new Date(startOfWeek).setDate(startOfWeek.getDate() + i)
-  );
+
+
+  const formatDateToLocalString = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
 
   const handleDateChange = (direction) => {
     const newDate = new Date(currentDate);
-    const daysToMove = isMobileView ? 3 : 7; // 모바일: 3일, 큰 화면: 7일
-    newDate.setDate(newDate.getDate() + direction * daysToMove);
+    newDate.setDate(newDate.getDate() + direction * 7); // 한 주씩 이동
     setCurrentDate(newDate);
-    setCenteredWeekDates(getWeekDates(newDate, isMobileView));
   };
-  
+
+  const handleDateSelect = (date) => {
+    if (!(date instanceof Date)) {
+      date = new Date(date); // Ensure date is a Date object
+    }
+    setSelectedDate(new Date(date.getTime())); // Update the selected date
+  };
+
+
+  const weekDates = getWeekDates(currentDate); // 주간 7일
+  const threeDays = getThreeDays(selectedDate || new Date());
+  const todayStr = new Date().toISOString().split("T")[0];
+
 
   const convertTimeToPosition = (time) => {
+    const rowHeight = isMobileView ? 40 : 50; // 반응형 여부에 따라 높이 결정
+    const startHour = 9; // 시작 시간 기준 (9:00 AM)
+
     const [start, end] = time.split(" ~ ");
-    const [startHour, startMinute] = start.split(":").map((t) => parseInt(t, 10));
-    const [endHour, endMinute] = end.split(":").map((t) => parseInt(t, 10));
-  
-    // Offset start time relative to 9:00 AM
-    const top = ((startHour - 9) * 50) + (startMinute / 60) * 50;
-  
-    // Calculate duration in minutes and convert to height
-    const durationInMinutes = (endHour - startHour) * 60 + (endMinute - startMinute);
-    const height = (durationInMinutes / 60) * 50;
-  
-    console.log(`Time: ${time}, Top: ${top}px, Height: ${height}px`);
+    const [startHourNum, startMinute] = start.split(":").map(Number);
+    const [endHourNum, endMinute] = end.split(":").map(Number);
+
+    // 시작 시간 위치 계산
+    const top =
+      (startHourNum - startHour) * rowHeight +
+      (startMinute / 60) * rowHeight + 15;
+
+    // 지속 시간 계산
+    const durationInMinutes =
+      (endHourNum - startHourNum) * 60 + (endMinute - startMinute);
+    const height = (durationInMinutes / 60) * rowHeight;
+
     return { top, height };
   };
 
   const renderGrid = () => {
     const hours = Array.from({ length: 24 }, (_, i) => (9 + i) % 24);
-    
+
     return hours.map((hour) => (
       <div key={hour} className={styles.hourRow}>
         <span className={styles.hourLabel}>
@@ -220,37 +203,37 @@ const WeekPage = () => {
       </div>
     ));
   };
-  
+
 
   const renderWeekColumns = () => {
-    const todayStr = new Date().toISOString().split("T")[0]; // 오늘 날짜 문자열
-  
-    return centeredWeekDates.map((day, index) => {
+    const displayedDates = isMobileView ? threeDays : centeredWeekDates;
+
+    return displayedDates.map((day, index) => {
       const dateString = day.toISOString().split("T")[0];
       const dayReservations = reservations.filter((r) => r.date === dateString);
-  
+
       const isSelected =
         selectedDate &&
-        new Date(selectedDate).toISOString().split("T")[0] === dateString;
-  
-      const isToday = todayStr === dateString; // 오늘 날짜인지 확인
-  
+        selectedDate.toISOString().split("T")[0] === dateString;
+
+      const isToday = todayStr === dateString;
+
       return (
         <div
           key={index}
-          className={`${styles.dayColumn} ${isSelected ? styles.selected : ""} ${
-            isToday ? styles.today : ""
-          }`}
-          onClick={() => setSelectedDate(dateString)} // Click handler
+          className={`${styles.dayColumn} ${isSelected ? styles.selected : ""} ${isToday ? styles.today : ""
+            }`}
+          onClick={() => setSelectedDate(day)}
         >
           <div className={styles.dayGrid}>
             {dayReservations.map((res) => {
-              const { top, height } = convertTimeToPosition(res.time); // 시간 위치 계산
+              const { top, height } = convertTimeToPosition(res.time);
               return (
                 <div
                   key={res.reservationNum}
                   className={styles.reservationItem}
                   style={{ top: `${top}px`, height: `${height}px` }}
+                  onClick={() => handleOpenPopup(res)} // 클릭 핸들러 추가
                 >
                   <span className={styles.reservationName}>{res.name}</span>
                   <span className={styles.reservationTitle}>{res.title}</span>
@@ -263,7 +246,41 @@ const WeekPage = () => {
       );
     });
   };
-  
+
+  const handleOpenPopup = (reservation) => {
+    setSelectedReservation(reservation);
+    setIsPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+    setSelectedReservation(null);
+  };
+
+  const Popup = ({ reservation, onClose }) => {
+    if (!reservation) return null;
+
+    return (
+      <div className={styles.popupOverlay}>
+        <div className={styles.popup}>
+          <div className={styles.popupLabel}>예약 정보</div>
+          <p>
+            <div className={styles.popupName}>예약자 {reservation.name}</div>
+          </p>
+          <p>
+            <div className={styles.popupTitle}>예약 사유 {reservation.title}</div>
+          </p>
+          <p>
+            <div className={styles.popupTime}>예약 시간 {reservation.time}</div>
+          </p>
+          <button className={styles.closeButton} onClick={onClose}>
+            닫기
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className={styles.page}>
       {/* 상단 버튼 */}
@@ -281,9 +298,10 @@ const WeekPage = () => {
       </div>
 
 
+      {/*년월 + status*/}
       <div className={styles.header}>
         <span className={styles.navText}>
-          {currentDate.getFullYear()} {currentDate.getMonth() + 1}
+          {currentDate.getFullYear()} . {currentDate.getMonth() + 1}
         </span>
 
         <div className={styles.statusLegend}>
@@ -299,13 +317,81 @@ const WeekPage = () => {
       </div>
 
 
-      {/* 날짜 */}
-      <div className={styles.weekDaysContainer}>
+      {isMobileView && (
+        <div className={styles.dateContainer}>
+          <button
+            onClick={() => handleDateChange(-1)}
+            className={styles.navButton}
+          >
+            <img src={prev} alt="prev" />
+          </button>
+          {weekDates.map((date, index) => {
+            const dateString = date.toISOString().split("T")[0];
+            const isToday = todayStr === dateString;
+            const isSelected =
+              selectedDate instanceof Date &&
+              selectedDate.toISOString().split("T")[0] === dateString;
+
+            return (
+              <div
+                key={index}
+                className={`${styles.dateItem} ${
+                  isToday ? styles.today : ""
+                } ${isSelected ? styles.selected : ""}`}
+                onClick={() => handleDateSelect(date)}
+              >
+                {date.toLocaleDateString("en-US", {
+                  day: "numeric",
+                  weekday: "short",
+                })}
+              </div>
+            );
+          })}
+          <button
+            onClick={() => handleDateChange(1)}
+            className={styles.navButton}
+          >
+            <img src={next} alt="next" />
+          </button>
+        </div>
+      )}
+
+      {/* 주요 타임라인: 오늘 중심의 3일 */}
+      {isMobileView && (
+        <div className={styles.timelineContainer}>
+          {threeDays.map((date, index) => {
+            const dateString = date.toISOString().split("T")[0];
+            const isToday = todayStr === dateString;
+
+            return (
+              <div
+                key={index}
+                className={`${styles.timelineItem} ${
+                  isToday ? styles.timelineToday : ""
+                }`}
+              >
+                <span className={styles.timelineDate}>
+                  {date.toLocaleDateString("en-US", {
+                    day: "numeric",
+                    weekday: "short",
+                  })}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+
+
+      {/* 큰 화면에서는 기존 weekDaysHeader */}
+      {!isMobileView && (
+        <div className={styles.weekDaysContainer}>
         <button
           onClick={() => handleDateChange(-1)}
           className={styles.navButton}
         >
-          ◀
+          <img src={prev} alt="prev" />
         </button>
 
         <div className={styles.weekDaysHeader}>
@@ -322,9 +408,17 @@ const WeekPage = () => {
           onClick={() => handleDateChange(1)}
           className={styles.navButton}
         >
-          ▶
+          <img src={next} alt="next" />
         </button>
       </div>
+
+      
+      )}
+
+
+      {/* 날짜 */}
+      
+      
       <div className={styles.weekGrid}>
         <div className={styles.timeColumn}>{renderGrid()}</div>
         {renderWeekColumns()}
@@ -332,10 +426,14 @@ const WeekPage = () => {
 
       {isModalOpen && (
         <ReservationModal
-          selectedDate={selectedDate}
+          selectedDate={formatDateToLocalString(selectedDate)} // 로컬 기준 날짜 포맷
           onClose={handleCloseModal}
           handleSave={handleSaveReservation}
         />
+      )}
+
+      {isPopupOpen && (
+        <Popup reservation={selectedReservation} onClose={handleClosePopup} />
       )}
     </div>
   );

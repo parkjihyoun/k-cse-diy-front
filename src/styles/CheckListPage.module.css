@@ -3,7 +3,6 @@
   display: flex;
   flex-direction: column;
   margin-top: 120px;
-  
 }
 
 .container {
@@ -19,7 +18,7 @@
 .legend {
   position: absolute; 
   right: 10px; 
-  top:-10px;
+  top: -10px;
   display: flex;
   padding: 10px;
   gap: 20px;
@@ -39,7 +38,8 @@
   height: 15px;
   border-radius: 50%;
   display: inline-block;
-  margin-left: auto;
+  margin: 0;
+  align-self: center; /* 세로 가운데 정렬 */
 }
 
 .pending {
@@ -109,17 +109,36 @@
 }
 
 
+.backBtn {
+  margin-top: 10px; /* 상단 여백 추가 */
+  padding: 10px 15px; /* 버튼 패딩 조정 */
+  font-size: 14px; /* 버튼 텍스트 크기 축소 */
+  width: 150px;
+  border: none;
+  text-align: center; 
+  align-items: center; /* 가로 중앙 정렬 */
+  justify-content: center; /* 세로 중앙 정렬 */
+}
+
+.noResultsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 가로 중앙 정렬 */
+  justify-content: center; /* 세로 중앙 정렬 */
+  height: 100%; /* 컨테이너 높이 설정 */
+  margin-top: 30px; /* 여백 조정 */
+  gap:10px;
+}
 .title {
   font-size: 16px;
   font-weight: bold;
   margin-top: auto; 
   color: #e3e3e3;
-    overflow: hidden;
-    white-space: nowrap;    
-    text-overflow: ellipsis; 
-    max-width: 120px; 
-    display: inline-block;   
-  
+  overflow: hidden;
+  white-space: nowrap;    
+  text-overflow: ellipsis; 
+  max-width: 120px; 
+  display: inline-block;   
 }
 
 .titleAndActions {
@@ -132,7 +151,8 @@
 .actions {
   display: flex;
   gap: 10px;
-  margin-left: 10px;
+  margin-left: auto; /* 왼쪽 여백 제거 */
+  justify-content: flex-end; /* 오른쪽 정렬 */
 }
 
 .editBtn,
@@ -151,17 +171,17 @@
   background-color: white;
   color: black;
 }
-.editBtn:hover{
+.editBtn:hover {
   background-color: #333; 
   transform: scale(1);
-  color:white;
+  color: white;
 }
 
 .deleteBtn {
   background-color: black;
   color: white;
 }
-.deleteBtn:hover{
+.deleteBtn:hover {
   background-color: #c9302c; 
   transform: scale(1);
 }
@@ -170,22 +190,155 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left:40px;
-
+  margin-left: 40px;
 }
 
 .userInfo {
   font-weight: bold;
   font-size: 18px;
-  color: rgba(255,255,255, 0.8);
-
+  color: rgba(255, 255, 255, 0.8);
+  white-space: pre-line; /* 줄바꿈 허용 */
 }
 
-.noResults{
-  margin-top:15px;
+.noResults {
+  margin-top: 15px;
   margin-left: 40px;
   font-weight: bold;
   font-size: 25px;
-  color: rgba(255,255,255, 0.8);
+  color: rgba(255, 255, 255, 0.8);
+  justify-content: center;
+  align-items: center;
+}
 
+
+@media (max-width: 600px) {
+  .page {
+    margin-top: 0px; 
+    padding: 20px; 
+  }
+  .userInfo{
+    margin-top: 50px;
+    margin-left:10px;
+    }
+
+  .container {
+    margin-top: 0px; 
+    padding: 10px;
+  }
+
+  .legend {
+    flex-direction: column; /* 세로 정렬 */
+    position: absolute; 
+    top: 10px;
+    right: 30px;
+    gap: 10px; 
+    padding: 0;
+  }
+
+  .legendItem {
+    font-size: 14px; 
+    gap: 5px; 
+  }
+
+  .statusCircle {
+    width: 12px; 
+    height: 12px;
+    align-self: center; /* 모바일에서도 세로 가운데 정렬 */
+  }
+
+  .grid {
+    grid-template-columns: 1fr; 
+    gap: 15px; 
+    width: 100%;
+  }
+
+  .card {
+    width: 100%; 
+    height: auto; 
+    padding: 20px;
+    border-radius: 5px; 
+  }
+
+  .cardHeader {
+    align-items: flex-start;
+    margin-bottom: 5px;
+  }
+
+  .cardHeader h3 {
+    font-size: 24px; 
+    margin-bottom: 5px;
+  }
+  .day{
+    margin-bottom: 5px;
+    font-size: 24px !important; 
+
+  }
+
+  .time {
+    font-size: 16px; 
+    margin-top: 2px;
+    margin-bottom: 7px;
+  }
+
+  .title {
+    font-size: 14px; 
+    max-width: 100%;
+  }
+
+  .titleAndActions {
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 10px;
+  }
+
+  .actions {
+    flex-direction: row; 
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    gap: 8px; 
+  }
+
+  .editBtn,
+  .deleteBtn {
+    font-size: 14px; 
+    padding: 5px 10px; 
+    border-radius: 5px; 
+    width: 80px;
+  }
+
+  .header {
+    flex-direction: column; 
+    align-items: flex-start;
+    margin-left: 0;
+  }
+
+  .userInfo {
+    font-size: 16px; 
+    margin-bottom: 10px;
+  }
+
+  .noResults {
+    font-size: 18px; 
+    margin-top: 60px; 
+    margin-left:0px;
+    font-weight: bold;
+    text-align: center;
+    
+  }
+
+  .noResultsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 가로 중앙 정렬 */
+    justify-content: center; /* 세로 중앙 정렬 */
+    height: 100%; /* 컨테이너 높이 설정 */
+    margin-top: 30px; /* 여백 조정 */
+  }
+
+  .backBtn {
+    margin-top: 10px; /* 상단 여백 추가 */
+    padding: 10px 15px; /* 버튼 패딩 조정 */
+    font-size: 14px; /* 버튼 텍스트 크기 축소 */
+    width: 150px;
+    text-align: center; 
+  }
 }
