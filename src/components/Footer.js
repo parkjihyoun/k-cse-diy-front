@@ -29,7 +29,7 @@ const Footer = () => {
                 alt="cselogo"
                 style={{ ...styles.cselogo, ...(isMobile ? styles.cselogoMobile : {}) }}
             />
-            <p style={isMobile ? styles.textMobile : {}}>made by: @yeaey_oo | @unnhyo | @w.o_xna | @y___ch__</p>
+            <p style={isMobile ? styles.textMobile : {}}>© 2025 @yeaey_oo | @unnhyo | @w.o_xna | @y___ch__ All rights reserved.</p>
         </footer>
     );
 };
@@ -43,6 +43,7 @@ const styles = {
         bottom: 0,
         width: '100%',
         padding: '30px',
+        fontSize:'14px',
     },
     footerMobile: {
         padding: '10px', // 모바일에서 줄어든 푸터 크기
