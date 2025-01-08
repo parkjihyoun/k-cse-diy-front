@@ -176,17 +176,21 @@ const MonthPage = () => {
     <div className={styles.page}>
       {/* Right Controls */}
       <div className={styles.rightControls}>
-        <button className={styles.reserveButton} onClick={handleOpenModal}>
-          예약하기
-        </button>
-        <div className={styles.dropdown}>
-          <button className={styles.dropdownButton}>{selectedView}</button>
-          <ul className={styles.dropdownMenu}>
-            <li onClick={() => handleViewChange("Month")}>Month</li>
-            <li onClick={() => handleViewChange("Week")}>Week</li>
-          </ul>
-        </div>
-      </div>
+  <button className={styles.reserveButton} onClick={handleOpenModal}>
+    예약하기
+  </button>
+  <div className={styles.dropdown}>
+    
+    <button
+      className={`${styles.dropdownButton} ${
+        selectedView === "Week" ? styles.active : ""
+      }`}
+      onClick={() => navigate("/week")} // Week 페이지로 이동
+    >
+      Week
+    </button>
+  </div>
+</div>
 
       <div className={styles.header}>
         <div className={styles.headerRow}>
@@ -254,7 +258,14 @@ const MonthPage = () => {
           <p>예약자 학번 | {res.studentNumber}</p>
           <p>예약 사유 | {res.reason}</p>
           <p>예약 시간 | {res.startTime} ~ {res.endTime}</p>
-          <p>상태 | {res.status}</p>
+          <p>
+            상태 |{" "}
+            {res.status === "PENDING"
+              ? "예약 대기중 . ."
+              : res.status === "APPROVED"
+              ? "예약 승인"
+              : "알 수 없음"}
+          </p>
         </li>
       ))}
     </ul>

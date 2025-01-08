@@ -51,7 +51,7 @@ const Header = () => {
                     </div>
                     <div
                         style={{
-                            ...styles.drawer,
+                            ...styles.mobileDrawer,
                             transform: menuOpen ? 'translateX(0)' : 'translateX(100%)',
                         }}
                     >
@@ -164,21 +164,21 @@ const Header = () => {
                         </li>
                     </ul>
                     {desktopDrawerOpen && (
-                        <div style={styles.drawer}>
-                            <ul style={styles.drawerList}>
-                                <li style={styles.drawerItem}>
+                        <div style={styles.desktopDrawer}>
+                            <ul style={styles.drawerList2}>
+                                <li style={styles.drawerItem2}>
                                     <Link
                                         to="/month"
-                                        style={styles.drawerLink}
+                                        style={styles.drawerLink2}
                                         onClick={toggleDesktopDrawer}
                                     >
                                         Month
                                     </Link>
                                 </li>
-                                <li style={styles.drawerItem}>
+                                <li style={styles.drawerItem2}>
                                     <Link
                                         to="/week"
-                                        style={styles.drawerLink}
+                                        style={styles.drawerLink2}
                                         onClick={toggleDesktopDrawer}
                                     >
                                         Week
@@ -220,7 +220,7 @@ const styles = {
         height: '3px',
         backgroundColor: 'white',
     },
-    drawer: {
+    mobileDrawer: {
         position: 'fixed',
         top: 0,
         right: 0,
@@ -238,6 +238,26 @@ const styles = {
         transition: 'transform 0.3s ease',
         zIndex: 1500,
     },
+    desktopDrawer: {
+        position: 'fixed',
+        top: '73.5px',
+        right: 0,
+        width: '100%',
+        height: '100px',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        color: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        paddingRight: '20px',
+        paddingLeft: '20px',
+        boxShadow: '-2px 0 6px rgba(0, 0, 0, 0.3)',
+        transition: 'transform 0.5s ease',
+        zIndex: 2000,
+        
+    
+    },
+
     drawerList: {
         listStyle: 'none',
         padding: 0,
@@ -252,12 +272,33 @@ const styles = {
     drawerLink: {
         color: '#000',
         textDecoration: 'none',
-        fontSize: '18px',
+        fontSize: '16px',
+        cursor:'pointer',
+    },
+    drawerList2: {
+        listStyle: 'none',
+        paddingTop: 0,
+        marginBottom: '10px',
+        textAlign: 'right',
+    },
+    drawerItem2: {
+        marginBottom: '15px',
+        paddingBottom: '15px',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+    },
+    drawerLink2: {
+        color: '#fff',
+        textDecoration: 'none',
+        fontSize: '16px',
+        right:'316px',
+        position:'relative',
+        textAlign: 'center', // 글자 가운데 정렬
     },
     submenuList: {
         listStyle: 'none',
         margin: 0,
         padding: '10px 0 0 20px',
+        transition: 'max-height 0.3s ease',
     },
     submenuItem: {
         marginBottom: '10px',

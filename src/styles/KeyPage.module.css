@@ -329,7 +329,7 @@ body {
     transform: scale(1.1);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 692px) {
 
   .statusContainer {
     display: flex;

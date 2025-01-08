@@ -264,7 +264,7 @@ td {
 }
 
 /* 모바일 스타일 */
-@media (max-width: 600px) {
+@media (max-width: 693px) {
   .page {
     padding: 10px;
     margin: 0px;

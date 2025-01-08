@@ -29,7 +29,7 @@ const Footer = () => {
                 alt="cselogo"
                 style={{ ...styles.cselogo, ...(isMobile ? styles.cselogoMobile : {}) }}
             />
-            <p style={isMobile ? styles.textMobile : {}}>© 2025 @yeaey_oo | @unnhyo | @w.o_xna | @y___ch__ All rights reserved.</p>
+            <p style={isMobile ? styles.textMobile : {}}>© 2025 @yeaey_oo | @unnhyo | @w.o_xna | @y___ch__ <br/> All rights reserved.</p>
         </footer>
     );
 };
