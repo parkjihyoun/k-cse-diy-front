@@ -104,12 +104,12 @@
     margin-bottom: 20px;
 }
 
-@media (max-width: 870px) {
+@media (max-width: 760px) {
     .maintitle {
-        font-size: 5.7vw;
+        font-size: 8vw;
     }
     .mainsubtitle {
-        font-size: 4vw;
+        font-size: 5vw;
     }
     .mainbutton {
         font-size: 15px;

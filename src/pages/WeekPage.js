@@ -358,17 +358,20 @@ const WeekPage = () => {
     <div className={styles.page}>
       {/* 상단 버튼 */}
       <div className={styles.rightControls}>
-        <button className={styles.reserveButton} onClick={handleOpenModal}>
-          예약하기
-        </button>
-        <div className={styles.dropdown}>
-          <button className={styles.dropdownButton}>{selectedView}</button>
-          <ul className={styles.dropdownMenu}>
-            <li onClick={() => handleViewChange("Month")}>Month</li>
-            <li onClick={() => handleViewChange("Week")}>Week</li>
-          </ul>
-        </div>
-      </div>
+  <button className={styles.reserveButton} onClick={handleOpenModal}>
+    예약하기
+  </button>
+  <div className={styles.dropdown}>
+    <button
+      className={`${styles.dropdownButton} ${
+        selectedView === "Month" ? styles.active : ""
+      }`}
+      onClick={() => navigate("/month")} // 경로 이동 추가
+    >
+      Month
+    </button>
+  </div>
+</div>
 
 
       {/*년월 + status*/}

@@ -446,7 +446,7 @@
 
 
 /* 반응형 스타일 */
-@media (max-width: 600px) {
+@media (max-width: 918px) {
   .rightControls {
     top: 0px;
     right: 10px;
