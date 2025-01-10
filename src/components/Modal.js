@@ -9,8 +9,8 @@ const CustomDateInput = forwardRef(({ value, onClick }, ref) => {
   // 날짜를 대문자로 변환
   const formattedValue = value
     ? value.replace(/Mon|Tue|Wed|Thu|Fri|Sat|Sun/g, (match) =>
-        match.toUpperCase()
-      )
+      match.toUpperCase()
+    )
     : "날짜 선택";
 
   return (
@@ -19,7 +19,7 @@ const CustomDateInput = forwardRef(({ value, onClick }, ref) => {
     </button>
   );
 });
-
+// authCode는 백에서 인증하도록 수정했습니다 (authCode 인증하는 로직 지움)
 const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
   const [authCodeInput, setAuthCodeInput] = useState("");
   const [step, setStep] = useState(type);
@@ -61,21 +61,18 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
     setStep("auth");
   };
 
+
   const handleAuthSubmit = () => {
-    const isAuthenticated = onAuthenticate(authCodeInput);
-    if (isAuthenticated) {
-      const updatedReservation = {
-        ...reservation,
-        date: editedReservation.date.toISOString().slice(0, 10),
-        startTime: editedReservation.startTime,
-        endTime: editedReservation.endTime,
-        title: editedReservation.title,
-      };
-      onSave(updatedReservation);
-      onClose();
-    } else {
-      alert("인증번호가 올바르지 않습니다.");
-    }
+    const updatedReservation = {
+      ...reservation,
+      date: editedReservation.date.toISOString().slice(0, 10),
+      startTime: editedReservation.startTime,
+      endTime: editedReservation.endTime,
+      title: editedReservation.title,
+      authCode: authCodeInput
+    };
+    onSave(updatedReservation);
+    onClose();
   };
 
   const generateTimeOptions = () => {
@@ -102,7 +99,7 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
                 className={styles.inputedit}
                 placeholderText="날짜 선택"
               />
-            </div>
+            </div> 날짜는 수정 불가능하게 바꿔주세여
             <div className={styles.timeGroup}>
               <select
                 value={editedReservation.startTime}

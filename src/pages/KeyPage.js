@@ -5,10 +5,10 @@ const KeyPage = () => {
   const [status, setStatus] = useState("KEEPING"); // 초기 상태를 'KEEPING'으로 설정
   const [showRules, setShowRules] = useState(false);
   const [showInputModal, setShowInputModal] = useState(false);
-  const [name, setName] = useState("");
-  const [student_number, setStudentNumber] = useState("");
+  const [studentName, setStudentName] = useState(""); // 이름
+  const [studentNumber, setStudentNumber] = useState(""); // 학번
   const [actionType, setActionType] = useState(""); // '대여' 또는 '반납' 구분
-  const [returnDate, setReturnDate] = useState("2024-11-14 18:55:57"); // 초기 반납 시간 
+  const [returnDate, setReturnDate] = useState(""); // 반납 시간
 
   const toggleRulesModal = () => {
     setShowRules(!showRules);
@@ -21,13 +21,13 @@ const KeyPage = () => {
 
   const closeInputModal = () => {
     setShowInputModal(false);
-    setName("");
+    setStudentName("");
     setStudentNumber("");
   };
 
   const handleSubmit = async () => {
     const studentNumberRegex = /^\d{10}$/;
-    if (!student_number.match(studentNumberRegex)) {
+    if (!studentNumber.match(studentNumberRegex)) {
       alert("학번은 10자리의 숫자 형식이어야 합니다.\nex)2024XXXXXX");
       return;
     }
@@ -37,14 +37,11 @@ const KeyPage = () => {
         ? "https://diy.knucse.site/api/v1/application/roomkey/rent"
         : "https://diy.knucse.site/api/v1/application/roomkey/return";
 
-    const payload =
-      actionType === "대여"
-        ? { name, student_number }
-        : { name, student_number };
+    const payload = { studentName, studentNumber };
 
     try {
       const response = await fetch(endpoint, {
-        method: "POST",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -52,10 +49,13 @@ const KeyPage = () => {
       });
 
       if (response.ok) {
-        const responseData = await response.json();
+        const responseData = await response.json(); // API에서 반환된 KeyReadDto
+        const { holderName, status: keyStatus } = responseData.response;
+
+        // 상태 업데이트
+        setStatus(keyStatus === "USING" ? "USING" : "KEEPING");
 
         if (actionType === "반납") {
-          // 반납 시간 업데이트
           const now = new Date();
           const formattedDate = `${now.getFullYear()}-${String(
             now.getMonth() + 1
@@ -69,20 +69,14 @@ const KeyPage = () => {
         }
 
         alert(
-          `이름: ${name}, 학번: ${student_number}\n열쇠가 ${
-            actionType === "대여" ? "대여" : "반납"
+          `이름: ${holderName}, 학번: ${studentNumber}\n열쇠가 ${actionType === "대여" ? "대여" : "반납"
           }되었습니다.`
-        );
-        setStatus(
-          actionType === "대여"
-            ? "USING" // 대여 상태를 'USING'으로 설정
-            : "KEEPING" // 반납 상태를 'KEEPING'으로 설정 (대여 가능)
         );
       } else {
         const errorData = await response.json();
         if (response.status === 404) {
           if (errorData.code === "STUDENT_NOT_FOUND") {
-            alert("학생 정보가 없습니다. 이름과 학번을 다시 확인해주세요");
+            alert("학생 정보가 없습니다. 이름과 학번을 다시 확인해주세요.");
           } else if (errorData.code === "KEY_NOT_FOUND") {
             alert("열쇠가 없습니다.");
           } else {
@@ -115,12 +109,6 @@ const KeyPage = () => {
             <span className={`${styles.statusCircle} ${styles.usingCircle}`} />
           </div>
         </div>
-        <div className={styles.item}>
-          <div className={styles.textWithCircle}>
-            <span className={styles.didntreturn}>미반납</span>
-            <span className={`${styles.statusCircle} ${styles.didntreturnCircle}`} />
-          </div>
-        </div>
       </div>
 
       {/* 중앙 박스 */}
@@ -128,23 +116,23 @@ const KeyPage = () => {
         <h2 className={styles.roomTitle}>
           D.I.Y실
           <span
-            className={`${styles.statusCircle2} ${
-              status === "KEEPING"
-                ? styles.canlentCircle
-                : status === "USING"
-                ? styles.usingCircle
-                : styles.didntreturnCircle
-            }`}
+            className={`${styles.statusCircle2} ${status === "KEEPING" ? styles.canlentCircle : styles.usingCircle
+              }`}
           />
         </h2>
         <p className={styles.roomSubtitle}>D.I.Y Room’s key</p>
         <hr className={styles.separator} />
-        <p className={styles.lastUserTitle}>Last User</p>
+        <p className={styles.lastUserTitle}>
+          {actionType === "대여" ? "Using User" : "Last User"}
+        </p>
         <p className={styles.lastUser}>호예찬</p>
-        <p className={styles.eventTitle}>산사랑 연극 연습</p>
         <div className={styles.locationContainer}>
-          <p className={styles.locationBox}>IT4호관 과사무실 반납완료</p>
-          <p className={styles.date}>{returnDate}</p>
+          <p className={styles.locationBox}>
+            {actionType === "대여" ? "DIY실" : "IT4호관 과사무실"}
+          </p>
+          <p className={styles.eventTitle}>
+            {actionType === "대여" ? "사용중" : "보관중"}
+          </p>
         </div>
       </div>
 
@@ -173,24 +161,8 @@ const KeyPage = () => {
           <div className={styles.ruleModalContent}>
             <h2>열쇠 대여 및 반납 규칙</h2>
             <ol>
-              <li>
-                <strong>IT4호관 사무실 방문</strong>
-              </li>
-              <li>
-                사이트의 열쇠 대여/반납 페이지에서{" "}
-                <strong>열쇠 대여하기</strong> 클릭
-              </li>
-              <li>
-                <strong>IT4호관 사무실에서 열쇠 대여</strong> 후 사이트의{" "}
-                <strong>대여 버튼</strong> 클릭
-              </li>
-              <li>
-                사용 후 <strong>IT4호관 사무실에 열쇠 반납</strong>
-              </li>
-              <li>
-                열쇠 반납 후 열쇠 대여/반납 페이지에서{" "}
-                <strong>열쇠 반납하기</strong> 클릭
-              </li>
+              <li>IT4호관 사무실 방문</li>
+              <li>사이트에서 열쇠 대여 또는 반납 진행</li>
             </ol>
             <button
               className={styles.actionButton}
@@ -216,8 +188,8 @@ const KeyPage = () => {
                 id="name"
                 className={styles.input}
                 placeholder="이름을 입력하세요"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={studentName}
+                onChange={(e) => setStudentName(e.target.value)}
               />
             </div>
             <div className={styles.inputContainer}>
@@ -229,7 +201,7 @@ const KeyPage = () => {
                 id="student_number"
                 className={styles.input}
                 placeholder="학번을 입력하세요"
-                value={student_number}
+                value={studentNumber}
                 onChange={(e) => setStudentNumber(e.target.value)}
               />
             </div>

@@ -34,7 +34,7 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const formData = {
       studentName: e.target.name.value,
       studentNumber: e.target.studentId.value,
@@ -44,19 +44,19 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
       reason: e.target.reason.value,
       authCode: e.target.password.value,
     };
-  
+
     // 시작 시간이 끝나는 시간보다 크거나 같은 경우 검증
     if (formData.startTime >= formData.endTime) {
       alert("예약 시간이 잘못 설정되었습니다. 시작 시간은 끝나는 시간보다 이전이어야 합니다!");
       return;
     }
-  
+
     // 인증번호 유효성 검사
     if (formData.authCode.length !== 4 || isNaN(Number(formData.authCode))) {
       alert("인증번호는 반드시 4자리 숫자여야 합니다!");
       return;
     }
-  
+
     try {
       const response = await fetch("https://diy.knucse.site/api/v1/application/reservation/create", {
         method: "POST",
@@ -65,10 +65,9 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (response.ok) {
         const result = await response.json();
-        alert("예약이 성공적으로 생성되었습니다!");
         handleSave(result.response); // 부모 컴포넌트의 저장 함수 호출
         onClose(); // 모달 닫기
       } else {
