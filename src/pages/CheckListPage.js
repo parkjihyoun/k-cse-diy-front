@@ -7,7 +7,6 @@ const CheckListPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { name, studentId } = location.state || {}; // 전달받은 이름과 학번
-
   const [reservations, setReservations] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState("edit");
@@ -119,13 +118,12 @@ const CheckListPage = () => {
                     <p className={styles.day}>{reservation.day}</p>
                   </div>
                   <span
-                    className={`${styles.statusCircle} ${
-                      reservation.status === "APPROVED"
-                        ? styles.approved
-                        : reservation.status === "PENDING"
+                    className={`${styles.statusCircle} ${reservation.status === "APPROVED"
+                      ? styles.approved
+                      : reservation.status === "PENDING"
                         ? styles.pending
                         : styles.rejected
-                    }`}
+                      }`}
                   />
                 </div>
                 <p className={styles.time}>{reservation.time}</p>
@@ -171,40 +169,42 @@ const CheckListPage = () => {
           onSave={async (updatedReservation) => {
             try {
               const response = await fetch(
-                `https://diy.knucse.site/api/v1/application/reservation/update/${updatedReservation.reservationNum}`,
+                `https://diy.knucse.site/api/v1/application/reservation/update`,
                 {
-                  method: "PUT",
+                  method: "PATCH",
                   headers: {
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify({
-                    date: updatedReservation.date,
+                    reservationId: updatedReservation.reservationNum,
                     startTime: updatedReservation.startTime,
                     endTime: updatedReservation.endTime,
                     reason: updatedReservation.title,
+                    authCode: updatedReservation.authCode
                   }),
                 }
               );
-          
+
               if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
               }
-          
+
+              alert("예약 수정완료 잦같은거");
               const updatedData = await response.json();
-          
+
               // 로컬 상태 갱신
               setReservations((prev) =>
                 prev.map((res) =>
                   res.reservationNum === updatedData.id
                     ? {
-                        ...res,
-                        date: updatedData.reservationDate,
-                        day: calculateDay(updatedData.reservationDate),
-                        startTime: updatedData.startTime,
-                        endTime: updatedData.endTime,
-                        title: updatedData.reason,
-                        status: "PENDING", // 수정 후 기본 상태는 "대기"
-                      }
+                      ...res,
+                      date: updatedData.reservationDate,
+                      day: calculateDay(updatedData.reservationDate),
+                      startTime: updatedData.startTime,
+                      endTime: updatedData.endTime,
+                      title: updatedData.reason,
+                      status: "PENDING", // 수정 후 기본 상태는 "대기"
+                    }
                     : res
                 )
               );
