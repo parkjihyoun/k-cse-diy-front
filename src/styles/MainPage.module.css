@@ -58,6 +58,7 @@
     font-size: 25px;
     font-weight: bold;
     color: #fff;
+    margin-left: 20px;
 }
 
 .statusline {
@@ -66,6 +67,7 @@
     background-color: #fff;
     margin-top: 10px;
     margin-bottom: 20px;
+    margin-left: 20px;
 }
 
 .statusbox {
@@ -104,12 +106,12 @@
     margin-bottom: 20px;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 860px) {
     .maintitle {
-        font-size: 8vw;
+        font-size: 5.8vw;
     }
     .mainsubtitle {
-        font-size: 5vw;
+        font-size: 4vw;
     }
     .mainbutton {
         font-size: 15px;

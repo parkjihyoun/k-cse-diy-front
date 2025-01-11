@@ -6,34 +6,55 @@ import Modal from "../components/Modal";
 const CheckListPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { name, studentId } = location.state || {}; // 전달받은 이름과 학번
+  const { name, studentId } = location.state || {};
   const [reservations, setReservations] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState("edit");
   const [selectedReservation, setSelectedReservation] = useState(null);
-  const [loading, setLoading] = useState(false); // 로딩 상태
+  const [loading, setLoading] = useState(false);
+
+  const [rejectionReason, setRejectionReason] = useState(""); // 거절 사유 상태 추가
+  const [showRejectionModal, setShowRejectionModal] = useState(false); // 거절 사유 팝업 상태
+
+  const [authCodeInput, setAuthCodeInput] = useState(""); // 인증번호 상태
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
+  const [pageSize, setPageSize] = useState(window.innerWidth <= 770 ? 2 : 4); // 모바일은 2개씩, 데스크탑은 6개씩
+
+  useEffect(() => {
+    const handleResize = () => {
+      const newPageSize = window.innerWidth <= 770 ? 2 : 4;
+      setPageSize(newPageSize);
+
+      // 현재 페이지에서 잘리는 경우 첫 페이지로 리셋
+      const maxPage = Math.ceil(reservations.length / newPageSize) - 1;
+      if (currentPage > maxPage) {
+        setCurrentPage(0);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [currentPage, reservations]);
 
   const handleBackClick = () => {
-    navigate("/check"); // /check 페이지로 이동
+    navigate("/check");
   };
 
-  // 날짜에 따라 요일 계산
   const calculateDay = (date) => {
     const dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
     const dateObj = new Date(date);
     return dayNames[dateObj.getDay()];
   };
 
-  // 날짜와 요일 포함한 포맷
-  const calculateDayWithDate = (date) => {
-    const day = calculateDay(date);
-    return `${date} (${day})`; // "YYYY-MM-DD (DAY)" 형식
+  const isPastDateTime = (date, endTime) => {
+    const today = new Date();
+    const reservationEnd = new Date(`${date}T${endTime}`);
+    return reservationEnd < today;
   };
 
-  // API 호출 (fetch 사용)
   useEffect(() => {
     const fetchReservations = async () => {
-      if (!name || !studentId) return; // 이름과 학번이 없으면 API 호출 안 함
+      if (!name || !studentId) return;
       setLoading(true);
       try {
         const response = await fetch(
@@ -42,47 +63,134 @@ const CheckListPage = () => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json(); // JSON 데이터 파싱
+        const data = await response.json();
         const reservationData = data.response.map((res) => ({
-          reservationNum: res.id,
+          reservationId: res.id,
           date: res.reservationDate,
-          day: calculateDay(res.reservationDate), // 요일 계산
-          startTime: res.startTime, // 시작 시간
-          endTime: res.endTime, // 종료 시간
-          time: `${res.startTime} ~ ${res.endTime}`, // 시간 포맷팅
+          day: calculateDay(res.reservationDate),
+          startTime: res.startTime.slice(0, 5), // 초 제거
+          endTime: res.endTime.slice(0, 5), // 초 제거
+          time: `${res.startTime.slice(0, 5)} ~ ${res.endTime.slice(0, 5)}`,
           title: res.reason,
           status: res.status,
+          rejectionReason: res.rejectionReason || "사유가 제공되지 않았습니다.", // 거절 사유 추가
           name: res.studentName,
           studentId: res.studentNumber,
         }));
-        setReservations(reservationData); // 상태 업데이트
+
+        reservationData.sort((a, b) => {
+          const isAPast = isPastDateTime(a.date, a.endTime);
+          const isBPast = isPastDateTime(b.date, b.endTime);
+          if (isAPast !== isBPast) {
+            return isAPast ? 1 : -1;
+          }
+          return new Date(a.date) - new Date(b.date);
+        });
+
+        setReservations(reservationData);
       } catch (err) {
         console.error(err);
-        setReservations([]); // 에러 발생 시 빈 배열로 설정
+        setReservations([]);
       } finally {
-        setLoading(false); // 로딩 종료
+        setLoading(false);
       }
     };
 
-    fetchReservations(); // 함수 호출
-  }, [name, studentId]); // name, studentId가 변경될 때 호출
-
-  const handleDeleteClick = (reservationNum) => {
-    if (window.confirm("정말로 삭제하시겠습니까?")) {
-      setReservations((prev) =>
-        prev.filter((res) => res.reservationNum !== reservationNum)
-      );
-    }
-  };
+    fetchReservations();
+  }, [name, studentId]);
 
   const handleEditClick = (reservation) => {
-    setSelectedReservation({
-      ...reservation,
-      dateWithDay: calculateDayWithDate(reservation.date), // 날짜와 요일 추가
-    });
+    setSelectedReservation(reservation);
     setModalType("edit");
     setIsModalOpen(true);
   };
+
+  const handleDeleteClick = async (reservationId) => {
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      try {
+        const authCode = prompt("인증 코드를 입력해주세요:");
+        if (!authCode) return;
+
+        const response = await fetch(
+          `https://diy.knucse.site/api/v1/application/reservation`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ reservationId: reservationId, authCode }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        setReservations((prev) =>
+          prev.filter((res) => res.reservationId !== reservationId)
+        );
+        alert("삭제가 완료되었습니다.");
+      } catch (error) {
+        alert("인증번호가 틀립니다.");
+      }
+    }
+  };
+
+  const handleSaveReservation = async (updatedReservation) => {
+    try {
+      const response = await fetch(
+        `https://diy.knucse.site/api/v1/application/reservation/update`,
+        {
+          method: "PATCH", // PATCH 사용
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            reservationId: updatedReservation.reservationId,
+            startTime: updatedReservation.startTime,
+            endTime: updatedReservation.endTime,
+            title: updatedReservation.title,
+            authCode: authCodeInput, // 인증 코드 추가
+          }),
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const result = await response.json();
+  
+      setReservations((prev) =>
+        prev.map((res) =>
+          res.reservationId === updatedReservation.reservationId
+            ? { ...res, ...updatedReservation, status: "PENDING" }
+            : res
+        )
+      );
+  
+      alert("수정이 성공적으로 완료되었습니다!");
+    } catch (error) {
+      console.error(error);
+      alert("수정 요청에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  const handleRejectionClick = (reason) => {
+    setRejectionReason(reason);
+    setShowRejectionModal(true);
+  };
+
+  const closeRejectionModal = () => {
+    setShowRejectionModal(false);
+    setRejectionReason("");
+  };
+
+  const totalPages = Math.ceil(reservations.length / pageSize);
+  const displayedReservations = reservations.slice(
+    currentPage * pageSize,
+    (currentPage + 1) * pageSize
+  );
 
   return (
     <div className={styles.page}>
@@ -106,46 +214,90 @@ const CheckListPage = () => {
         </div>
       </div>
       {loading ? (
-        <p>로딩 중...</p> // 로딩 중 메시지
+        <p>로딩 중...</p>
       ) : reservations.length > 0 ? (
-        <div className={styles.container}>
-          <div className={styles.grid}>
-            {reservations.map((reservation) => (
-              <div key={reservation.reservationNum} className={styles.card}>
+        <div className={styles.scrollWrapper}>
+          <div className={styles.cardContainer}>
+            {displayedReservations.map((reservation) => (
+              <div
+                key={reservation.reservationId}
+                className={`${styles.card} ${
+                  isPastDateTime(reservation.date, reservation.endTime)
+                    ? styles.pastCard
+                    : ""
+                }`}
+              >
                 <div className={styles.cardHeader}>
                   <div className={styles.cardHeaderLeft}>
                     <h3>{reservation.date}</h3>
                     <p className={styles.day}>{reservation.day}</p>
                   </div>
                   <span
-                    className={`${styles.statusCircle} ${reservation.status === "APPROVED"
-                      ? styles.approved
-                      : reservation.status === "PENDING"
+                    className={`${styles.statusCircle} ${
+                      reservation.status === "APPROVED"
+                        ? styles.approved
+                        : reservation.status === "PENDING"
                         ? styles.pending
-                        : styles.rejected
-                      }`}
+                        : reservation.status === "CANCELLED"
+                        ? styles.rejected
+                        : ""
+                    }`}
                   />
                 </div>
                 <p className={styles.time}>{reservation.time}</p>
                 <div className={styles.titleAndActions}>
                   <p className={styles.title}>{reservation.title}</p>
-                  <div className={styles.actions}>
-                    <button
-                      className={styles.editBtn}
-                      onClick={() => handleEditClick(reservation)}
-                    >
-                      수정
-                    </button>
-                    <button
-                      className={styles.deleteBtn}
-                      onClick={() => handleDeleteClick(reservation.reservationNum)}
-                    >
-                      삭제
-                    </button>
-                  </div>
+                  {!isPastDateTime(reservation.date, reservation.endTime) && (
+                    <div className={styles.actions}>
+                      {reservation.status === "CANCELLED" ? (
+                        <button
+                          className={styles.reasonBtn}
+                          onClick={() =>
+                            handleRejectionClick(reservation.rejectionReason)
+                          }
+                        >
+                          사유
+                        </button>
+                      ) : (
+                        <button
+                          className={styles.editBtn}
+                          onClick={() => handleEditClick(reservation)}
+                        >
+                          수정
+                        </button>
+                      )}
+                      <button
+                        className={styles.deleteBtn}
+                        onClick={() =>
+                          handleDeleteClick(reservation.reservationId)
+                        }
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
+          </div>
+          <div className={styles.pagination}>
+            <button
+              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={currentPage === 0}
+              className={styles.pageButton}
+            >
+              ❮
+            </button>
+            <span>
+              {currentPage + 1} / {totalPages}
+            </span>
+            <button
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={currentPage === totalPages - 1}
+              className={styles.pageButton}
+            >
+              ❯
+            </button>
           </div>
         </div>
       ) : (
@@ -159,61 +311,22 @@ const CheckListPage = () => {
         </div>
       )}
 
+      {/* 사유 팝업 */}
+      {showRejectionModal && (
+        <div className={styles.rejectionModal}>
+          <div className={styles.modalContent}>
+            <span>거절 사유</span>
+            <p>{rejectionReason}</p>
+            <button onClick={closeRejectionModal}>닫기</button>
+          </div>
+        </div>
+      )}
+
       {isModalOpen && (
         <Modal
           type={modalType}
           reservation={selectedReservation}
-          onAuthenticate={(inputCode) =>
-            String(inputCode) === String(selectedReservation?.authCode)
-          }
-          onSave={async (updatedReservation) => {
-            try {
-              const response = await fetch(
-                `https://diy.knucse.site/api/v1/application/reservation/update`,
-                {
-                  method: "PATCH",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    reservationId: updatedReservation.reservationNum,
-                    startTime: updatedReservation.startTime,
-                    endTime: updatedReservation.endTime,
-                    reason: updatedReservation.title,
-                    authCode: updatedReservation.authCode
-                  }),
-                }
-              );
-
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
-
-              alert("예약 수정완료 잦같은거");
-              const updatedData = await response.json();
-
-              // 로컬 상태 갱신
-              setReservations((prev) =>
-                prev.map((res) =>
-                  res.reservationNum === updatedData.id
-                    ? {
-                      ...res,
-                      date: updatedData.reservationDate,
-                      day: calculateDay(updatedData.reservationDate),
-                      startTime: updatedData.startTime,
-                      endTime: updatedData.endTime,
-                      title: updatedData.reason,
-                      status: "PENDING", // 수정 후 기본 상태는 "대기"
-                    }
-                    : res
-                )
-              );
-              setIsModalOpen(false);
-            } catch (error) {
-              console.error("Reservation update failed:", error);
-              alert("예약 수정에 실패했습니다. 다시 시도해주세요.");
-            }
-          }}
+          onSave={handleSaveReservation}
           onClose={() => setIsModalOpen(false)}
         />
       )}

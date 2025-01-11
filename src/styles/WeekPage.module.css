@@ -446,7 +446,7 @@
 
 
 /* 반응형 스타일 */
-@media (max-width: 918px) {
+@media (max-width: 600px) {
   .rightControls {
     top: 0px;
     right: 10px;
@@ -586,19 +586,19 @@
   
   .reservationName {
     font-weight: 600;
-    font-size: 9px;
+    font-size: 10px;
     color: #000;
   }
   
   .reservationTitle {
-    font-size: 8px;
-    margin-top: -2px;
+    font-size: 9px;
+    margin-top: 0px;
     display: block;
     color: #333;
   }
   
   .reservationTime {
-    font-size: 8px;
+    font-size: 9px;
     font-weight: bold;
     margin-top: 0px;
     display: block;
