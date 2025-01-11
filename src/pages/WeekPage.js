@@ -238,15 +238,35 @@ const WeekPage = () => {
     ));
   };
 
+  const getLocalDate = (dateString) => {
+    if (!dateString) {
+      console.error("Invalid reservationDate:", dateString);
+      return null; // Return null if dateString is invalid
+    }
+  
+    const utcDate = new Date(dateString + "T00:00:00Z");
+    if (isNaN(utcDate.getTime())) {
+      console.error("Invalid Date object from:", dateString);
+      return null; // Return null for invalid Date objects
+    }
+  
+    return new Date(utcDate.getTime() + utcDate.getTimezoneOffset() * 60000);
+  };
+
 
   const renderWeekColumns = () => {
     const displayedDates = isMobileView ? threeDays : centeredWeekDates;
   
     return displayedDates.map((day, index) => {
       const dateString = day.toISOString().split("T")[0];
-      const dayReservations = reservations.filter(
-        (r) => r.reservationDate === dateString
-      );
+      const dayReservations = reservations.filter((r) => {
+        const localDate = getLocalDate(r.reservationDate);
+        if (!localDate) {
+          console.error("Skipping invalid reservation:", r);
+          return false; // Skip invalid reservations
+        }
+        return localDate.toISOString().split("T")[0] === dateString;
+      });
   
       const isSelected =
         selectedDate && selectedDate.toISOString().split("T")[0] === dateString;
@@ -342,9 +362,17 @@ const WeekPage = () => {
           <div className={styles.popupLabel}>예약 정보</div>
           <div className={styles.popupContent}>
             <p>예약자 이름 | <span>{reservation.studentName}</span></p>
-            <p>예약 사유 | <span>{reservation.reason}</span></p>
+            <p>예약 날짜 | <span>{reservation.reservationDate}</span></p>
             <p>예약 시간 | <span>{`${reservation.startTime} ~ ${reservation.endTime}`}</span></p>
-            <p>상태 | <span>{reservation.status}</span></p>
+            <p>예약 사유 | <span>{reservation.reason}</span></p>
+            <p>
+                상태 | <span>{" "}
+                {reservation.status === "PENDING"
+                  ? "예약 대기중 . ."
+                  : reservation.status === "APPROVED"
+                    ? "예약 승인"
+                    : "알 수 없음"}</span>
+              </p>
           </div>
           <button className={styles.closeButton} onClick={onClose}>
             닫기
