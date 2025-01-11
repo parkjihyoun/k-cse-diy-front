@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/WeekPage.module.css";
-import ReservationModal from "../components/ReservationModal";
-import { getDayName } from "../components/ReservationModal";
 import next from '../img/next.png';
 import prev from '../img/prev.png';
-
+import ReservationModal from "../components/ReservationModal";
+import { getDayName } from "../components/ReservationModal";
 
 const WeekPage = () => {
   const navigate = useNavigate();
 
+  // ====== 날짜 함수 ======
+
+  // 주간 시작 날짜 계산
   const getStartOfWeek = (date) => {
     const day = date.getDay();
-    const diff = date.getDate() - day; // Start from Sunday
+    const diff = date.getDate() - day; // 주간 시작일 (일요일 기준)
     return new Date(date.setDate(diff));
   };
 
+  // 주간 날짜 배열 생성
   const getWeekDates = (date) => {
     const startOfWeek = getStartOfWeek(new Date(date));
     return Array.from({ length: 7 }, (_, i) => {
@@ -25,16 +28,11 @@ const WeekPage = () => {
     });
   };
 
+  // 모바일 뷰를 위한 3일 간의 날짜 배열 생성
   const getThreeDays = (date) => {
-    // Ensure the date is a Date object
-    if (!(date instanceof Date)) {
-      date = new Date(date); // Convert if not a Date object
-    }
-  
-    const todayIndex = 1; // 오늘을 기준으로 왼쪽 하루, 오른쪽 하루 추가
+    const todayIndex = 1; // 오늘 기준 좌우 하루
     const startDate = new Date(date);
     startDate.setDate(date.getDate() - todayIndex);
-  
     return Array.from({ length: 3 }, (_, i) => {
       const newDate = new Date(startDate);
       newDate.setDate(startDate.getDate() + i);
@@ -42,142 +40,28 @@ const WeekPage = () => {
     });
   };
 
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedView, setSelectedView] = useState("Week");
-  const [selectedDate, setSelectedDate] = useState(new Date()); // 선택한 날짜 상태
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-  const [isMobileView, setIsMobileView] = useState(false); // 모바일 뷰 상태
+
+  // ====== State ======
+  const [currentDate, setCurrentDate] = useState(new Date()); // 현재 날짜
+  const [selectedDate, setSelectedDate] = useState(new Date()); // 선택한 날짜
+  const [reservations, setReservations] = useState([]); // 예약 데이터
+  const [isModalOpen, setIsModalOpen] = useState(false); // 예약 모달 상태
   const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 상태
-  const [selectedReservation, setSelectedReservation] = useState(null); // 선택한 예약 정보
-  const [reservations, setReservations] = useState([]);
-  const [centeredWeekDates, setCenteredWeekDates] = useState(
-    getWeekDates(currentDate, isMobileView)
-  );
+  const [selectedReservation, setSelectedReservation] = useState(null); // 선택된 예약 데이터
+  const [isMobileView, setIsMobileView] = useState(false); // 반응형 뷰 상태
+  const [centeredWeekDates, setCenteredWeekDates] = useState(getWeekDates(new Date()));
 
 
-  // API 호출
-  useEffect(() => {
-    const fetchReservations = async () => {
-      let url = "";
-      let targetDate = isMobileView ? new Date(selectedDate) : new Date(currentDate);
-  
-      if (isMobileView) {
-        // 반응형일 때
-        const year = targetDate.getFullYear();
-        const month = String(targetDate.getMonth() + 1).padStart(2, "0");
-        const day = String(targetDate.getDate()).padStart(2, "0");
-        url = `https://diy.knucse.site/api/v1/application/reservation/limit/${year}/${month}/${day}?minusDay=1&plusDay=1`;
-      } else {
-        // 큰 화면일 때
-        const startOfWeek = getStartOfWeek(targetDate); // 주의 시작일 (일요일)
-        const year = startOfWeek.getFullYear();
-        const month = String(startOfWeek.getMonth() + 1).padStart(2, "0");
-        const day = String(startOfWeek.getDate()).padStart(2, "0");
-        url = `https://diy.knucse.site/api/v1/application/reservation/limit/${year}/${month}/${day}?minusDay=0&plusDay=6`;
-      }
-  
-      console.log("API 호출 URL:", url);
-  
-      try {
-        const response = await fetch(url, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-  
-        if (!response.ok) {
-          throw new Error("예약 데이터를 가져오는 데 실패했습니다.");
-        }
-  
-        const data = await response.json();
-        console.log("API 응답 데이터:", data);
-  
-        if (data.response && Array.isArray(data.response)) {
-          setReservations(data.response);
-        } else {
-          console.error("API 응답 형식이 올바르지 않습니다:", data);
-          setReservations([]);
-        }
-      } catch (error) {
-        console.error("API 호출 오류:", error);
-        setReservations([]);
-      }
-    };
-  
-    fetchReservations();
-  }, [currentDate, selectedDate, isMobileView]);
+  // ====== 시간 함수 ======
 
-
-  useEffect(() => {
-    const handleResize = () => {
-      const isMobile = window.innerWidth <= 600;
-      setIsMobileView(isMobile);
-    };
-
-    handleResize(); // 초기 로드 시 실행
-    window.addEventListener("resize", handleResize); // 리사이즈 이벤트 리스너 추가
-    return () => window.removeEventListener("resize", handleResize); // 리스너 정리
-
-    setSelectedDate(new Date());
-  }, []);
-
-  // useEffect to update centeredWeekDates when currentDate changes
-  useEffect(() => {
-    if (!isMobileView) {
-      setCenteredWeekDates(getWeekDates(currentDate));
-    }
-  }, [currentDate, isMobileView]);
-
+  // 시간 포맷팅 (23:59:00 → 24:00)
   const formatTime = (time) => {
-    const [hours, minutes] = time.split(":"); // 시간과 분만 추출
-    return `${hours}:${minutes}`; // HH:mm 형식으로 반환
+    if (time === "23:59:00") return "24:00";
+    const [hours, minutes] = time.split(":");
+    return `${hours}:${minutes}`;
   };
 
-
-  const handleOpenModal = () => {
-    if (!selectedDate) {
-      alert("날짜를 선택해주세요!");
-      return;
-    }
-    setIsModalOpen(true); // 모달 열기
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false); // 모달 닫기
-  };
-
-  const handleSaveReservation = (data) => {
-    setReservations((prev) => [
-      ...prev,
-      {
-        id: prev.length + 1,
-        date: formatDateToLocalString(selectedDate),
-        day: getDayName(selectedDate), // 요일
-        time: `${data.startTime} ~ ${data.endTime}`, // 시간 범위
-        title: data.reason, // 예약 사유
-        status: "pending",
-        authCode: data.password, // 인증번호
-        name: data.name, // 예약자 이름
-        studentId: data.studentId, // 학번
-      },
-    ]);
-    alert("예약이 저장되었습니다!");
-  };
-
-  const handleViewChange = (view) => {
-    if (view === "Month") {
-      navigate("/month");
-    } else {
-      setSelectedView(view);
-    }
-  };
-
-  
-
-  const startOfWeek = getStartOfWeek(new Date(currentDate));
-
-
+  // 날짜를 YYYY-MM-DD 형식으로 변환
   const formatDateToLocalString = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -185,29 +69,10 @@ const WeekPage = () => {
     return `${year}-${month}-${day}`;
   };
 
-
-  const handleDateChange = (direction) => {
-    const newDate = new Date(currentDate);
-    newDate.setDate(newDate.getDate() + direction * 7); // 한 주씩 이동
-    setCurrentDate(newDate);
-  };
-
-  const handleDateSelect = (date) => {
-    if (!(date instanceof Date)) {
-      date = new Date(date);
-    }
-    setSelectedDate(date);
-  };
-
-
-  const weekDates = getWeekDates(currentDate); // 주간 7일
-  const threeDays = getThreeDays(selectedDate || new Date());
-  const todayStr = new Date().toISOString().split("T")[0];
-
-
+  // 시간 데이터를 그리드 위치로 변환
   const convertTimeToPosition = (time) => {
-    const rowHeight = isMobileView ? 50 : 50; // 반응형 여부에 따라 높이 결정
-    const startHour = 0; // 시작 시간 기준 (0:00 AM)
+    const rowHeight = 50;
+    const startHour = 0;
   
     const [start, end] = time.split(" ~ ");
     const [startHourNum, startMinute] = start.split(":").map(Number);
@@ -226,47 +91,158 @@ const WeekPage = () => {
     return { top, height, durationInMinutes };
   };
 
+
+  // ====== API Calls ======
+
+  // 예약 데이터 가져오기
+  const fetchReservations = async () => {
+    let url;
+    const targetDate = isMobileView ? new Date(selectedDate) : new Date(currentDate);
+
+    if (isMobileView) {
+      // 모바일 뷰에서 3일 기준 예약 데이터
+      const year = targetDate.getFullYear();
+      const month = String(targetDate.getMonth() + 1).padStart(2, "0");
+      const day = String(targetDate.getDate()).padStart(2, "0");
+      url = `https://diy.knucse.site/api/v1/application/reservation/limit/${year}/${month}/${day}?minusDay=1&plusDay=1`;
+    } else {
+      // 데스크톱 뷰에서 주간 예약 데이터
+      const startOfWeek = getStartOfWeek(targetDate);
+      const year = startOfWeek.getFullYear();
+      const month = String(startOfWeek.getMonth() + 1).padStart(2, "0");
+      const day = String(startOfWeek.getDate()).padStart(2, "0");
+      url = `https://diy.knucse.site/api/v1/application/reservation/limit/${year}/${month}/${day}?minusDay=0&plusDay=6`;
+    }
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("예약 데이터를 가져오는 데 실패했습니다.");
+      const data = await response.json();
+      setReservations(data.response || []);
+    } catch (error) {
+      console.error("API 호출 오류:", error);
+      setReservations([]);
+    }
+  };
+
+
+  // ====== Event Handlers ======
+
+  // 날짜 선택
+  const handleDateSelect = (date) => {
+    setSelectedDate(new Date(date));
+  };
+
+  // 날짜 변경 (주간 이동)
+  const handleDateChange = (direction) => {
+    const newDate = new Date(currentDate);
+    newDate.setDate(newDate.getDate() + direction * 7);
+    setCurrentDate(newDate);
+  };
+
+  // 예약 데이터 저장
+  const handleSaveReservation = async (data) => {
+    setReservations((prev) => [
+      ...prev,
+      {
+        id: prev.length + 1,
+        date: formatDateToLocalString(selectedDate),
+        day: getDayName(selectedDate),
+        time: `${data.startTime} ~ ${data.endTime}`,
+        title: data.reason,
+        status: "pending",
+        authCode: data.password,
+        name: data.name,
+        studentId: data.studentId,
+      },
+    ]);
+    alert("예약이 저장되었습니다!");
+
+    await fetchReservations();
+  };
+
+  // 예약 모달 열기
+  const handleOpenModal = () => {
+    if (!selectedDate) {
+      alert("날짜를 선택해주세요!");
+      return;
+    }
+    setIsModalOpen(true);
+  };
+
+  // 예약 모달 닫기
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // 팝업 열기
+  const handleOpenPopup = (reservation) => {
+    setSelectedReservation(reservation);
+    setIsPopupOpen(true);
+  };
+
+  // 팝업 닫기
+  const handleClosePopup = () => {
+    setSelectedReservation(null);
+    setIsPopupOpen(false);
+  };
+
+
+  // ====== useEffect Hooks ======
+
+  // 예약 데이터 가져오기
+  useEffect(() => {
+    fetchReservations();
+  }, [currentDate, selectedDate, isMobileView]);
+
+  // 반응형 뷰 업데이트
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth <= 890);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // useEffect to update centeredWeekDates when currentDate changes
+  useEffect(() => {
+    if (!isMobileView) {
+      setCenteredWeekDates(getWeekDates(currentDate));
+    }
+  }, [currentDate, isMobileView]);
+
+
+  // ====== Rendering Functions ======
+
+  // 시간 그리드 생성
   const renderGrid = () => {
-    const hours = Array.from({ length: 24 }, (_, i) => i); // 0부터 23까지
-  
-    return hours.map((hour) => (
-      <div key={hour} className={styles.hourRow}>
+    return Array.from({ length: 24 }, (_, i) => (
+      <div key={i} className={styles.hourRow}>
         <span className={styles.hourLabel}>
-          {hour < 10 ? `0${hour}:00` : `${hour}:00`}
+          {i < 10 ? `0${i}:00` : `${i}:00`}
         </span>
       </div>
     ));
   };
 
-  const getLocalDate = (dateString) => {
-    if (!dateString) {
-      console.error("Invalid reservationDate:", dateString);
-      return null; // Return null if dateString is invalid
-    }
-  
-    const utcDate = new Date(dateString + "T00:00:00Z");
-    if (isNaN(utcDate.getTime())) {
-      console.error("Invalid Date object from:", dateString);
-      return null; // Return null for invalid Date objects
-    }
-  
-    return new Date(utcDate.getTime() + utcDate.getTimezoneOffset() * 60000);
-  };
+
+  const weekDates = getWeekDates(currentDate); // 주간 7일
+  const threeDays = getThreeDays(selectedDate || new Date());
+  const todayStr = new Date().toISOString().split("T")[0];
 
 
+  
+
+  // 주간 컬럼 렌더링
   const renderWeekColumns = () => {
     const displayedDates = isMobileView ? threeDays : centeredWeekDates;
   
     return displayedDates.map((day, index) => {
       const dateString = day.toISOString().split("T")[0];
-      const dayReservations = reservations.filter((r) => {
-        const localDate = getLocalDate(r.reservationDate);
-        if (!localDate) {
-          console.error("Skipping invalid reservation:", r);
-          return false; // Skip invalid reservations
-        }
-        return localDate.toISOString().split("T")[0] === dateString;
-      });
+      const dayReservations = reservations.filter(
+        (r) => r.reservationDate === dateString
+      );
   
       const isSelected =
         selectedDate && selectedDate.toISOString().split("T")[0] === dateString;
@@ -283,11 +259,12 @@ const WeekPage = () => {
           <div className={styles.dayGrid}>
             {dayReservations.map((res) => {
               const { top, height, durationInMinutes } = convertTimeToPosition(
-                `${res.startTime} ~ ${res.endTime}`
+                `${formatTime(res.startTime)} ~ ${formatTime(res.endTime)}`
               );
   
               const isThirtyMinutes = durationInMinutes === 30;
   
+              // reservationItem 생성
               return (
                 <div
                   key={res.id}
@@ -296,7 +273,7 @@ const WeekPage = () => {
                   onClick={() => handleOpenPopup(res)}
                 >
                   {isThirtyMinutes && (
-                    <div className={styles.reservationDetails}>
+                    <div className={styles.reservationDetailsthirty}>
                       <span className={styles.reservationName}>
                         {res.studentName}
                       </span>
@@ -328,9 +305,7 @@ const WeekPage = () => {
                         {res.reason}
                       </span>
                       <span className={styles.reservationTime}>
-                        {`${formatTime(res.startTime)} ~ ${formatTime(
-                          res.endTime
-                        )}`}
+                        {`${formatTime(res.startTime)} ~ ${formatTime(res.endTime)}`}
                       </span>
                     </>
                   )}
@@ -343,16 +318,7 @@ const WeekPage = () => {
     });
   };
 
-  const handleOpenPopup = (reservation) => {
-    setSelectedReservation(reservation);
-    setIsPopupOpen(true);
-  };
-
-  const handleClosePopup = () => {
-    setIsPopupOpen(false);
-    setSelectedReservation(null);
-  };
-
+  // 팝업 컴포넌트
   const Popup = ({ reservation, onClose }) => {
     if (!reservation) return null;
   
@@ -361,18 +327,20 @@ const WeekPage = () => {
         <div className={styles.popup}>
           <div className={styles.popupLabel}>예약 정보</div>
           <div className={styles.popupContent}>
-            <p>예약자 이름 | <span>{reservation.studentName}</span></p>
-            <p>예약 날짜 | <span>{reservation.reservationDate}</span></p>
-            <p>예약 시간 | <span>{`${reservation.startTime} ~ ${reservation.endTime}`}</span></p>
-            <p>예약 사유 | <span>{reservation.reason}</span></p>
-            <p>
-                상태 | <span>{" "}
-                {reservation.status === "PENDING"
-                  ? "예약 대기중 . ."
-                  : reservation.status === "APPROVED"
-                    ? "예약 승인"
-                    : "알 수 없음"}</span>
-              </p>
+            <p>이름 &nbsp;|&nbsp; <span>{reservation.studentName}</span></p>
+            <p>날짜 &nbsp;|&nbsp; <span>{reservation.reservationDate}</span></p>
+            <p>시간 &nbsp;|&nbsp;{" "}
+              <span>
+                {`${formatTime(reservation.startTime)} ~ ${formatTime(reservation.endTime)}`}
+              </span>
+            </p>
+            <p>사유 &nbsp;|&nbsp; <span>{reservation.reason}</span></p>
+            <p>상태 &nbsp;|&nbsp; {" "}
+              <span>
+                {reservation.status === "PENDING"? "예약 대기중 . ."
+                  : reservation.status === "APPROVED"? "예약 승인": "알 수 없음"}
+              </span>
+            </p>
           </div>
           <button className={styles.closeButton} onClick={onClose}>
             닫기
@@ -382,27 +350,23 @@ const WeekPage = () => {
     );
   };
 
+
+  // ====== Main ======
+
   return (
     <div className={styles.page}>
       {/* 상단 버튼 */}
       <div className={styles.rightControls}>
-  <button className={styles.reserveButton} onClick={handleOpenModal}>
-    예약하기
-  </button>
-  <div className={styles.dropdown}>
-    <button
-      className={`${styles.dropdownButton} ${
-        selectedView === "Month" ? styles.active : ""
-      }`}
-      onClick={() => navigate("/month")} // 경로 이동 추가
-    >
-      Month
-    </button>
-  </div>
-</div>
+        <button className={styles.reserveButton} onClick={handleOpenModal}>
+          예약하기
+        </button>
+        <button className={styles.dropdownButton} onClick={() => navigate("/month")}>
+          Month
+        </button>
+      </div>
 
 
-      {/*년월 + status*/}
+      {/* 년월 + status */}
       <div className={styles.header}>
         <span className={styles.navText}>
           {currentDate.getFullYear()} . {currentDate.getMonth() + 1}
@@ -421,6 +385,7 @@ const WeekPage = () => {
       </div>
 
 
+      {/* 주간 달력 */}
       {isMobileView && (
         <div className={styles.dateContainer}>
           <button
@@ -460,7 +425,7 @@ const WeekPage = () => {
         </div>
       )}
 
-      {/* 주요 타임라인: 오늘 중심의 3일 */}
+
       {isMobileView && (
         <div className={styles.timelineContainer}>
           {threeDays.map((date, index) => {
@@ -487,8 +452,7 @@ const WeekPage = () => {
       )}
 
 
-
-      {/* 큰 화면에서는 기존 weekDaysHeader */}
+      {/* 큰 화면 */}
       {!isMobileView && (
         <div className={styles.weekDaysContainer}>
         <button
@@ -515,29 +479,31 @@ const WeekPage = () => {
           <img src={next} alt="next" />
         </button>
       </div>
-
-      
       )}
 
-
-      {/* 날짜 */}
       
-      
+      {/* 시간표 */}
       <div className={styles.weekGrid}>
         <div className={styles.timeColumn}>{renderGrid()}</div>
         {renderWeekColumns()}
       </div>
 
+
+      {/* 모달 및 팝업 */}
       {isModalOpen && (
         <ReservationModal
-          selectedDate={formatDateToLocalString(selectedDate)} // 로컬 기준 날짜 포맷
+          selectedDate={formatDateToLocalString(selectedDate)}
           onClose={handleCloseModal}
           handleSave={handleSaveReservation}
         />
       )}
 
+
       {isPopupOpen && (
-        <Popup reservation={selectedReservation} onClose={handleClosePopup} />
+        <Popup
+          reservation={selectedReservation}
+          onClose={handleClosePopup}
+        />
       )}
     </div>
   );
