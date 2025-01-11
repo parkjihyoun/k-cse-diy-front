@@ -18,7 +18,8 @@
   width: 100%;
   position: relative;
   top: 70px;
-  padding-left: 110px;
+  margin-top:-22px;
+  padding-left: 120px;
 }
 
 .navigation {
@@ -250,9 +251,9 @@ td {
 }
 
 .reservationItem {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 5px;
+  border-radius: 5px !important;
   padding: 15px;
   color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -385,8 +386,8 @@ td {
   }
   .completeDot,
   .pendingDot {
-    width: 9px;
-    height: 9px;
+    width: 10px;
+    height: 10px;
   }
   .dropdownMenu li {
     padding: 10px;
@@ -397,6 +398,11 @@ td {
     align-items: flex-end; /* 항목 자체를 오른쪽 정렬 */
     text-align: right; /* 텍스트 오른쪽 정렬 */
     gap: 5px; /* 항목 간 간격 */
+    margin-right:10px;
+  }
+
+  .statusItem span {
+    font-size:12px;
   }
   .extraDots {
     font-size: 14px;
