@@ -251,17 +251,33 @@ td {
 }
 
 .reservationItem {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 5px !important;
   padding: 15px;
   color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3px); /* 블러 효과 추가 */
+  -webkit-backdrop-filter: blur(10px); /* Safari 지원 */
 }
 
 .reservationItem p {
   margin: 5px 0;
   font-size: 14px;
+}
+
+.noReservations {
+  color:white;
+  font-size: 1rem; /* 텍스트 크기 */
+  text-align: center; /* 가운데 정렬 */
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px; /* 둥근 모서리 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 가벼운 그림자 */
+  margin:0;
+  margin-bottom: 15px;
+  backdrop-filter: blur(3px); /* 블러 효과 추가 */
+  -webkit-backdrop-filter: blur(10px); /* Safari 지원 */
 }
 
 /* 모바일 스타일 */
