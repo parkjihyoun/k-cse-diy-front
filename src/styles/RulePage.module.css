@@ -14,7 +14,7 @@
 
 .penalty h2 {
   font-size: 24px;
-  margin-top: 15px;
+  margin-top: 50px;
   margin-left: -55px;
   color: #d99c9c;
 }
@@ -31,6 +31,7 @@
   margin-bottom: 10px; /* 규칙들 사이의 간격 */
   line-height: 1.6; /* 줄 간격 */
   width: 1000px; /* 너비 조정 필요 */
+  margin-left: -20px;
 }
 
 .line {
@@ -39,6 +40,7 @@
   background-color: #d99c9c;
   margin-left: -55px;
   margin-top: -5px;
+  margin-bottom: 35px;
 }
 
 .penaltyTitle {

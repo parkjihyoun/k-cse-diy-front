@@ -22,6 +22,7 @@ const Layout = () => {
         '/check/list': '예약 리스트',
         '/help': '이용 안내',
         '/help/rule': '이용 규칙',
+        '/help/tutorial': '예약 방법 및 FAQ',
     };
 
     const currentTitle = titles[location.pathname] || '페이지';
