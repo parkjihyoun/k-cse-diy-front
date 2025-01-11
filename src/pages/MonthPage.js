@@ -10,7 +10,7 @@ const MonthPage = () => {
   const [month, setMonth] = useState(today.getMonth()); // 현재 달로 초기화
   const [year, setYear] = useState(today.getFullYear()); // 현재 연도로 초기화
   const [selectedView, setSelectedView] = useState("Month");
-  const [selectedDate, setSelectedDate] = useState(todayStr); // 오늘 날짜로 초기화
+  const [selectedDate, setSelectedDate] = useState(null); // 초기값 null로 설정
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
   const [selectedReservations, setSelectedReservations] = useState([]);
   const [reservations, setReservations] = useState([]); // 예약 데이터 상태
@@ -180,7 +180,6 @@ const MonthPage = () => {
           예약하기
         </button>
         <div className={styles.dropdown}>
-
           <button
             className={`${styles.dropdownButton} ${selectedView === "Week" ? styles.active : ""
               }`}
@@ -247,31 +246,36 @@ const MonthPage = () => {
         />
       )}
 
-      <div className={styles.reservationDetails}>
-        <h3>{selectedDate} 예약 정보</h3>
-        {selectedReservations.length > 0 ? (
-          <ul className={styles.reservationList}>
-            {selectedReservations.map((res) => (
-              <li key={res.id} className={styles.reservationItem}>
-                <p>예약자 이름 | {res.studentName}</p>
-                <p>예약자 학번 | {res.studentNumber}</p>
-                <p>예약 사유 | {res.reason}</p>
-                <p>예약 시간 | {res.startTime} ~ {res.endTime}</p>
-                <p>
-                  상태 |{" "}
-                  {res.status === "PENDING"
-                    ? "예약 대기중 . ."
-                    : res.status === "APPROVED"
-                      ? "예약 승인"
-                      : "알 수 없음"}
-                </p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>예약이 없습니다.</p>
-        )}
-      </div>
+<div className={styles.reservationDetails}>
+  {selectedDate ? ( // 선택된 날짜가 있을 경우에만 표시
+    <>
+      <h3>{selectedDate} 예약 정보</h3>
+      {selectedReservations.length > 0 ? (
+        <ul className={styles.reservationList}>
+          {selectedReservations.map((res) => (
+            <li key={res.id} className={styles.reservationItem}>
+              <p>이름 | {res.studentName}</p>
+              {/* 초를 제외한 시간 표시 */}
+              <p>시간 | {res.startTime.slice(0, 5)} ~ {res.endTime.slice(0, 5)}</p>
+              <p>사유 | {res.reason}</p>
+              <p>상태 |{" "}
+                {res.status === "PENDING"
+                  ? "예약 대기중 . ."
+                  : res.status === "APPROVED"
+                  ? "예약 승인"
+                  : "알 수 없음"}
+              </p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className={styles.noReservations}>예약이 없습니다.</p>
+      )}
+    </>
+  ) : (
+    <p><br/>날짜를 선택하면 예약 정보가 표시됩니다.</p> // 선택된 날짜 없을 경우 안내 메시지
+  )}
+</div>
     </div>
   );
 };

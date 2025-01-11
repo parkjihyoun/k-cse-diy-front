@@ -54,13 +54,57 @@
   margin-bottom: 20px; /* 규칙들 사이의 간격 */
   margin-left: 15px;
   line-height: 1.6; /* 줄 간격 */
-  list-style-type: none;
 }
 .Faq li {
   margin-bottom: 25px; /* 규칙들 사이의 간격 */
   margin-left: 15px;
   line-height: 1.6; /* 줄 간격 */
   list-style-type: none;
+}
+
+@media (max-width: 900px) and (min-width: 601px) { /* 중간사이즈 */
+  .RulePage {
+    flex-direction: column; /* 세로 배치 */
+    gap: 15px; /* 컨테이너 간격 약간 축소 */
+    padding: 10px; /* 여백 약간 추가 */
+  }
+
+  .RulesContainer {
+    width: 100%; /* 화면 전체 너비 */
+    margin: 0; /* 외부 여백 제거 */
+    margin-top: 50px; /* 위쪽 여백 축소 */
+  }
+
+  .EditContainer,
+  .FaqContainer {
+    width: 100%; /* 컨테이너 너비를 화면 전체로 설정 */
+    margin-top: 30px; /* 위쪽 여백 약간 축소 */
+  }
+
+  .RulesHeader h2,
+  .EditHeader h2,
+  .FaqHeader h2 {
+    font-size: 24px; /* 제목 크기 약간 축소 */
+    margin-top: 15px; /* 위쪽 여백 약간 축소 */
+    margin-bottom: 25px; /* 아래쪽 여백 약간 축소 */
+  }
+
+  .FaqSHeader h2 {
+    font-size: 18px; /* FAQ 제목 크기 유지 */
+    margin-bottom: 10px;
+    margin-left: 15px;
+  }
+
+  .Rules li,
+  .Edit li {
+    font-size: 17px; /* 글씨 크기 약간 축소 */
+    margin-bottom: 18px; /* 간격 약간 축소 */
+    margin-left: 12px; /* 왼쪽 여백 약간 축소 */
+  }
+
+  .FaqWrapper {
+    padding-left: 15px; /* FAQ 내부 여백 약간 축소 */
+  }
 }
 
 @media (max-width: 600px) {
