@@ -13,6 +13,8 @@
   padding: 20px;
   position: relative;
   margin-top: 30px;
+  overflow: hidden;
+  width: 100%;
 }
 
 .legend {
@@ -66,6 +68,7 @@
 
 .card {
   position: relative;
+  flex: 0 0 auto;
   display: flex; 
   flex-direction: column; 
   justify-content: space-between; 
@@ -206,6 +209,59 @@ p{
   color: rgba(255, 255, 255, 0.8);
   white-space: pre-line; /* 줄바꿈 허용 */
 }
+.horizontalScroll {
+  display: flex;
+  overflow-x: auto; /* 가로 스크롤 활성화 */
+  gap: 20px; /* 카드 간격 */
+  padding: 20px;
+}
+
+.horizontalGrid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr); /* 가로로 10개 배치 */
+  grid-auto-rows: 1fr; /* 자동 줄 높이 */
+  grid-auto-flow: row dense; /* 가로 정렬 우선 */
+  gap: 20px;
+  overflow-x: auto; /* 가로 스크롤 활성화 */
+  padding: 20px;
+  white-space: nowrap; /* 가로로 스크롤이 유지되게 */
+}
+.scrollContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* 카드 크기 유지 */
+  grid-auto-rows: 1fr; /* 카드 높이 유지 */
+  gap: 20px;
+  overflow-x: auto; /* 가로 스크롤 활성화 */
+  padding: 20px;
+}
+
+.scrollContainer::-webkit-scrollbar {
+  height: 10px; /* 스크롤바 높이 */
+}
+
+.scrollContainer::-webkit-scrollbar-thumb {
+  background-color: #888; /* 스크롤바 색상 */
+  border-radius: 10px;
+}
+
+.scrollContainer::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+.scrollContainer::-webkit-scrollbar-track {
+  background: #f1f1f1; /* 스크롤바 트랙 색상 */
+}
+
+.card {
+  height: 200px; /* 카드 원래 크기 */
+  width: 350px; /* 카드 원래 크기 */
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+
 
 .noResults {
   margin-top: 15px;
@@ -217,6 +273,10 @@ p{
   align-items: center;
 }
 
+.pastCard {
+  background-color: rgba(143, 143, 143, 0.3); /* 블러 처리 효과 */
+  pointer-events: none; /* 클릭 불가 */
+}
 
 @media (max-width: 770px) {
   .page {
@@ -231,6 +291,9 @@ p{
   .container {
     margin-top: 0px; 
     padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
   }
 
   .legend {
@@ -256,6 +319,8 @@ p{
   .grid {
     grid-template-columns: 1fr; 
     gap: 15px; 
+    display: grid;
+    justify-content: center;
     width: 100%;
   }
 

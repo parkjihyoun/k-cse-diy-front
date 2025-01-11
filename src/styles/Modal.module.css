@@ -22,7 +22,7 @@ h2 {
   font-size: 30px;
   font-weight: bold;
   color: #ffffff;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .inputGroup button{
@@ -150,4 +150,17 @@ button {
   margin-left: 5px; 
   vertical-align: middle; 
   margin-bottom:3px;
+}
+
+.dateDisplay {
+  margin-bottom: 25px;
+  padding: 4px;
+  text-align: center;
+}
+
+.dateText {
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+  margin:0;
 }
