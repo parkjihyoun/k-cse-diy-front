@@ -18,7 +18,7 @@
   width: 100%;
   position: relative;
   top: 70px;
-  margin-top:-22px;
+  margin-top:-7px;
   padding-left: 120px;
 }
 
@@ -311,7 +311,7 @@ td {
     justify-content: space-between; /* 좌우 정렬 */
     width: 100%;
     position: relative;
-    top: 65px;
+    top: 50px;
     padding-left: 50px; /* 헤더 전체 왼쪽에 여백 추가 */
   }
 
