@@ -43,6 +43,7 @@ const Modal = ({ type, reservation, onSave, onClose }) => {
       startTime: editedReservation.startTime,
       endTime: editedReservation.endTime,
       title: editedReservation.title,
+      authCode: authCodeInput
     };
     onSave(updatedReservation);
     onClose();
