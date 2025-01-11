@@ -269,7 +269,7 @@ const MonthPage = () => {
           ))}
         </ul>
       ) : (
-        <p>예약이 없습니다.</p>
+        <p className={styles.noReservations}>예약이 없습니다.</p>
       )}
     </>
   ) : (
