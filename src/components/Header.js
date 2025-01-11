@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
-    const location = useLocation();
-    const [activeStyle, setActiveStyle] = useState({ left: 0, width: 0 });
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [submenuOpen, setSubmenuOpen] = useState(false); // 예약하기 하위 메뉴 상태
-    const [desktopDrawerOpen, setDesktopDrawerOpen] = useState(false); // 기본형 drawer 상태 추가
+    const [desktopDrawerOpen, setDesktopDrawerOpen] = useState(false); // 드로워 상태
+    const [drawerTimer, setDrawerTimer] = useState(null); // 드로워 타이머 상태
 
     // 화면 크기 변경 감지
     useEffect(() => {
@@ -16,23 +14,17 @@ const Header = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // 활성화된 메뉴 아이템에 따라 activeLine 위치 계산
-    useEffect(() => {
-        const navItems = Array.from(document.querySelectorAll('.nav-item'));
-        const activeIndex = navItems.findIndex(
-            (item) => item.firstChild.getAttribute('href') === location.pathname
-        );
-
-        if (activeIndex !== -1) {
-            const activeItem = navItems[activeIndex];
-            const { offsetLeft, offsetWidth } = activeItem;
-            setActiveStyle({ left: offsetLeft, width: offsetWidth });
+    // 드로워 열기/닫기 및 자동 닫기 설정
+    const toggleDesktopDrawer = () => {
+        clearTimeout(drawerTimer); // 기존 타이머 초기화
+        if (!desktopDrawerOpen) {
+            setDesktopDrawerOpen(true);
+            const timerId = setTimeout(() => setDesktopDrawerOpen(false), 2500); // 2초 후 닫힘
+            setDrawerTimer(timerId);
+        } else {
+            setDesktopDrawerOpen(false);
         }
-    }, [location]);
-
-    const toggleMenu = () => setMenuOpen(!menuOpen);
-    const toggleSubmenu = () => setSubmenuOpen(!submenuOpen); // 하위 메뉴 토글
-    const toggleDesktopDrawer = () => setDesktopDrawerOpen(!desktopDrawerOpen); // 기본형 drawer 토글
+    };
 
     return (
         <header style={styles.header}>
@@ -44,11 +36,13 @@ const Header = () => {
 
             {isMobile ? (
                 <>
-                    <div style={styles.menuIcon} onClick={toggleMenu}>
+                    {/* 모바일용 햄버거 메뉴 */}
+                    <div style={styles.menuIcon} onClick={() => setMenuOpen(!menuOpen)}>
                         <div style={styles.hamburger}></div>
                         <div style={styles.hamburger}></div>
                         <div style={styles.hamburger}></div>
                     </div>
+                    {/* 모바일 드로워 */}
                     <div
                         style={{
                             ...styles.mobileDrawer,
@@ -57,81 +51,30 @@ const Header = () => {
                     >
                         <ul style={styles.drawerList}>
                             <li style={styles.drawerItem}>
-                                <Link
-                                    to="/"
-                                    style={styles.drawerLink}
-                                    onClick={() => setMenuOpen(false)}
-                                >
+                                <Link to="/" style={styles.drawerLink} onClick={() => setMenuOpen(false)}>
                                     메인
                                 </Link>
                             </li>
                             <li style={styles.drawerItem}>
-                                <div
-                                    style={styles.drawerLink}
-                                    onClick={toggleSubmenu} // 예약하기 클릭 시 하위 메뉴 토글
-                                >
-                                    예약하기
-                                </div>
-                                {submenuOpen && (
-                                    <ul style={styles.submenuList}>
-                                        <li style={styles.submenuItem}>
-                                            <Link
-                                                to="/month"
-                                                style={styles.submenuLink}
-                                                onClick={() => setMenuOpen(false)}
-                                            >
-                                                Month
-                                            </Link>
-                                        </li>
-                                        <li style={styles.submenuItem}>
-                                            <Link
-                                                to="/week"
-                                                style={styles.submenuLink}
-                                                onClick={() => setMenuOpen(false)}
-                                            >
-                                                Week
-                                            </Link>
-                                        </li>
-                                    </ul>
-                                )}
-                            </li>
-                            <li style={styles.drawerItem}>
-                                <Link
-                                    to="/key"
-                                    style={styles.drawerLink}
-                                    onClick={() => setMenuOpen(false)}
-                                >
+                                <Link to="/key" style={styles.drawerLink} onClick={() => setMenuOpen(false)}>
                                     열쇠 대여/반납
                                 </Link>
                             </li>
                             <li style={styles.drawerItem}>
-                                <Link
-                                    to="/check"
-                                    style={styles.drawerLink}
-                                    onClick={() => setMenuOpen(false)}
-                                >
+                                <Link to="/check" style={styles.drawerLink} onClick={() => setMenuOpen(false)}>
                                     예약 확인/수정
                                 </Link>
                             </li>
                             <li style={styles.drawerItem}>
-                                <Link
-                                    to="/help"
-                                    style={styles.drawerLink}
-                                    onClick={() => setMenuOpen(false)}
-                                >
+                                <Link to="/help" style={styles.drawerLink} onClick={() => setMenuOpen(false)}>
                                     이용 안내
                                 </Link>
                             </li>
                         </ul>
                     </div>
-                    {menuOpen && (
-                        <div
-                            style={styles.overlay}
-                            onClick={() => setMenuOpen(false)}
-                        ></div>
-                    )}
                 </>
             ) : (
+                // 데스크탑용 메뉴
                 <nav style={styles.nav}>
                     <ul style={styles.navList}>
                         <li className="nav-item" style={styles.navItem}>
@@ -139,13 +82,12 @@ const Header = () => {
                                 메인
                             </Link>
                         </li>
-                        <li className="nav-item" style={styles.navItem}>
-                            <div
-                                style={styles.navLink}
-                                onClick={toggleDesktopDrawer} // 기본형 예약하기 클릭 시 drawer 열기
-                            >
-                                예약하기
-                            </div>
+                        <li
+                            className="nav-item"
+                            style={styles.navItem}
+                            onClick={toggleDesktopDrawer}
+                        >
+                            <div style={styles.navLink}>예약하기</div>
                         </li>
                         <li className="nav-item" style={styles.navItem}>
                             <Link to="/key" style={styles.navLink}>
@@ -163,24 +105,17 @@ const Header = () => {
                             </Link>
                         </li>
                     </ul>
+                    {/* 데스크탑 드로워 */}
                     {desktopDrawerOpen && (
                         <div style={styles.desktopDrawer}>
                             <ul style={styles.drawerList2}>
                                 <li style={styles.drawerItem2}>
-                                    <Link
-                                        to="/month"
-                                        style={styles.drawerLink2}
-                                        onClick={toggleDesktopDrawer}
-                                    >
+                                    <Link to="/month" style={styles.drawerLink2}>
                                         Month
                                     </Link>
                                 </li>
                                 <li style={styles.drawerItem2}>
-                                    <Link
-                                        to="/week"
-                                        style={styles.drawerLink2}
-                                        onClick={toggleDesktopDrawer}
-                                    >
+                                    <Link to="/week" style={styles.drawerLink2}>
                                         Week
                                     </Link>
                                 </li>
