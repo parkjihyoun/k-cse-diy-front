@@ -116,13 +116,13 @@ body {
   height: 15px;
   border-radius: 50%; /* 원 모양 */
   display: inline-block; /* 크기를 유지하며 인라인 요소로 처리 */
-  margin-left: 10px; /* 텍스트와의 간격 */
+  margin-right: 10px; /* 텍스트와의 간격 */
 
 }
 
 .textWithCircle {
   display: flex; /* Flexbox 활성화 */
-  justify-content: flex-end; /* 오른쪽 정렬 */
+  justify-content: flex-start; /* 왼쪽 정렬 */
   align-items: center; /* 수직 가운데 정렬 */
   width: 100%; /* 부모 요소 전체를 차지 */
   margin-bottom: 5px;
