@@ -1,14 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../styles/KeyPage.module.css";
 
 const KeyPage = () => {
-  const [status, setStatus] = useState("KEEPING"); // 초기 상태를 'KEEPING'으로 설정
+  const [status, setStatus] = useState(""); // 초기 상태를 'KEEPING'으로 설정
   const [showRules, setShowRules] = useState(false);
   const [showInputModal, setShowInputModal] = useState(false);
   const [studentName, setStudentName] = useState(""); // 이름
   const [studentNumber, setStudentNumber] = useState(""); // 학번
   const [actionType, setActionType] = useState(""); // '대여' 또는 '반납' 구분
   const [returnDate, setReturnDate] = useState(""); // 반납 시간
+  const [roomKey, setRoomKey] = useState(""); // 열쇠
+  const [actionStudent, setActionStudent] = useState(""); // 열쇠 사용자 추가
+
+  // 새로운 useEffect 추가: 컴포넌트가 마운트될 때 열쇠 정보를 가져옴
+  useEffect(() => {
+    const fetchRoomKey = async () => {
+      try {
+        const response = await fetch("https://diy.knucse.site/api/v1/application/roomkey", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const responseData = await response.json();
+          const { holderName, status: keyStatus } = responseData.response;
+
+          // 상태와 사용자 이름 업데이트
+          setStatus(keyStatus);
+          setActionStudent(holderName);
+        } else {
+          console.error("열쇠 정보를 가져오는 데 실패했습니다.");
+        }
+      } catch (error) {
+        console.error(`API 요청 중 오류 발생: ${error.message}`);
+      }
+    };
+
+    fetchRoomKey();
+  }, []); // 의존성 배열 비워서 컴포넌트 마운트 시 한 번 실행
 
   const toggleRulesModal = () => {
     setShowRules(!showRules);
@@ -52,6 +83,7 @@ const KeyPage = () => {
         const responseData = await response.json(); // API에서 반환된 KeyReadDto
         const { holderName, status: keyStatus } = responseData.response;
 
+        setActionStudent(holderName);
         // 상태 업데이트
         setStatus(keyStatus === "USING" ? "USING" : "KEEPING");
 
@@ -123,15 +155,15 @@ const KeyPage = () => {
         <p className={styles.roomSubtitle}>D.I.Y Room’s key</p>
         <hr className={styles.separator} />
         <p className={styles.lastUserTitle}>
-          {actionType === "대여" ? "Using User" : "Last User"}
+          {status === "USING" ? "Using User" : "Last User"}
         </p>
-        <p className={styles.lastUser}>호예찬</p>
+        <p className={styles.lastUser}>{actionStudent}</p>
         <div className={styles.locationContainer}>
           <p className={styles.locationBox}>
-            {actionType === "대여" ? "DIY실" : "IT4호관 과사무실"}
+            {status === "USING" ? "DIY실" : "IT4호관 과사무실"}
           </p>
           <p className={styles.eventTitle}>
-            {actionType === "대여" ? "사용중" : "보관중"}
+            {status === "USING" ? "사용중" : "보관중"}
           </p>
         </div>
       </div>
