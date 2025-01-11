@@ -73,7 +73,7 @@ const CheckListPage = () => {
           time: `${res.startTime.slice(0, 5)} ~ ${res.endTime.slice(0, 5)}`,
           title: res.reason,
           status: res.status,
-          rejectionReason: res.rejectionReason || "사유가 제공되지 않았습니다.", // 거절 사유 추가
+          rejectionReason: res.cancelledReason || "사유가 제공되지 않았습니다.", // 거절 사유 추가
           name: res.studentName,
           studentId: res.studentNumber,
         }));
@@ -118,10 +118,10 @@ const CheckListPage = () => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ reservationId: reservationId, authCode }),
+            body: JSON.stringify({ reservationId, authCode }),
           }
         );
-
+        console.log(authCode);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -149,18 +149,19 @@ const CheckListPage = () => {
             reservationId: updatedReservation.reservationId,
             startTime: updatedReservation.startTime,
             endTime: updatedReservation.endTime,
-            title: updatedReservation.title,
-            authCode: authCodeInput, // 인증 코드 추가
+            reason: updatedReservation.title,
+            authCode: updatedReservation.authCode, // 인증 코드 추가
           }),
         }
       );
-  
+      console.log('tlqkf', updatedReservation.authCode);
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
+
       const result = await response.json();
-  
+
       setReservations((prev) =>
         prev.map((res) =>
           res.reservationId === updatedReservation.reservationId
@@ -168,7 +169,7 @@ const CheckListPage = () => {
             : res
         )
       );
-  
+
       alert("수정이 성공적으로 완료되었습니다!");
     } catch (error) {
       console.error(error);
@@ -178,6 +179,8 @@ const CheckListPage = () => {
 
   const handleRejectionClick = (reason) => {
     setRejectionReason(reason);
+    console.log('reason', reason);
+    console.log('rejectionReason', rejectionReason);
     setShowRejectionModal(true);
   };
 
@@ -221,11 +224,10 @@ const CheckListPage = () => {
             {displayedReservations.map((reservation) => (
               <div
                 key={reservation.reservationId}
-                className={`${styles.card} ${
-                  isPastDateTime(reservation.date, reservation.endTime)
-                    ? styles.pastCard
-                    : ""
-                }`}
+                className={`${styles.card} ${isPastDateTime(reservation.date, reservation.endTime)
+                  ? styles.pastCard
+                  : ""
+                  }`}
               >
                 <div className={styles.cardHeader}>
                   <div className={styles.cardHeaderLeft}>
@@ -233,15 +235,14 @@ const CheckListPage = () => {
                     <p className={styles.day}>{reservation.day}</p>
                   </div>
                   <span
-                    className={`${styles.statusCircle} ${
-                      reservation.status === "APPROVED"
-                        ? styles.approved
-                        : reservation.status === "PENDING"
+                    className={`${styles.statusCircle} ${reservation.status === "APPROVED"
+                      ? styles.approved
+                      : reservation.status === "PENDING"
                         ? styles.pending
                         : reservation.status === "CANCELLED"
-                        ? styles.rejected
-                        : ""
-                    }`}
+                          ? styles.rejected
+                          : ""
+                      }`}
                   />
                 </div>
                 <p className={styles.time}>{reservation.time}</p>
