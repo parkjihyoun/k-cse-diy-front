@@ -1,49 +1,25 @@
-import React, { useState, useEffect, forwardRef } from "react";
-import DatePicker from "react-datepicker";
-import { format } from "date-fns"; // date-fns를 사용해 요일을 대문자로 변환
+import React, { useState, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from "../styles/Modal.module.css";
 
-// Custom Input 컴포넌트 정의
-const CustomDateInput = forwardRef(({ value, onClick }, ref) => {
-  // 날짜를 대문자로 변환
-  const formattedValue = value
-    ? value.replace(/Mon|Tue|Wed|Thu|Fri|Sat|Sun/g, (match) =>
-      match.toUpperCase()
-    )
-    : "날짜 선택";
-
-  return (
-    <button className={styles.customDateInput} onClick={onClick} ref={ref}>
-      {formattedValue}
-    </button>
-  );
-});
-// authCode는 백에서 인증하도록 수정했습니다 (authCode 인증하는 로직 지움)
-const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
+const Modal = ({ type, reservation, onSave, onClose }) => {
   const [authCodeInput, setAuthCodeInput] = useState("");
   const [step, setStep] = useState(type);
   const [editedReservation, setEditedReservation] = useState({
-    date: reservation?.date ? new Date(reservation.date) : new Date(),
-    startTime: reservation?.startTime || reservation?.time?.split(" ~ ")[0] || "",
-    endTime: reservation?.endTime || reservation?.time?.split(" ~ ")[1] || "",
+    startTime: reservation?.startTime || "09:00",
+    endTime: reservation?.endTime || "10:00",
     title: reservation?.title || "",
   });
 
   useEffect(() => {
     if (reservation) {
       setEditedReservation({
-        date: reservation.date ? new Date(reservation.date) : new Date(),
-        startTime: reservation.startTime || reservation.time?.split(" ~ ")[0] || "09:00",
-        endTime: reservation.endTime || reservation.time?.split(" ~ ")[1] || "10:00",
+        startTime: reservation.startTime || "09:00",
+        endTime: reservation.endTime || "10:00",
         title: reservation.title || "",
       });
     }
   }, [reservation]);
-
-  const handleDateChange = (date) => {
-    setEditedReservation({ ...editedReservation, date });
-  };
 
   const handleStartTimeChange = (e) => {
     setEditedReservation({ ...editedReservation, startTime: e.target.value });
@@ -61,15 +37,12 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
     setStep("auth");
   };
 
-
   const handleAuthSubmit = () => {
     const updatedReservation = {
       ...reservation,
-      date: editedReservation.date.toISOString().slice(0, 10),
       startTime: editedReservation.startTime,
       endTime: editedReservation.endTime,
       title: editedReservation.title,
-      authCode: authCodeInput
     };
     onSave(updatedReservation);
     onClose();
@@ -90,16 +63,12 @@ const Modal = ({ type, reservation, onAuthenticate, onSave, onClose }) => {
         {step === "edit" ? (
           <>
             <h2 className={styles.modalTitle}>예약 수정</h2>
-            <div className={styles.inputGroup}>
-              <DatePicker
-                selected={editedReservation.date}
-                onChange={handleDateChange}
-                dateFormat="yyyy-MM-dd EEE" // 요일 약어를 표시
-                customInput={<CustomDateInput />}
-                className={styles.inputedit}
-                placeholderText="날짜 선택"
-              />
-            </div> 날짜는 수정 불가능하게 바꿔주세여
+            {/* 날짜 표시 */}
+            <div className={styles.dateDisplay}>
+              <p className={styles.dateText}>
+                {reservation.date} ({reservation.day})
+              </p>
+            </div>
             <div className={styles.timeGroup}>
               <select
                 value={editedReservation.startTime}
