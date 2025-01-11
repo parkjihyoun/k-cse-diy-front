@@ -32,6 +32,11 @@ const generateTimeOptions = () => {
 const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
   const dayName = getDayName(selectedDate); // 요일 계산
 
+  // 시간 변환 함수: 24:00 → 23:59
+  const adjustTime = (time) => {
+    return time === "24:00" ? "23:59" : time;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -39,8 +44,8 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
       studentName: e.target.name.value,
       studentNumber: e.target.studentId.value,
       reservationDate: selectedDate,
-      startTime: e.target.startTime.value,
-      endTime: e.target.endTime.value,
+      startTime: adjustTime(e.target.startTime.value), // 시작 시간 변환
+      endTime: adjustTime(e.target.endTime.value), // 종료 시간 변환
       reason: e.target.reason.value,
       authCode: e.target.password.value,
     };
