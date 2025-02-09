@@ -213,7 +213,7 @@ const KeyPage = () => {
               </li>
             </ol>
             <button
-              className={styles.actionButton}
+              className={styles.closeeButton}
               onClick={toggleRulesModal}
             >
               닫기

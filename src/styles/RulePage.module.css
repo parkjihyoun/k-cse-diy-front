@@ -25,6 +25,7 @@
   line-height: 1.5;
   color: #d99c9c;
   font-weight: 500;
+  margin-bottom: 20px;
 }
 
 .penalty li {
@@ -54,21 +55,14 @@
   .Rules {
     margin-top: 40px;
     padding: 30px;
-
+    margin-left: 1%;
     font-size: 16px; /* 글꼴 크기 조정 */
     align-items: center;
   }
 
 .penalty {
     padding: 30px;
-
-    font-size: 16px; /* 글꼴 크기 조정 */
-    align-items: center;
-    margin-top: -40px;
-  }
-
-.penalty {
-    padding: 30px;
+    margin-left: 1000px;
     font-size: 16px; /* 글꼴 크기 조정 */
     align-items: center;
     margin-top: -40px;
@@ -81,6 +75,7 @@
 
   .penalty li {
     width: auto; /* 너비 자동 조정 */
+    margin-left: 1%;
   }
 
   .penalty h2, .penalty {
