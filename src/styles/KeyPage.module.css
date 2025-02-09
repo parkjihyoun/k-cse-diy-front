@@ -275,7 +275,7 @@ body {
   display: flex;
   flex-direction: column; /* 레이블과 입력 상자를 세로로 배치 */
   align-items: flex-start; /* 왼쪽 정렬 */
-  margin-bottom: 20px; /* 컨테이너 간 간격 */
+  margin-bottom: 10px; /* 컨테이너 간 간격 */
   width: 100%; /* 반응형을 위한 너비 설정 */
   max-width: 300px; /* 최대 너비 설정 */
 }
@@ -305,6 +305,7 @@ body {
 /* 모달 버튼 */
 .modalButtonContainer {
   display: flex;
+  justify-content: space-evenly; /* 버튼 간격을 동일하게 설정 */
   margin-top: 10px;
   gap: 40px;
   justify-content: center; /* 버튼을 가로 중앙 정렬 */
@@ -312,7 +313,8 @@ body {
   justify-content: center;
 }
 
-.closeButton {
+.closeButton,
+.cancelButton {
     padding: 10px 50px;
     border-radius: 5px;
     cursor: pointer;
@@ -326,6 +328,10 @@ body {
 
 .closeButton:hover {
   background: #444444;
+    transform: scale(1.1);
+}
+.cancelButton:hover {
+  background: #c9302c;
     transform: scale(1.1);
 }
 
@@ -346,17 +352,16 @@ body {
     flex-direction:column; /* 가로 방향으로 아이템을 배열 */
     justify-content: center; /* 아이템을 중앙에 배치 */
     width: 100%; /* 전체 너비를 사용 */
-    padding-right: 80px; /* 오른쪽 마진 제거 */
-    margin-top: -65px;
+    margin-left: -20px;
+    margin-top: -26px;
     gap: 0px;
-
   }
 
   .centerBox {
     width: 90%; /* 전체 화면의 90% 사용 */
-    padding: 10px;
-    height: 260px;
-    margin-top: 135px;
+    padding: 15px;
+    height: 240px;
+    margin-top: 150px;
   }
 
   .roomTitle, .roomSubtitle, .lastUserTitle {
@@ -364,8 +369,12 @@ body {
   }
 
   .locationContainer {
-    flex-direction: column; /* 세로 배치로 변경 */
-    align-items: center; /* 중앙 정렬 */
+    display: flex; /* 가로로 배치 */
+    align-items: center; /* 세로 가운데 정렬 */
+    gap: 20px; /* 박스와 텍스트 사이 간격 */
+    margin-top: 20px; /* 위아래 여백 */
+    justify-content: flex-start; /* 요소를 왼쪽으로 정렬 */
+    width: 100%; /* 부모 요소 전체 차지 */
   }
 
   .buttonContainer {
@@ -377,7 +386,7 @@ body {
   .actionButton {
     width: 95%; /* 버튼 너비 조정 */
     margin-bottom: -2px; /* 버튼 간 간격 추가 */
-    margin-top: -5px;
+    margin-top: -10px;
     
   }
 
@@ -411,8 +420,8 @@ body {
   }
 
   .statusCircle {
-    width: 9px;
-    height: 9px;
+    width: 15px;
+    height: 15px;
     border-radius: 50%; /* 원 모양 */
     display: inline-block; /* 크기를 유지하며 인라인 요소로 처리 */
     margin-left: 8px; /* 텍스트와의 간격 */
@@ -425,10 +434,18 @@ body {
     margin-left: 20px;
     margin-bottom: 5px;
   }
+  
   .locationBox {
     margin-left: 20px;
   }
 
+  .eventTitle {
+    font-size: 0.9rem;
+    color: white; /* 텍스트 색상 */
+    text-align: left; /* 왼쪽 정렬 */
+    margin-left: -10px;
+    flex-shrink: 0; /* 줄어들지 않도록 설정 */
+  }
   .date {
     margin-left: -20px;
     margin-top: -10px;
@@ -445,6 +462,5 @@ body {
     justify-content: center;
   }
 
-
-
 }
+

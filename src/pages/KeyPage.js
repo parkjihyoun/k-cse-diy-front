@@ -131,14 +131,14 @@ const KeyPage = () => {
       <div className={styles.checkkey}>
         <div className={styles.item}>
           <div className={styles.textWithCircle}>
+          <span className={`${styles.statusCircle} ${styles.canlentCircle}`} />
             <span className={styles.canlent}>대여가능</span>
-            <span className={`${styles.statusCircle} ${styles.canlentCircle}`} />
           </div>
         </div>
         <div className={styles.item}>
           <div className={styles.textWithCircle}>
+          <span className={`${styles.statusCircle} ${styles.usingCircle}`} />
             <span className={styles.using}>대여중</span>
-            <span className={`${styles.statusCircle} ${styles.usingCircle}`} />
           </div>
         </div>
       </div>
@@ -193,8 +193,24 @@ const KeyPage = () => {
           <div className={styles.ruleModalContent}>
             <h2>열쇠 대여 및 반납 규칙</h2>
             <ol>
-              <li>IT4호관 사무실 방문</li>
-              <li>사이트에서 열쇠 대여 또는 반납 진행</li>
+            <li>
+                <strong>IT4호관 사무실 방문</strong>
+              </li>
+              <li>
+                사이트의 열쇠 대여/반납 페이지에서{" "}
+                <strong>열쇠 대여하기</strong> 클릭
+              </li>
+              <li>
+                <strong>IT4호관 사무실에서 열쇠 대여</strong> 후 사이트의{" "}
+                <strong>대여 버튼</strong> 클릭
+              </li>
+              <li>
+                사용 후 <strong>IT4호관 사무실에 열쇠 반납</strong>
+              </li>
+              <li>
+                열쇠 반납 후 열쇠 대여/반납 페이지에서{" "}
+                <strong>열쇠 반납하기</strong> 클릭
+              </li>
             </ol>
             <button
               className={styles.actionButton}
@@ -242,7 +258,7 @@ const KeyPage = () => {
               <button className={styles.closeButton} onClick={handleSubmit}>
                 확인
               </button>
-              <button className={styles.closeButton} onClick={closeInputModal}>
+              <button className={styles.cancelButton} onClick={closeInputModal}>
                 취소
               </button>
             </div>
