@@ -23,6 +23,9 @@ const Layout = () => {
         '/help': '이용 안내',
         '/help/rule': '이용 규칙',
         '/help/tutorial': '예약 방법 및 FAQ',
+        '/admin': '관리자 로그인',
+        '/admin/month': '관리자용 월별 예약 현황',
+        '/admin/week': '관리자용 주간 예약 현황',
     };
 
     const currentTitle = titles[location.pathname] || '페이지';
