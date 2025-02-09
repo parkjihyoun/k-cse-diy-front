@@ -1,0 +1,682 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  font-family: Inter, sans-serif;
+  margin-top: 60px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  padding-left: 180px;
+}
+
+.navButton {
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  width: 50px;
+}
+
+.navButton:hover {
+  background: none;
+}
+
+.navButton img {
+  width: 8px;
+}
+
+.navText {
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  align-items: center;
+  flex: 1;
+}
+
+.statusLegend {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  margin-right: 40px;
+}
+
+.statusItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.statusItem span {
+  color: white;
+  font-size: 14px;
+}
+
+.completeDot {
+  width: 13px;
+  height: 13px;
+  background-color: #324e97;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.pendingDot {
+  width: 13px;
+  height: 13px;
+  background-color: #e4e4e4;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+
+
+.dateContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  margin-top: 20px;
+  color: white;
+  font-size: 12px;
+}
+
+.dateItem {
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.dateItem.selected {
+  background-color: rgba(255, 255, 255, 0.3); /* 선택된 날짜 배경 강조 */
+  font-weight: bold;
+}
+
+.dateItem.today {
+  border: 0.5px solid #fff;
+  font-weight: bold;
+}
+
+.timelineContainer {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  grid-template-columns: repeat(3, 1fr); /* 3일 표시 */
+  width: 100%;
+  gap: 0px;
+  margin-top: 20px;
+  color: white;
+  font-size: 14px;
+  padding-left: 60px;
+  padding-right: 30px;
+}
+
+
+
+.timelineItem {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+}
+
+
+.timelineDate {
+  display: block;
+}
+
+
+.weekDaysContainer {
+  display: flex;
+  margin-left: 100px;
+  margin-right: 41px;
+}
+
+.weekDaysHeader {
+  display: flex;
+  background-color: transparent;
+  width: 100%;
+}
+
+.dateHeader {
+  display: flex; /* Flexbox를 사용 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  font-weight: bold;
+  font-size: 14px;
+  color: white;
+  white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 설정 */
+  overflow: hidden; /* 넘치는 텍스트 숨김 */
+  text-overflow: ellipsis; /* 말줄임 표시 */
+}
+
+.weekGrid {
+  display: flex;
+  margin-top: 0;
+  overflow-y: auto;
+  margin-left: 50px;
+  margin-right: 90px;
+  margin-bottom: 40px;
+  max-height: calc(100vh - 200px);
+}
+
+.timeColumn {
+  flex-shrink: 0;
+  width: 100px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hourRow {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hourLabel {
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.dayColumn {
+  flex: 1;
+  position: relative;
+  border-right: 1px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  height: 1250px;
+}
+
+.dayColumn.selected {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.dayColumn.today {
+  border: 1.5px solid white;
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.3);
+  position: relative;
+}
+
+.dayColumn.today::before,
+.dayColumn.today::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  width: 1.5px;
+  background-color: white;
+}
+
+.dayColumn.today::before {
+  left: -1.5px;
+}
+
+.dayColumn.today::after {
+  right: -1.5px;
+}
+
+
+.dayGrid {
+  position: relative;
+  overflow: hidden;
+  margin-top:0px;
+  background-color: rgba(255, 255, 255, 0.1);
+  min-height: 1250px;
+}
+
+.reservationItem {
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  background-color: #d9d9d9;
+  padding: 0px 10px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reservationDetails {
+  display: flex; 
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+
+.reservationDetailsthirty {
+  display: flex; 
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.statusCircle {
+  display: inline-block;
+  vertical-align: middle;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.statusComplete {
+  background-color: #324e97; /* 예약 완료 */
+}
+
+.statusPending {
+  background-color: white; /* 예약 대기 */
+}
+
+.statusRejected {
+  background-color: #861C1C;
+  
+}
+
+.reservationName {
+  font-weight: bold;
+  font-size: 11px;
+  color: #000;
+}
+
+.reservationTitle {
+  font-size: 10px;
+  margin-top: 0px;
+  display: block;
+  color: #333;
+  overflow: hidden; /* 넘치는 텍스트 숨기기 */
+  text-overflow: ellipsis; /* 말줄임표로 처리 */
+  white-space: nowrap;
+}
+
+.reservationTime {
+  font-size: 10px;
+  font-weight: bold;
+  margin-top: 0px;
+  display: block;
+  color: #5B77BE;
+}
+
+/* Shared styles for hover effects and alignments */
+.reservationItem,
+.navButton:hover {
+  transition: background-color 0.3s ease;
+}
+
+.rightControls {
+  position: absolute;
+  top: 15px;
+  right: 40px;
+  display: flex;
+  gap: 10px;
+}
+
+
+.reserveButton {
+  padding: 8px 15px;
+  background-color: #1f3775;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 90px;
+  height: 35px;
+  font-size: 15px;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdownButton {
+  padding: 8px 15px;
+  background-color: #1d1e1d;
+  color: white;
+  width: 90px;
+  height: 35px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 36px;
+  right: 0;
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  list-style: none;
+  padding: 5px 0;
+  display: none;
+}
+
+.dropdown:hover .dropdownMenu {
+  display: block;
+}
+
+.dropdownMenu li {
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.dropdownMenu li:hover {
+  background-color: #f0f0f0;
+}
+
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  padding: 20px 30px;
+  width: 80%;
+  text-align: left;
+  color: #000;
+  font-size: 14px;
+  font-family: Inter, sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.popupLabel {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.popupContent {
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.popupContent p {
+  margin: 5px 0;
+  font-size: 15px;
+}
+
+.popupContent p span {
+  font-weight: bold;
+  color: #000;
+}
+
+
+.closeButton {
+  display: block;
+  height: 39.5px;
+  width: 100%;
+  padding: 10px 0;
+  background: none;
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  border: 1.5px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.actionButtons{
+  display:flex;
+  justify-content:space-between;
+  gap:6px;
+}
+  
+  .approveButton {
+    padding: 8px 15px;
+    background-color: #1f3775;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    height: 39.5px;
+    font-size: 16px;
+  
+  }
+  
+  .rejectButton {
+    padding: 8px 15px;
+    background-color: #861C1C;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    height: 39.5px;
+    font-size: 16px;
+  }
+
+
+/* 반응형 스타일 */
+@media (max-width: 890px) {
+  .rightControls {
+    top: 0px;
+    right: 10px;
+    gap: 7px;
+  }
+
+  .reserveButton,
+  .dropdownButton {
+    width: 75px;
+    height: 32px;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .dropdown {
+    position: relative;
+    z-index: 10;
+  }
+
+  .dropdownMenu {
+    top: 28px;
+    right: 0px;
+    width: calc(100% - 0px);
+    margin-left: 10px;
+    z-index: 20;
+  }
+
+  .header {
+    margin: 0px;
+    display: flex;
+    
+    justify-content: space-between;
+    align-items: center; /* 전체 헤더 가운데 정렬 */
+    padding-left: 100px;
+  }
+
+  .navText {
+    font-size: 22px;
+    color: white;
+    text-align: center; /* 텍스트 중앙 정렬 */
+    margin-top: 0px; /* 텍스트와 버튼 사이 간격 */
+    display: flex;
+    justify-content: center; /* 수평 정렬 */
+    align-items: center; /* 수직 정렬 */
+  }
+
+  .statusLegend {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+    margin-right: 20px;
+  }
+  
+  .statusItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .statusItem span {
+    color: white;
+    font-size: 12px;
+  }
+  
+  .completeDot {
+    width: 10px;
+    height: 10px;
+    background-color: #324e97;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .pendingDot {
+    width: 10px;
+    height: 10px;
+    background-color: #e4e4e4;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  .rejectedDot{
+    width: 10px;
+    height: 10px;
+    background-color: #861C1C;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+
+
+
+  
+  .weekGrid {
+    display: grid;
+    grid-template-columns: 50px repeat(3, 1fr); /* 시간 열 + 3일 표시 */
+    margin-left: 10px;
+    margin-right: 30px;
+  }
+
+  .dayGrid {
+    position: relative;
+    margin-top: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    min-height: 1250px;
+  }
+
+  .dayColumn {
+    position: relative;
+    border-right: 1px solid rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+  }
+
+  .timeColumn {
+    display: block; /* 시간 축 유지 */
+    width: 50px;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .hourRow {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hourLabel {
+    font-size: 12px; /* 모바일에서 글씨 크기 줄이기 */
+    color: #ffffff;
+  }
+
+  .reservationItem {
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    background-color: #d9d9d9;
+    padding: 0px 10px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: all 0.3s ease; /* 위치 및 높이 변화에 부드러운 애니메이션 추가 */
+  }
+  
+  .reservationName {
+    font-weight: 600;
+    font-size: 10px;
+    color: #000;
+  }
+  
+  .reservationTitle {
+    font-size: 9px;
+    margin-top: 0px;
+    display: block;
+    color: #333;
+  }
+  
+  .reservationTime {
+    font-size: 9px;
+    font-weight: bold;
+    margin-top: 0px;
+    display: block;
+    color: #5B77BE;
+  }
+
+  .weekDaysContainer {
+    display: flex;
+    margin-left: 35px;
+    margin-right: 5px;
+  }
+
+  .weekDaysHeader {
+    display: flex;
+    grid-template-columns: repeat(3, 1fr); /* 3일 표시 */
+    width: 100%;
+    gap: 30px;
+  }
+
+
+  .navButton {
+    padding: 5px;
+    font-size: 12px;
+  }
+
+  .navButton img {
+    width: 8px;
+  }
+
+  .dateHeader {
+    font-size: 14px; /* 날짜 크기 조정 */
+  }
+}
+
