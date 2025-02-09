@@ -33,7 +33,7 @@ const AppRoutes = () => {
       </Route>
 
       {/* Admin 관련 라우팅 */}
-      <Route path="admin/login" element={<AdminLoginPage />} />
+      <Route path="admin" element={<AdminLoginPage />} />
       <Route path="admin/month" element={<AdminMonthPage />} />
       <Route path="admin/week" element={<AdminWeekPage />} />
       <Route path="admin/check" element={<AdminCheckPage />} />
