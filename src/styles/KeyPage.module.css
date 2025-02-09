@@ -158,6 +158,24 @@ body {
   gap:10px;
 }
 
+.closeeButton {
+  flex: 1;
+  padding: 14px 20px;
+  width: 100%;
+  margin-top: 12px;
+  border: none;
+  border-radius: 5px;
+  background-color: #000000;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.closeeButton:hover {
+  background-color: #1f3775;
+  transform: scale(1);
+}
 .actionButton {
   flex: 1;
   padding: 14px 20px;
@@ -227,7 +245,6 @@ body {
   border-radius: 5px;
   font-size: 1rem;
   cursor: pointer;
-  margin-top: 10px;
 }
 
 .closeButton:hover {
@@ -328,11 +345,9 @@ body {
 
 .closeButton:hover {
   background: #444444;
-    transform: scale(1.1);
 }
 .cancelButton:hover {
   background: #c9302c;
-    transform: scale(1.1);
 }
 
 @media (max-width: 692px) {
@@ -358,10 +373,10 @@ body {
   }
 
   .centerBox {
-    width: 90%; /* 전체 화면의 90% 사용 */
+    width: 70%; /* 전체 화면의 90% 사용 */
     padding: 15px;
     height: 240px;
-    margin-top: 150px;
+    margin-top: 170px;
   }
 
   .roomTitle, .roomSubtitle, .lastUserTitle {
@@ -379,24 +394,24 @@ body {
 
   .buttonContainer {
     flex-direction: row; /* 버튼을 세로로 배치 */
-    width:88%; /* 너비를 100%로 조정 */
+    width: 70%; /* 너비를 100%로 조정 */
     align-items: center;
   }
 
   .actionButton {
-    width: 95%; /* 버튼 너비 조정 */
+    width: 90%; /* 버튼 너비 조정 */
     margin-bottom: -2px; /* 버튼 간 간격 추가 */
     margin-top: -10px;
     
   }
 
   .modalContent, .ruleModalContent {
-    width: 95%; /* 모달 너비를 화면에 맞게 조정 */
+    width: 80%; /* 모달 너비를 화면에 맞게 조정 */
     padding: 15px;
   }
 
   .closeButton {
-    width: auto; /* 닫기 버튼 너비를 조정 */
+
     align-self: center;
     margin: 0 auto; 
   }
