@@ -9,12 +9,12 @@ import { getDayName } from "../components/ReservationModal";
 const WeekPage = () => {
   const navigate = useNavigate();
 
-  // ====== 날짜 함수 ======
+  // == 날짜 함수 ==
 
-  // 주간 시작 날짜 계산
+  // 주간 시작 날짜 일요일
   const getStartOfWeek = (date) => {
     const day = date.getDay();
-    const diff = date.getDate() - day; // 주간 시작일 (일요일 기준)
+    const diff = date.getDate() - day;
     return new Date(date.setDate(diff));
   };
 
@@ -28,9 +28,9 @@ const WeekPage = () => {
     });
   };
 
-  // 모바일 뷰를 위한 3일 간의 날짜 배열 생성
+  // 반응형 3일 간의 날짜 생성 (어제, 오늘, 내일)
   const getThreeDays = (date) => {
-    const todayIndex = 1; // 오늘 기준 좌우 하루
+    const todayIndex = 1;
     const startDate = new Date(date);
     startDate.setDate(date.getDate() - todayIndex);
     return Array.from({ length: 3 }, (_, i) => {
@@ -61,7 +61,7 @@ const WeekPage = () => {
     return `${hours}:${minutes}`;
   };
 
-  // 날짜를 YYYY-MM-DD 형식으로 변환
+  // 날짜 형식
   const formatDateToLocalString = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -81,7 +81,7 @@ const WeekPage = () => {
     // 시작 시간 위치 계산
     const top =
       (startHourNum - startHour) * rowHeight +
-      (startMinute / 60) * rowHeight + 20;
+      (startMinute / 60) * rowHeight + 25;
   
     // 지속 시간 계산 (분 단위)
     const durationInMinutes =
@@ -188,7 +188,7 @@ const WeekPage = () => {
   };
 
 
-  // ====== useEffect Hooks ======
+  // ====== useEffect ======
 
   // 예약 데이터 가져오기
   useEffect(() => {
@@ -205,7 +205,7 @@ const WeekPage = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // useEffect to update centeredWeekDates when currentDate changes
+  // 선택 날짜 기준 업데이트
   useEffect(() => {
     if (!isMobileView) {
       setCenteredWeekDates(getWeekDates(currentDate));
@@ -214,10 +214,13 @@ const WeekPage = () => {
 
 
   // ====== Rendering Functions ======
+  const weekDates = getWeekDates(currentDate);
+  const threeDays = getThreeDays(selectedDate || new Date());
+  const todayStr = new Date().toISOString().split("T")[0];
 
   // 시간 그리드 생성
   const renderGrid = () => {
-    return Array.from({ length: 24 }, (_, i) => (
+    return Array.from({ length: 25 }, (_, i) => (
       <div key={i} className={styles.hourRow}>
         <span className={styles.hourLabel}>
           {i < 10 ? `0${i}:00` : `${i}:00`}
@@ -226,14 +229,7 @@ const WeekPage = () => {
     ));
   };
 
-
-  const weekDates = getWeekDates(currentDate); // 주간 7일
-  const threeDays = getThreeDays(selectedDate || new Date());
-  const todayStr = new Date().toISOString().split("T")[0];
-
-
   
-
   // 주간 컬럼 렌더링
   const renderWeekColumns = () => {
     const displayedDates = isMobileView ? threeDays : centeredWeekDates;
@@ -318,7 +314,7 @@ const WeekPage = () => {
     });
   };
 
-  // 팝업 컴포넌트
+  // 팝업
   const Popup = ({ reservation, onClose }) => {
     if (!reservation) return null;
   
@@ -361,7 +357,7 @@ const WeekPage = () => {
           예약하기
         </button>
         <button className={styles.dropdownButton} onClick={() => navigate("/month")}>
-          Month
+          MONTH
         </button>
       </div>
 
@@ -369,7 +365,7 @@ const WeekPage = () => {
       {/* 년월 + status */}
       <div className={styles.header}>
         <span className={styles.navText}>
-          {currentDate.getFullYear()} . {currentDate.getMonth() + 1}
+          {currentDate.getFullYear()} . {String(currentDate.getMonth() + 1).padStart(2, "0")}
         </span>
 
         <div className={styles.statusLegend}>
@@ -412,7 +408,7 @@ const WeekPage = () => {
                 {date.toLocaleDateString("en-US", {
                   day: "numeric",
                   weekday: "short",
-                })}
+                }).toUpperCase()}
               </div>
             );
           })}
@@ -443,7 +439,7 @@ const WeekPage = () => {
                   {date.toLocaleDateString("en-US", {
                     day: "numeric",
                     weekday: "short",
-                  })}
+                  }).toUpperCase()}
                 </span>
               </div>
             );
@@ -466,7 +462,7 @@ const WeekPage = () => {
           {centeredWeekDates.map((day, index) => (
             <div key={index} className={styles.dateHeader}>
               <div>
-                {day.toLocaleDateString("en-US", { day: "numeric", weekday: "short" })}
+                {day.toLocaleDateString("en-US", { day: "numeric", weekday: "short" }).toUpperCase()}
               </div>
             </div>
           ))}
@@ -510,3 +506,4 @@ const WeekPage = () => {
 };
 
 export default WeekPage;
+

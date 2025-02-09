@@ -206,7 +206,7 @@
   cursor: pointer;
   border-bottom: 1px solid #ddd;
   border-top: 1px solid #ddd;
-  height: 1230px;
+  height: 1250px;
 }
 
 .dayColumn.selected {
@@ -243,7 +243,7 @@
   overflow: hidden;
   margin-top:0px;
   background-color: rgba(255, 255, 255, 0.1);
-  min-height: 1230px;
+  min-height: 1250px;
 }
 
 .reservationItem {
@@ -551,7 +551,7 @@
     position: relative;
     margin-top: 0;
     background-color: rgba(255, 255, 255, 0.1);
-    min-height: 1200px;
+    min-height: 1250px;
   }
 
   .dayColumn {
@@ -642,3 +642,4 @@
     font-size: 14px; /* 날짜 크기 조정 */
   }
 }
+
