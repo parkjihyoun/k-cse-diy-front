@@ -10,18 +10,17 @@ import HelpPage from '../pages/HelpPage';
 import CheckListPage from '../pages/CheckListPage';
 import TutorialPage from '../pages/TutorialPage';
 import RulePage from '../pages/RulePage';
-import AdminLoginPage from '../pages/Admin/LoginPage';
-import AdminMonthPage from '../pages/Admin/AdminMonthPage';
-import AdminWeekPage from '../pages/Admin/AdminWeekPage';
-import AdminCheckPage from '../pages/Admin/AdminCheckPage';
-import AdminKeyPage from '../pages/Admin/AdminKeyPage';
+import AdminLoginPage from '../pages/Adminpage/LoginPage';
+import AdminMonthPage from '../pages/Adminpage/AdminMonthPage';
+import AdminWeekPage from '../pages/Adminpage/AdminWeekPage';
+import AdminCheckPage from '../pages/Adminpage/AdminCheckPage';
+import AdminKeyPage from '../pages/Adminpage/AdminKeyPage';
 
 const AppRoutes = () => {
   return (
     <Routes>
       {/* Layout 적용 */}
       <Route path="/" element={<Layout />}>
-        {/* Layout 내부의 페이지들 */}
         <Route index element={<MainPage />} />
         <Route path="check" element={<CheckPage />} />
         <Route path="check/list" element={<CheckListPage />} />
@@ -34,12 +33,11 @@ const AppRoutes = () => {
       </Route>
 
       {/* Admin 관련 라우팅 */}
-      <Route path="admin" element={<AdminLoginPage />}>
-        <Route path="month" element={<AdminMonthPage />} />
-        <Route path="week" element={<AdminWeekPage />} />
-        <Route path="check" element={<AdminCheckPage />} />
-        <Route path="key" element={<AdminKeyPage />} />
-      </Route>
+      <Route path="admin/login" element={<AdminLoginPage />} />
+      <Route path="admin/month" element={<AdminMonthPage />} />
+      <Route path="admin/week" element={<AdminWeekPage />} />
+      <Route path="admin/check" element={<AdminCheckPage />} />
+      <Route path="admin/key" element={<AdminKeyPage />} />
     </Routes>
   );
 };
