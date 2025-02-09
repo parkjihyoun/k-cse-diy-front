@@ -19,7 +19,7 @@ const Header = () => {
         clearTimeout(drawerTimer); // 기존 타이머 초기화
         if (!desktopDrawerOpen) {
             setDesktopDrawerOpen(true);
-            const timerId = setTimeout(() => setDesktopDrawerOpen(false), 2500); // 2초 후 닫힘
+            const timerId = setTimeout(() => setDesktopDrawerOpen(false), 2000); // 2초 후 닫힘
             setDrawerTimer(timerId);
         } else {
             setDesktopDrawerOpen(false);
