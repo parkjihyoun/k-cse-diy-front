@@ -29,7 +29,12 @@ const Footer = () => {
                 alt="cselogo"
                 style={{ ...styles.cselogo, ...(isMobile ? styles.cselogoMobile : {}) }}
             />
-            <p style={isMobile ? styles.textMobile : {}}>© 2025 @yeaey_oo | @unnhyo | @w.o_xna | @y___ch__ <br/> All rights reserved.</p>
+            <p style={isMobile ? styles.textMobile : {}}>
+                © 2025 @yeaey_oo | @unnhyo | @w.o_xna | @y___ch__ <br /> All rights reserved.
+            </p>
+            <p style={styles.login}>
+                <a href="/admin" style={styles.loginLink}>Administrator LogIn</a>
+            </p>
         </footer>
     );
 };
@@ -43,7 +48,7 @@ const styles = {
         bottom: 0,
         width: '100%',
         padding: '30px',
-        fontSize:'14px',
+        fontSize: '14px',
     },
     footerMobile: {
         padding: '10px', // 모바일에서 줄어든 푸터 크기
@@ -57,6 +62,16 @@ const styles = {
     },
     textMobile: {
         fontSize: '12px', // 모바일에서 글자 크기 축소
+    },
+    login: {
+        marginTop: '5px',
+        fontWeight: 'bold',
+    },
+    loginLink: {
+        color: '#fff', 
+        textDecoration: 'underline', // 밑줄 추가!
+        fontSize: '12px',
+        fontWeight: 'bold',
     },
 };
 
