@@ -30,7 +30,7 @@ const AppRoutes = () => {
         <Route path="help" element={<HelpPage />} />
         <Route path="help/tutorial" element={<TutorialPage />} />
         <Route path="help/rule" element={<RulePage />} />
-      </Route>
+      
 
       {/* Admin 관련 라우팅 */}
       <Route path="admin" element={<AdminLoginPage />} />
@@ -38,6 +38,7 @@ const AppRoutes = () => {
       <Route path="admin/week" element={<AdminWeekPage />} />
       <Route path="admin/check" element={<AdminCheckPage />} />
       <Route path="admin/key" element={<AdminKeyPage />} />
+      </Route>
     </Routes>
   );
 };
