@@ -23,7 +23,7 @@ export default function LoginPage() {
       formData.append("username", username);
       formData.append("password", password);
 
-      const response = await fetch("http://localhost:8080/login", {
+      const response = await fetch("https://diy.knucse.site/api/v1/login", {
         method: "POST",
         body: formData,
       });
