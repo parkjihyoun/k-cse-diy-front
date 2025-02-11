@@ -154,7 +154,6 @@ const CheckListPage = () => {
           }),
         }
       );
-      console.log('tlqkf', updatedReservation.authCode);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

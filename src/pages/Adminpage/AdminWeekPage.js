@@ -111,25 +111,76 @@ const AdminWeekPage = () => {
   };
 
   // 예약 승인 시 예약 상태 변경 및 팝업 닫기
-  const handleApproveReservation = (id) => {
-    setReservations((prev) =>
-      prev.map((res) => (res.id === id ? { ...res, status: "APPROVED" } : res))
-    );
-    handleClosePopup();
-  };
+  const handleApproveReservation = async (reservationId, reservationStatus) => {
+    const token = localStorage.getItem("token");
 
-  // 예약 거절 시 거절 사유 입력 후 예약 상태 변경 및 팝업 닫기
-  const handleRejectReservation = (id) => {
-    const reason = prompt("거절 사유를 입력해주세요.");
-    if (reason !== null && reason.trim() !== "") {
-      setReservations((prev) =>
-        prev.map((res) =>
-          res.id === id ? { ...res, status: "REJECTED", cancelledReason: reason } : res
-        )
+    try {
+      const response = await fetch(
+        `https://diy.knucse.site/api/v1/admin/reservation/treatment`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ reservationId, reservationStatus }),
+      }
       );
+
+      if (!response.ok) {
+        throw new Error("예약 승인 실패");
+      }
+
+      setReservations((prev) =>
+        prev.map((res) => (res.id === reservationId ? { ...res, status: reservationStatus } : res))
+      );
+    } catch (err) {
+      console.log(err);
+    } finally {
       handleClosePopup();
     }
   };
+
+  // 예약 거절 시 거절 사유 입력 후 예약 상태 변경 및 팝업 닫기
+  const handleRejectReservation = async (reservationId, reservationStatus) => {
+    const token = localStorage.getItem("token");
+    const cancelledReason = prompt("거절 사유를 입력해주세요.");
+    if (!cancelledReason) {
+      alert("거절 사유를 입력해야 합니다.");
+      return;
+    }
+    console.log(reservationId);
+    console.log(cancelledReason);
+
+    try {
+      const response = await fetch(
+        `https://diy.knucse.site/api/v1/admin/reservation/cancel`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ reservationId, cancelledReason }),
+      }
+      );
+
+      if (!response.ok) {
+        throw new Error("예약 거절 실패");
+      }
+
+      setReservations((prev) =>
+        prev.map((res) =>
+          res.id === reservationId ? { ...res, status: reservationStatus, cancelledReason } : res
+        )
+      );
+
+    } catch (err) {
+      console.log(err);
+    } finally {
+      handleClosePopup();
+    }
+  };
+
+
 
   const handleOpenPopup = (reservation) => {
     setSelectedReservation(reservation);
@@ -189,9 +240,8 @@ const AdminWeekPage = () => {
       return (
         <div
           key={index}
-          className={`${styles.dayColumn} ${isSelected ? styles.selected : ""} ${
-            isToday ? styles.today : ""
-          }`}
+          className={`${styles.dayColumn} ${isSelected ? styles.selected : ""} ${isToday ? styles.today : ""
+            }`}
           onClick={() => setSelectedDate(day)}
         >
           <div className={styles.dayGrid}>
@@ -213,13 +263,12 @@ const AdminWeekPage = () => {
                         {res.studentName}
                       </span>
                       <span
-                        className={`${styles.statusCircle} ${
-                          res.status === "APPROVED"
-                            ? styles.statusComplete
-                            : res.status === "REJECTED"
+                        className={`${styles.statusCircle} ${res.status === "APPROVED"
+                          ? styles.statusComplete
+                          : res.status === "CANCELLED"
                             ? styles.statusRejected
                             : styles.statusPending
-                        }`}
+                          }`}
                       ></span>
                     </div>
                   )}
@@ -230,13 +279,12 @@ const AdminWeekPage = () => {
                           {res.studentName}
                         </span>
                         <span
-                          className={`${styles.statusCircle} ${
-                            res.status === "APPROVED"
-                              ? styles.statusComplete
-                              : res.status === "REJECTED"
+                          className={`${styles.statusCircle} ${res.status === "APPROVED"
+                            ? styles.statusComplete
+                            : res.status === "CANCELLED"
                               ? styles.statusRejected
                               : styles.statusPending
-                          }`}
+                            }`}
                         ></span>
                       </div>
                       <span className={styles.reservationTitle}>
@@ -285,20 +333,20 @@ const AdminWeekPage = () => {
                 {reservation.status === "PENDING"
                   ? "예약 대기중 . ."
                   : reservation.status === "APPROVED"
-                  ? "예약 승인"
-                  : `예약 거절${reservation.cancelledReason ? " (거절 사유 : " + reservation.cancelledReason : ""})`}
+                    ? "예약 승인"
+                    : `예약 거절${reservation.cancelledReason ? " (거절 사유 : " + reservation.cancelledReason : ""})`}
               </span>
             </p>
           </div>
           <div className={styles.actionButtons}>
             <button
-              onClick={() => handleApproveReservation(reservation.id)}
+              onClick={() => handleApproveReservation(reservation.id, "APPROVED")}
               className={styles.approveButton}
             >
               승인
             </button>
             <button
-              onClick={() => handleRejectReservation(reservation.id)}
+              onClick={() => handleRejectReservation(reservation.id, "CANCELLED")}
               className={styles.rejectButton}
             >
               거절

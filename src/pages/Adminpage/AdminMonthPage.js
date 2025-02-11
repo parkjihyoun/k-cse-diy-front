@@ -18,6 +18,36 @@ const AdminMonthPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    const validateToken = async () => {
+      console.log('validate token' + token);
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetch(
+          `https://diy.knucse.site/api/v1/admin/validate-token`, {
+          mothod: "GET",
+          headers: {
+            Authorization: token,
+          }
+        }
+        );
+
+        if (!response.ok) {
+          alert("로그인이 필요합니다.");
+          localStorage.removeItem("token");
+          navigate("/admin");
+        }
+      }
+      catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     const handleViewChange = (view) => {
       if (view === "Week") {
         navigate("/admin/week");
@@ -52,6 +82,7 @@ const AdminMonthPage = () => {
       }
     };
 
+    validateToken();
     fetchReservations();
   }, [year, month]);
 
@@ -82,30 +113,94 @@ const AdminMonthPage = () => {
     setSelectedReservations(filteredReservations);
   };
 
-  const handleApproval = (id, status) => {
-    if (status === "REJECTED") {
+  const handleApprove = async (reservationId, reservationStatus) => {
+    const token = localStorage.getItem("token");
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `https://diy.knucse.site/api/v1/admin/reservation/treatment`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ reservationId, reservationStatus }),
+      }
+      );
+
+      if (!response.ok) {
+        throw new Error("예약 승인 실패");
+      }
+
+      setReservations((prev) =>
+        prev.map((res) => (res.id === reservationId ? { ...res, status: reservationStatus } : res))
+      );
+      setSelectedReservations((prev) =>
+        prev.map((res) => (res.id === reservationId ? { ...res, status: reservationStatus } : res))
+      );
+
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReject = async (reservationId, status, cancelledReason) => {
+    const token = localStorage.getItem("token");
+    console.log(reservationId);
+    console.log(status);
+    console.log(cancelledReason);
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `https://diy.knucse.site/api/v1/admin/reservation/cancel`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ reservationId, cancelledReason }),
+      }
+      );
+
+      if (!response.ok) {
+        throw new Error("예약 거절 실패");
+      }
+
+      setReservations((prev) =>
+        prev.map((res) =>
+          res.id === reservationId ? { ...res, status, cancelledReason } : res
+        )
+      );
+
+      setSelectedReservations((prev) =>
+        prev.map((res) =>
+          res.id === reservationId ? { ...res, status, cancelledReason } : res
+        )
+      );
+
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReservationStatus = (id, status) => {
+    if (status === "CANCELLED") {
       const reason = prompt("거절 사유를 입력하세요:");
       if (!reason) {
         alert("거절 사유를 입력해야 합니다.");
         return;
       }
-      setReservations((prev) =>
-        prev.map((res) =>
-          res.id === id ? { ...res, status, cancelledReason: reason } : res
-        )
-      );
-      setSelectedReservations((prev) =>
-        prev.map((res) =>
-          res.id === id ? { ...res, status, cancelledReason: reason } : res
-        )
-      );
+      handleReject(id, status, reason);
     } else {
-      setReservations((prev) =>
-        prev.map((res) => (res.id === id ? { ...res, status } : res))
-      );
-      setSelectedReservations((prev) =>
-        prev.map((res) => (res.id === id ? { ...res, status } : res))
-      );
+      handleApprove(id, status);
     }
   };
 
@@ -146,9 +241,9 @@ const AdminMonthPage = () => {
                       className={
                         r.status === "APPROVED"
                           ? styles.completeDot
-                          : r.status === "REJECTED"
-                          ? styles.rejectedDot
-                          : styles.pendingDot
+                          : r.status === "CANCELLED"
+                            ? styles.rejectedDot
+                            : styles.pendingDot
                       }
                     ></div>
                   ))}
@@ -256,23 +351,23 @@ const AdminMonthPage = () => {
                       상태 | {res.status === "PENDING"
                         ? "예약 대기중 . ."
                         : res.status === "APPROVED"
-                        ? "예약 승인"
-                        : res.status === "REJECTED"
-                        ? `예약 거절  (거절 사유: ${res.cancelledReason || "없음"})`
-                        : "알 수 없음"}
+                          ? "예약 승인"
+                          : res.status === "CANCELLED"
+                            ? `예약 거절  (거절 사유: ${res.cancelledReason || "없음"})`
+                            : "알 수 없음"}
                     </p>
                     <div className={styles.actionButtons}>
                       <button
                         className={styles.approveButton}
-                        onClick={() => handleApproval(res.id, "APPROVED")}
+                        onClick={() => handleReservationStatus(res.id, "APPROVED")}
                         disabled={res.status === "APPROVED"}
                       >
                         승인
                       </button>
                       <button
                         className={styles.rejectButton}
-                        onClick={() => handleApproval(res.id, "REJECTED")}
-                        disabled={res.status === "REJECTED"}
+                        onClick={() => handleReservationStatus(res.id, "CANCELLED")}
+                        disabled={res.status === "CANCELLED"}
                       >
                         거절
                       </button>
