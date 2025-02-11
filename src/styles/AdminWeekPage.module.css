@@ -317,7 +317,6 @@
   color: #5B77BE;
 }
 
-/* Shared styles for hover effects and alignments */
 .reservationItem,
 .navButton:hover {
   transition: background-color 0.3s ease;
@@ -459,28 +458,32 @@
   gap:6px;
 }
   
-  .approveButton {
-    padding: 8px 15px;
-    background-color: #1f3775;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
+
+
+
+.approveButton,
+.rejectButton {
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
     height: 39.5px;
-    font-size: 16px;
-  
-  }
-  
-  .rejectButton {
-    padding: 8px 15px;
-    background-color: #861C1C;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    height: 39.5px;
-    font-size: 16px;
-  }
+  font-size: 16px;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.25);
+  box-shadow:rgba(0, 0, 0, 0.2) 4px 4px 6px;
+}
+
+.approveButton {
+  border: 2px solid #1f3775;
+  color:#1f3775;
+}
+
+.rejectButton {
+  border: 2px solid #861C1C;
+  color:#861C1C;
+}
+
 
 
 /* 반응형 스타일 */

@@ -371,7 +371,7 @@ const WeekPage = () => {
         <div className={styles.statusLegend}>
           <div className={styles.statusItem}>
             <div className={styles.completeDot}></div>
-            <span>예약 완료</span>
+            <span>예약 승인</span>
           </div>
           <div className={styles.statusItem}>
             <div className={styles.pendingDot}></div>

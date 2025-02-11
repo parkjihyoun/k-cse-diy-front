@@ -1,3 +1,4 @@
+// src/routes/AppRoutes.jsx
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Layout from '../components/Layout';
@@ -15,12 +16,13 @@ import AdminMonthPage from '../pages/Adminpage/AdminMonthPage';
 import AdminWeekPage from '../pages/Adminpage/AdminWeekPage';
 import AdminCheckPage from '../pages/Adminpage/AdminCheckPage';
 import AdminKeyPage from '../pages/Adminpage/AdminKeyPage';
+import AdminRoute from './AdminRoute';
 
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Layout 적용 */}
       <Route path="/" element={<Layout />}>
+        {/* 일반 사용자 라우트 */}
         <Route index element={<MainPage />} />
         <Route path="check" element={<CheckPage />} />
         <Route path="check/list" element={<CheckListPage />} />
@@ -30,14 +32,17 @@ const AppRoutes = () => {
         <Route path="help" element={<HelpPage />} />
         <Route path="help/tutorial" element={<TutorialPage />} />
         <Route path="help/rule" element={<RulePage />} />
-      
 
-      {/* Admin 관련 라우팅 */}
-      <Route path="admin" element={<AdminLoginPage />} />
-      <Route path="admin/month" element={<AdminMonthPage />} />
-      <Route path="admin/week" element={<AdminWeekPage />} />
-      <Route path="admin/check" element={<AdminCheckPage />} />
-      <Route path="admin/key" element={<AdminKeyPage />} />
+        {/* 관리자 로그인 페이지는 토큰 검증 없이 접근 */}
+        <Route path="admin" element={<AdminLoginPage />} />
+
+        {/* AdminRoute로 감싸서 토큰 검증 후 하위 관리자 페이지 렌더링 */}
+        <Route element={<AdminRoute />}>
+          <Route path="admin/month" element={<AdminMonthPage />} />
+          <Route path="admin/week" element={<AdminWeekPage />} />
+          <Route path="admin/check" element={<AdminCheckPage />} />
+          <Route path="admin/key" element={<AdminKeyPage />} />
+        </Route>
       </Route>
     </Routes>
   );
