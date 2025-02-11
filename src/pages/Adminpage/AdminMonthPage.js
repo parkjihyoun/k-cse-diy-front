@@ -18,36 +18,6 @@ const AdminMonthPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    const validateToken = async () => {
-      console.log('validate token' + token);
-      setLoading(true);
-      setError(null);
-
-      try {
-        const response = await fetch(
-          `https://diy.knucse.site/api/v1/admin/validate-token`, {
-          mothod: "GET",
-          headers: {
-            Authorization: token,
-          }
-        }
-        );
-
-        if (!response.ok) {
-          alert("로그인이 필요합니다.");
-          localStorage.removeItem("token");
-          navigate("/admin");
-        }
-      }
-      catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     const handleViewChange = (view) => {
       if (view === "Week") {
         navigate("/admin/week");
@@ -82,9 +52,8 @@ const AdminMonthPage = () => {
       }
     };
 
-    validateToken();
     fetchReservations();
-  }, [year, month]);
+  }, [year, month, navigate]);
 
   const handleMonthChange = (direction) => {
     if (direction === "prev") {
@@ -104,7 +73,6 @@ const AdminMonthPage = () => {
     }
   };
 
-
   const handleDateClick = (dateStr) => {
     setSelectedDate(dateStr);
     const filteredReservations = reservations.filter(
@@ -120,14 +88,15 @@ const AdminMonthPage = () => {
 
     try {
       const response = await fetch(
-        `https://diy.knucse.site/api/v1/admin/reservation/treatment`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({ reservationId, reservationStatus }),
-      }
+        `https://diy.knucse.site/api/v1/admin/reservation/treatment`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+          body: JSON.stringify({ reservationId, reservationStatus }),
+        }
       );
 
       if (!response.ok) {
@@ -135,12 +104,15 @@ const AdminMonthPage = () => {
       }
 
       setReservations((prev) =>
-        prev.map((res) => (res.id === reservationId ? { ...res, status: reservationStatus } : res))
+        prev.map((res) =>
+          res.id === reservationId ? { ...res, status: reservationStatus } : res
+        )
       );
       setSelectedReservations((prev) =>
-        prev.map((res) => (res.id === reservationId ? { ...res, status: reservationStatus } : res))
+        prev.map((res) =>
+          res.id === reservationId ? { ...res, status: reservationStatus } : res
+        )
       );
-
     } catch (err) {
       setError(err.message);
     } finally {
@@ -150,22 +122,20 @@ const AdminMonthPage = () => {
 
   const handleReject = async (reservationId, status, cancelledReason) => {
     const token = localStorage.getItem("token");
-    console.log(reservationId);
-    console.log(status);
-    console.log(cancelledReason);
     setLoading(true);
     setError(null);
 
     try {
       const response = await fetch(
-        `https://diy.knucse.site/api/v1/admin/reservation/cancel`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({ reservationId, cancelledReason }),
-      }
+        `https://diy.knucse.site/api/v1/admin/reservation/cancel`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+          body: JSON.stringify({ reservationId, cancelledReason }),
+        }
       );
 
       if (!response.ok) {
@@ -183,7 +153,6 @@ const AdminMonthPage = () => {
           res.id === reservationId ? { ...res, status, cancelledReason } : res
         )
       );
-
     } catch (err) {
       setError(err.message);
     } finally {
@@ -242,8 +211,8 @@ const AdminMonthPage = () => {
                         r.status === "APPROVED"
                           ? styles.completeDot
                           : r.status === "CANCELLED"
-                            ? styles.rejectedDot
-                            : styles.pendingDot
+                          ? styles.rejectedDot
+                          : styles.pendingDot
                       }
                     ></div>
                   ))}
@@ -271,15 +240,13 @@ const AdminMonthPage = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-
   return (
     <div className={styles.page}>
       {/* Right Controls */}
       <div className={styles.rightControls}>
         <div className={styles.dropdown}>
           <button
-            className={`${styles.dropdownButton} ${selectedView === "Week" ? styles.active : ""
-              }`}
+            className={`${styles.dropdownButton} ${selectedView === "Week" ? styles.active : ""}`}
             onClick={() => navigate("/admin/week")} // Week 페이지로 이동
           >
             Week
@@ -351,10 +318,10 @@ const AdminMonthPage = () => {
                       상태 | {res.status === "PENDING"
                         ? "예약 대기중 . ."
                         : res.status === "APPROVED"
-                          ? "예약 승인"
-                          : res.status === "CANCELLED"
-                            ? `예약 거절  (거절 사유: ${res.cancelledReason || "없음"})`
-                            : "알 수 없음"}
+                        ? "예약 승인"
+                        : res.status === "CANCELLED"
+                        ? `예약 거절  (거절 사유: ${res.cancelledReason || "없음"})`
+                        : "알 수 없음"}
                     </p>
                     <div className={styles.actionButtons}>
                       <button

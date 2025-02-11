@@ -1,3 +1,4 @@
+/* 전체 페이지 레이아웃 */
 .page {
   color: white;
   min-height: 100vh;
@@ -5,9 +6,11 @@
   position: relative;
 }
 
+/* ------------------------------- */
+/* 헤더 영역 */
+/* ------------------------------- */
 .header {
-  margin-bottom: 20px;
-  margin-top: 20px;
+  margin: 20px 0;
   width: 100%;
 }
 
@@ -18,10 +21,11 @@
   width: 100%;
   position: relative;
   top: 70px;
-  margin-top:-7px;
+  margin-top: -7px;
   padding-left: 120px;
 }
 
+/* 네비게이션 (중앙 정렬) */
 .navigation {
   display: flex;
   align-items: center;
@@ -29,8 +33,7 @@
   font-size: 20px;
   font-weight: bold;
   white-space: nowrap;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
   text-align: center;
   position: relative;
 }
@@ -55,6 +58,7 @@
   padding: 10px;
 }
 
+/* 상태 범례 (예약 승인, 대기, 거절) */
 .statusLegendContainer {
   display: flex;
   justify-content: flex-end;
@@ -80,24 +84,13 @@
   font-size: 14px;
 }
 
+/* 우측 컨트롤 (예: Week 버튼) */
 .rightControls {
   position: absolute;
   top: 15px;
   right: 40px;
   display: flex;
   gap: 10px;
-}
-
-.reserveButton {
-  padding: 8px 15px;
-  background-color: #1f3775;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 90px;
-  height: 35px;
-  font-size: 15px;
 }
 
 .dropdown {
@@ -115,35 +108,11 @@
   font-size: 15px;
 }
 
-.dropdownMenu {
-  position: absolute;
-  top: 36px;
-  right: 0;
-  background-color: white;
-  color: black;
-  border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  z-index: 10;
-  list-style: none;
-  padding: 5px 0;
-  display: none;
-}
-
-.dropdown:hover .dropdownMenu {
-  display: block;
-}
-
-.dropdownMenu li {
-  padding: 10px 15px;
-  cursor: pointer;
-}
-
-.dropdownMenu li:hover {
-  background-color: #f0f0f0;
-}
-
+/* ------------------------------- */
+/* 캘린더 영역 */
+/* ------------------------------- */
 .calendar {
-  margin: 90px 20px 20px 20px;
+  margin: 90px 20px 20px;
 }
 
 table {
@@ -173,11 +142,13 @@ td {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
+/* 날짜 번호 표시 */
 .dateNumber {
   font-size: 20px;
   font-weight: 900;
 }
 
+/* 예약 상태 점 (완료, 대기, 거절) */
 .dotsContainer {
   display: flex;
   gap: 8px;
@@ -187,43 +158,43 @@ td {
   left: 15px;
 }
 
-.completeDot {
-  width: 13px;
-  height: 13px;
-  background-color: #324e97;
-  border-radius: 50%;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-.pendingDot {
-  width: 13px;
-  height: 13px;
-  background-color: #e4e4e4;
-  border-radius: 50%;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
+.completeDot,
+.pendingDot,
 .rejectedDot {
   width: 13px;
   height: 13px;
-  background-color: #861C1C;
   border-radius: 50%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
+.completeDot {
+  background-color: #324e97;
+}
+
+.pendingDot {
+  background-color: #e4e4e4;
+}
+
+.rejectedDot {
+  background-color: #861C1C;
+}
+
+/* 추가 예약 점 (예약이 2개 초과일 경우) */
 .extraDots {
   font-size: 17px;
   font-weight: bold;
-  color: rgb(255, 255, 255);
+  color: white;
   margin-left: 5px;
   margin-top: 5px;
 }
 
+/* 선택된 날짜 */
 .selected {
   background-color: rgba(255, 255, 255, 0.6);
   color: black;
 }
 
+/* 빈 칸 및 오늘 날짜 스타일 */
 .empty {
   background-color: transparent;
   cursor: default;
@@ -236,13 +207,14 @@ td {
   z-index: 1;
 }
 
+/* ------------------------------- */
+/* 예약 상세 정보 영역 */
+/* ------------------------------- */
 .reservationDetails {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-bottom: 20px;
+  margin: 0 20px 20px;
 }
 
 .reservationDetails h3 {
@@ -253,7 +225,7 @@ td {
 
 .reservationList {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 데스크탑 2열 */
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   margin: 0;
 }
@@ -261,12 +233,12 @@ td {
 .reservationItem {
   background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 5px !important;
+  border-radius: 5px;
   padding: 15px;
   color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(3px); /* 블러 효과 추가 */
-  -webkit-backdrop-filter: blur(10px); /* Safari 지원 */
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .reservationItem p {
@@ -275,155 +247,132 @@ td {
 }
 
 .noReservations {
-  color:white;
-  font-size: 1rem; /* 텍스트 크기 */
-  text-align: center; /* 가운데 정렬 */
+  color: white;
+  font-size: 1rem;
+  text-align: center;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 5px; /* 둥근 모서리 */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 가벼운 그림자 */
-  margin:0;
-  margin-bottom: 15px;
-  backdrop-filter: blur(3px); /* 블러 효과 추가 */
-  -webkit-backdrop-filter: blur(10px); /* Safari 지원 */
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 0 0 15px;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-.actionButtons{
-  display:flex;
-  justify-content:end;
-  gap:12px;
+/* ------------------------------- */
+/* 액션 버튼 (예약 승인 / 거절) */
+/* ------------------------------- */
+.actionButtons {
+  display: flex;
+  justify-content: end;
+  gap: 12px;
+}
+
+.approveButton,
+.rejectButton {
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 90px;
+  height: 34px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.25);
+  box-shadow:rgba(0, 0, 0, 0.2) 4px 4px 6px;
 }
 
 .approveButton {
-  padding: 8px 15px;
-  background-color: #1f3775;
-  color: white;
-  border: 1px solid #fff;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 90px;
-  height: 34px;
-  font-size: 14px;
-
+  border: 2px solid #1f3775;
+  color:#1f3775;
 }
 
 .rejectButton {
-  padding: 8px 15px;
-  background-color: #861C1C;
-  color: white;
-  border: 1px solid #fff;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 90px;
-  height: 34px;
-  font-size: 14px;
+  border: 2px solid #861C1C;
+  color:#861C1C;
 }
 
-/* 모바일 스타일 */
+
+/* 반응형 (모바일) 스타일 */
 @media (max-width: 890px) {
   .page {
     padding: 10px;
-    margin: 0px;
+    margin: 0;
     display: flex;
-  flex-direction: column;
-  min-height: 50vh;
-    
+    flex-direction: column;
+    min-height: 50vh;
   }
-  .reservationDetails{
-    margin:0 10px 0 10px;
+  
+  .reservationDetails {
+    margin: 0 10px;
   }
-
+  
   .reservationDetails h3 {
-    margin-bottom: 5px;
-    margin-top:20px;
+    margin: 20px 0 5px;
     font-size: 22px;
   }
   
-  .reservationDetails li {
-    flex: 1 1 100%; /* 1열로 변경 (100% 너비) */
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 5px;
-  padding: 15px;
-  color: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
-  }
   .reservationList {
-    grid-template-columns: 1fr; /* 모바일 1열 */
-    gap:12px;
+    grid-template-columns: 1fr; 
+    gap: 12px;
     margin-bottom: 10px;
   }
-  .reservationItem{
-    margin:0px;
+  
+  .reservationItem {
+    margin: 0;
   }
+  
   .header {
     margin: 0;
   }
+  
   .headerRow {
-    display: flex;
-    align-items: center; /* 세로 가운데 정렬 */
-    justify-content: space-between; /* 좌우 정렬 */
-    width: 100%;
-    position: relative;
     top: 50px;
-    padding-left: 50px; /* 헤더 전체 왼쪽에 여백 추가 */
+    padding-left: 50px;
   }
-
+  
   .navigation {
     font-size: 10px;
     gap: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-  align-items: center;
-  font-weight: bold;
-  white-space: nowrap;
-  text-align: center;
-  position: relative;
+    margin: 0 auto;
+    align-items: center;
+    font-weight: bold;
+    white-space: nowrap;
+    text-align: center;
+    position: relative;
   }
-
+  
   .navButton {
     font-size: 23px;
     font-weight: 100;
-    
   }
-
+  
   .navText {
     font-size: 22px;
-  
   }
+  
   .rightControls {
-    top: 0px;
+    top: 0;
     right: 10px;
     gap: 7px;
   }
-  .reserveButton,
+  
   .dropdownButton {
     width: 75px;
     height: 32px;
     font-size: 12px;
     text-align: center;
   }
-  .dropdown {
-    position: relative;
-    z-index: 10;
-  }
-  .dropdownMenu {
-    top: 28px;
-    right: 0px;
-    width: calc(100% - 0px);
-    margin-left: 10px;
-    z-index: 20;
-  }
+  
   .calendar {
     margin: 85px 0;
     top: 15px;
     margin-bottom: 0;
   }
+  
   th {
     font-size: 13px;
   }
+  
   td {
     height: 72px;
     padding: 5px;
@@ -431,45 +380,39 @@ td {
     background-color: rgba(255, 255, 255, 0.1);
     border: 0.8px solid rgba(255, 255, 255, 0.5);
   }
+  
   .dateNumber {
     font-size: 14px;
   }
+  
   .dotsContainer {
     gap: 5px;
     bottom: 5px;
     left: 5px;
   }
+  
   .completeDot,
   .pendingDot,
-  .rejectedDot{
+  .rejectedDot {
     width: 10px;
     height: 10px;
   }
-  .dropdownMenu li {
-    padding: 10px;
-  }
+  
   .statusLegend {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end; /* 항목 자체를 오른쪽 정렬 */
-    text-align: right; /* 텍스트 오른쪽 정렬 */
-    gap: 5px; /* 항목 간 간격 */
-    margin-right:10px;
+    gap: 5px;
+    margin-right: 10px;
   }
-
+  
   .statusItem span {
-    font-size:12px;
+    font-size: 12px;
   }
+  
   .extraDots {
     font-size: 14px;
-    margin-left: 0px;
+    margin-left: 0;
   }
-
+  
   .statusLegendContainer {
-    display: flex;
-    justify-content: flex-end; /* 오른쪽 정렬 */
-    flex-shrink: 0; /* 크기 줄어들지 않도록 설정 */
-    margin-right: 0px; /* 오른쪽 여백 */
+    margin-right: 0;
   }
-
 }
