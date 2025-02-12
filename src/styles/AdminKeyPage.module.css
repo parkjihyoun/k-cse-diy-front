@@ -1,0 +1,70 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+
+  }
+  .page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 500;
+    background-color: rgba(255, 255, 255, 0.188);
+    height: 80vh;
+  }
+
+.tableHeader {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    padding: 10px 120px;
+    border-bottom: 2px solid #ccc;
+}
+.cell {
+    flex: 1; /* 각 셀은 컨테이너 공간의 동일한 비율을 차지 */
+    padding: 0 10px; /* 좌우 패딩으로 간격 조정 */
+    text-align: center; /* 텍스트를 셀 중앙으로 정렬 */
+}
+
+.row {
+    display: flex;
+    justify-content: space-between; /* flex 컨테이너의 아이템들 사이에 가능한 공간 분배 */
+    padding: 10px 0;
+    width: 78%; /* 행의 너비 조정 */
+    margin: 0 auto; /* 센터 정렬 */
+}
+
+.statusReturned {
+    color: rgb(255, 107, 107);
+}
+
+.statusRented {
+    color: rgb(121, 121, 255);
+}
+
+.dropdown {
+    padding: 8px;
+    border-radius: 4px;
+}
+  .listContainer {
+    margin-top: 80px;
+    width: 100%; 
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.returnButton{
+    align-self: flex-end;
+    margin-right: 70px; 
+    margin-top: 100px;
+    width: 200px;
+}
+.dropdown {
+    align-self: flex-end;
+    margin-right: 70px; 
+    margin-top: 10px;
+}
