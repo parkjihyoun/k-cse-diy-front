@@ -33,7 +33,7 @@ const Footer = () => {
                 © 2025 @yeaey_oo | @unnhyo | @w.o_xna | @y___ch__ <br /> All rights reserved.
             </p>
             <p style={styles.login}>
-                <a href="/admin" style={styles.loginLink}>Administrator LogIn</a>
+                <a href="/admin" style={styles.loginLink}>Administrator LogIn/LogOut</a>
             </p>
         </footer>
     );
