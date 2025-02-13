@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Select from 'react-select';
 import styles from "../../styles/AdminCheckPage.module.css";
 
 const initialRequests = [
