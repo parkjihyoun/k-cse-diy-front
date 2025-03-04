@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../../styles/AdminCheckPage.module.css";
+import { format } from "date-fns";
 
 const initialRequests = [
   { id: 1, name: "최예윤", studentId: "202400003", date: "2025-02-10", time: "14:00 - 16:00", reason: "동아리 회의를 할거야 동아리 회의를 할거야", status: "CANCELLED" },
@@ -11,14 +12,15 @@ const initialRequests = [
 ];
 
 const AdminCheckPage = () => {
-  const [allRequests, setAllRequests] = useState([...initialRequests]);
-  const [searchCategory, setSearchCategory] = useState("name");
+  const [allRequests, setAllRequests] = useState([]);
+  const [searchCategory, setSearchCategory] = useState("all");
   const [search, setSearch] = useState("");
   const [dateRange, setDateRange] = useState({ from: "", to: "" });
   const [sortFilter, setSortFilter] = useState("이름순");
   const [checkedItems, setCheckedItems] = useState([]);
   const [rejectModal, setRejectModal] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
+  const [filteredRequests, setFilteredRequests] = useState([]);
 
   // 상태 값을 한글로 변환
   const translateStatus = (status) => {
@@ -28,18 +30,25 @@ const AdminCheckPage = () => {
     return status;
   };
 
-  // 정렬 조건에 따른 데이터 반환
-  const getSortedRequests = () => {
-    let sortedData = [...allRequests];
+  //날짜 포맷팅
+  const formatTime = (startTime, endTime) => {
+    return startTime + " - " + endTime
+  }
+
+  useEffect(() => {
+    setCheckedItems([]);
+
+    let sortedData = [...allRequests];  // ✅ allRequests 사용
+
     switch (sortFilter) {
       case "이름순":
-        sortedData.sort((a, b) => a.name.localeCompare(b.name));
+        sortedData.sort((a, b) => (a.studentName ?? "").localeCompare(b.studentName ?? ""));
         break;
       case "학번순":
-        sortedData.sort((a, b) => a.studentId.localeCompare(b.studentId));
+        sortedData.sort((a, b) => (a.studentNumber ?? "").localeCompare(b.studentNumber ?? ""));
         break;
       case "날짜순":
-        sortedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+        sortedData.sort((a, b) => new Date(a.reservationDate ?? 0) - new Date(b.reservationDate ?? 0));
         break;
       case "대기":
         sortedData = sortedData.filter(item => item.status === "PENDING");
@@ -53,30 +62,11 @@ const AdminCheckPage = () => {
       default:
         break;
     }
-    return sortedData;
-  };
 
-  // 검색 조건 및 날짜 범위까지 적용한 최종 데이터
-  const filteredRequests = getSortedRequests().filter(req => {
-    // 날짜 필터 적용
-    const reqDate = new Date(req.date);
-    if (dateRange.from) {
-      const fromDate = new Date(dateRange.from);
-      if (reqDate < fromDate) return false;
-    }
-    if (dateRange.to) {
-      const toDate = new Date(dateRange.to);
-      if (reqDate > toDate) return false;
-    }
+    setFilteredRequests(sortedData);  // 상태 업데이트 시 의존성 루프 제거
+  }, [sortFilter, allRequests]);  // ✅ filteredRequests 제거, allRequests와 sortFilter만 의존
 
-    // 검색어 필터 적용 (예: 이름, 학번, 상태)
-    if (searchCategory === "status") {
-      return translateStatus(req.status)
-        .toLowerCase()
-        .includes(search.toLowerCase());
-    }
-    return req[searchCategory].toLowerCase().includes(search.toLowerCase());
-  });
+
 
   // 체크박스
   const handleCheck = (id) => {
@@ -99,17 +89,33 @@ const AdminCheckPage = () => {
     filteredRequests.every(item => checkedItems.includes(item.id));
 
   // 승인 버튼
-  const handleApprove = () => {
+  const handleApprove = async () => {
+    const token = localStorage.getItem("token");
+    console.log(checkedItems);
     const hasPending = allRequests.some(
       item => checkedItems.includes(item.id) && item.status === "PENDING"
     );
-    
+
     if (!hasPending) {
       alert("대기 상태인 항목을 선택하세요.");
       return;
     }
-  
-    setAllRequests(prev =>
+
+    try {
+      await fetch("https://diy.knucse.site/api/v1/admin/reservation/treatment-list", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": token
+        },
+        body: JSON.stringify(checkedItems) // JSON 형식으로 변환
+      });
+
+    } catch (error) {
+      alert(`예약 승인중 오류가 발생했습니다: ${error.message}`);
+    }
+
+    setFilteredRequests(prev =>
       prev.map(item =>
         checkedItems.includes(item.id) && item.status === "PENDING"
           ? { ...item, status: "APPROVED" }
@@ -121,7 +127,8 @@ const AdminCheckPage = () => {
   };
 
   // 거절 버튼
-  const handleReject = () => {
+  const handleReject = async () => {
+    const token = localStorage.getItem("token");
     const hasPending = allRequests.some(
       item => checkedItems.includes(item.id) && item.status === "PENDING"
     );
@@ -130,7 +137,34 @@ const AdminCheckPage = () => {
       alert("대기 상태인 항목을 선택하세요.");
       return;
     }
-    setRejectModal(true);
+
+    const reason = prompt("거절 사유를 입력하세요:");
+    if (!reason) {
+      alert("거절 사유를 입력해야 합니다.");
+      return;
+    }
+
+    try {
+      await fetch("https://diy.knucse.site/api/v1/admin/reservation/cancel", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": token
+        },
+        body: JSON.stringify({
+          reservationIds: checkedItems,
+          cancelledReason: reason
+        })
+      });
+
+    } catch (error) {
+      alert(`예약 승인중 오류가 발생했습니다: ${error.message}`);
+    }
+    console.log(reason);
+
+    setCheckedItems([]);
+    alert("거절 완료!");
+    //setRejectModal(true);
   };
 
   // 거절 모달 확인
@@ -154,6 +188,56 @@ const AdminCheckPage = () => {
     alert(`거절 완료! (거절 사유: ${rejectReason})`);
   };
 
+  /*
+   조회 로직
+  */
+  const handleSearch2 = async () => {
+    if (dateRange.from === "" || dateRange.to === "") {
+      alert("조회 기간을 먼저 설정해주세요.");
+      return;
+    }
+
+    try {
+      setCheckedItems([]);
+      const response = await fetch(
+        `https://diy.knucse.site/api/v1/application/reservation/range?startDate=${dateRange.from}&endDate=${dateRange.to}`
+      );
+
+      if (!response.ok) {
+        throw new Error("예약 정보를 가져오는데 실패했습니다.");
+      }
+
+      const result = await response.json();
+      if (result.response && Array.isArray(result.response)) {
+        let filteredData = [...result.response];  // ✅ API 데이터 바로 사용
+        // 🔎 검색 조건 적용
+        if (searchCategory !== "all") {
+          if (searchCategory === "name") {
+            filteredData = filteredData.filter(req =>
+              req.studentName?.toLowerCase().includes(search.toLowerCase())
+            );
+          } else if (searchCategory === "status") {
+            filteredData = filteredData.filter(req =>
+              translateStatus(req.status).toLowerCase().includes(search.toLowerCase())
+            );
+          } else if (searchCategory === "studentId") {
+            console.log("searchCategory = " + searchCategory);
+            filteredData = filteredData.filter(req =>
+              req.studentNumber.toLowerCase().includes(search.toLowerCase())
+            );
+          }
+        }
+
+        setAllRequests(filteredData);  // ✅ 필터링된 결과 설정
+      } else {
+        setAllRequests([]);  // 데이터 없음 처리
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+
   return (
     <div className={styles.page}>
 
@@ -172,6 +256,7 @@ const AdminCheckPage = () => {
           value={searchCategory}
           onChange={(e) => setSearchCategory(e.target.value)}
         >
+          <option value="all">전체</option>
           <option value="name">이름</option>
           <option value="studentId">학번</option>
           <option value="status">상태</option>
@@ -181,10 +266,16 @@ const AdminCheckPage = () => {
         <input
           className={styles.searchBox}
           type="text"
-          placeholder="검색어를 입력하세요"
+          placeholder={
+            searchCategory === "all"
+              ? "검색 조건을 선택하여 검색할 수 있습니다."
+              : "검색어를 입력하세요"
+          }
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          disabled={searchCategory === "all"}  //  전체 모드일 때 비활성화
         />
+
 
         {/* 날짜 선택 */}
         <div className={styles.dateRange}>
@@ -199,6 +290,12 @@ const AdminCheckPage = () => {
             value={dateRange.to}
             onChange={(e) => setDateRange({ ...dateRange, to: e.target.value })}
           />
+        </div>
+
+        <div>
+          <button className={styles.searchButton} onClick={() => handleSearch2()}>
+            조회
+          </button>
         </div>
 
         {/* 정렬 조건 */}
@@ -250,10 +347,10 @@ const AdminCheckPage = () => {
                 onChange={() => handleCheck(item.id)}
               />
             </div>
-            <div className={styles.cell}>{item.name}</div>
-            <div className={styles.cell}>{item.studentId}</div>
-            <div className={styles.cell}>{item.date}</div>
-            <div className={styles.cell}>{item.time}</div>
+            <div className={styles.cell}>{item.studentName}</div>
+            <div className={styles.cell}>{item.studentNumber}</div>
+            <div className={styles.cell}>{item.reservationDate}</div>
+            <div className={styles.cell}>{formatTime(item.startTime, item.endTime)}</div>
             <div className={styles.cell}>{item.reason}</div>
             <div className={styles.cell}>{translateStatus(item.status)}</div>
           </div>
@@ -267,12 +364,12 @@ const AdminCheckPage = () => {
             <div className={styles.modalLabel}>거절 사유</div>
             <div className={styles.modalContent}>
               <input
-                  type="text"
-                  value={rejectReason}
-                  onChange={(e) => setRejectReason(e.target.value)}
-                  placeholder="거절 사유를 입력하세요."
-                  className={styles.modalInput}
-                />
+                type="text"
+                value={rejectReason}
+                onChange={(e) => setRejectReason(e.target.value)}
+                placeholder="거절 사유를 입력하세요."
+                className={styles.modalInput}
+              />
               <button className={styles.closeButton} onClick={confirmReject}>확인</button>
             </div>
           </div>
