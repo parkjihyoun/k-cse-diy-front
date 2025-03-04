@@ -134,7 +134,7 @@ const AdminMonthPage = () => {
             "Content-Type": "application/json",
             Authorization: token,
           },
-          body: JSON.stringify({ reservationId, cancelledReason }),
+          body: JSON.stringify({ reservationIds: [reservationId], cancelledReason }),
         }
       );
 
@@ -211,8 +211,8 @@ const AdminMonthPage = () => {
                         r.status === "APPROVED"
                           ? styles.completeDot
                           : r.status === "CANCELLED"
-                          ? styles.rejectedDot
-                          : styles.pendingDot
+                            ? styles.rejectedDot
+                            : styles.pendingDot
                       }
                     ></div>
                   ))}
@@ -318,10 +318,10 @@ const AdminMonthPage = () => {
                       상태 | {res.status === "PENDING"
                         ? "예약 대기중 . ."
                         : res.status === "APPROVED"
-                        ? "예약 승인"
-                        : res.status === "CANCELLED"
-                        ? `예약 거절  (거절 사유: ${res.cancelledReason || "없음"})`
-                        : "알 수 없음"}
+                          ? "예약 승인"
+                          : res.status === "CANCELLED"
+                            ? `예약 거절  (거절 사유: ${res.cancelledReason || "없음"})`
+                            : "알 수 없음"}
                     </p>
                     <div className={styles.actionButtons}>
                       <button
