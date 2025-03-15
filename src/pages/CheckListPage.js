@@ -12,20 +12,25 @@ const CheckListPage = () => {
   const [modalType, setModalType] = useState("edit");
   const [selectedReservation, setSelectedReservation] = useState(null);
   const [loading, setLoading] = useState(false);
+  // 삭제나 수정 외 별도의 "거절 사유" 모달은 이제 사용하지 않으므로 관련 상태 제거!
+  // const [rejectionReason, setRejectionReason] = useState("");
+  // const [showRejectionModal, setShowRejectionModal] = useState(false);
+  const [authCodeInput, setAuthCodeInput] = useState("");
 
-  const [rejectionReason, setRejectionReason] = useState(""); // 거절 사유 상태 추가
-  const [showRejectionModal, setShowRejectionModal] = useState(false); // 거절 사유 팝업 상태
+  // 창 크기에 따른 페이지당 카드 개수 결정 함수
+  const getPageSize = (width) => {
+    if (width <= 770) return 2;       // 모바일: 2개
+    else if (width <= 850) return 4;  // 850px 이하: 4개
+    else return 6;                  // 데스크탑: 6개
+  };
 
-  const [authCodeInput, setAuthCodeInput] = useState(""); // 인증번호 상태
-  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
-  const [pageSize, setPageSize] = useState(window.innerWidth <= 770 ? 2 : 4); // 모바일은 2개씩, 데스크탑은 6개씩
+  const [pageSize, setPageSize] = useState(getPageSize(window.innerWidth));
+  const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
     const handleResize = () => {
-      const newPageSize = window.innerWidth <= 770 ? 2 : 4;
+      const newPageSize = getPageSize(window.innerWidth);
       setPageSize(newPageSize);
-
-      // 현재 페이지에서 잘리는 경우 첫 페이지로 리셋
       const maxPage = Math.ceil(reservations.length / newPageSize) - 1;
       if (currentPage > maxPage) {
         setCurrentPage(0);
@@ -35,10 +40,6 @@ const CheckListPage = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [currentPage, reservations]);
-
-  const handleBackClick = () => {
-    navigate("/check");
-  };
 
   const calculateDay = (date) => {
     const dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -68,12 +69,13 @@ const CheckListPage = () => {
           reservationId: res.id,
           date: res.reservationDate,
           day: calculateDay(res.reservationDate),
-          startTime: res.startTime.slice(0, 5), // 초 제거
-          endTime: res.endTime.slice(0, 5), // 초 제거
+          startTime: res.startTime.slice(0, 5),
+          endTime: res.endTime.slice(0, 5),
           time: `${res.startTime.slice(0, 5)} ~ ${res.endTime.slice(0, 5)}`,
           title: res.reason,
           status: res.status,
-          rejectionReason: res.cancelledReason || "사유가 제공되지 않았습니다.", // 거절 사유 추가
+          // cancelledReason 토큰으로 거절 사유 저장
+          cancelledReason: res.cancelledReason || "사유가 제공되지 않았습니다.",
           name: res.studentName,
           studentId: res.studentNumber,
         }));
@@ -121,7 +123,6 @@ const CheckListPage = () => {
             body: JSON.stringify({ reservationId, authCode }),
           }
         );
-        console.log(authCode);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -141,7 +142,7 @@ const CheckListPage = () => {
       const response = await fetch(
         `https://diy.knucse.site/api/v1/application/reservation/update`,
         {
-          method: "PATCH", // PATCH 사용
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
@@ -150,7 +151,7 @@ const CheckListPage = () => {
             startTime: updatedReservation.startTime,
             endTime: updatedReservation.endTime,
             reason: updatedReservation.title,
-            authCode: updatedReservation.authCode, // 인증 코드 추가
+            authCode: updatedReservation.authCode,
           }),
         }
       );
@@ -159,7 +160,7 @@ const CheckListPage = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const result = await response.json();
+      await response.json();
 
       setReservations((prev) =>
         prev.map((res) =>
@@ -176,23 +177,26 @@ const CheckListPage = () => {
     }
   };
 
-  const handleRejectionClick = (reason) => {
-    setRejectionReason(reason);
-    console.log('reason', reason);
-    console.log('rejectionReason', rejectionReason);
-    setShowRejectionModal(true);
-  };
+  // 모달 관련 거절 사유 코드는 이제 사용하지 않으므로 제거!
+  // const handleRejectionClick = (reason) => {
+  //   setRejectionReason(reason);
+  //   setShowRejectionModal(true);
+  // };
 
-  const closeRejectionModal = () => {
-    setShowRejectionModal(false);
-    setRejectionReason("");
-  };
+  // const closeRejectionModal = () => {
+  //   setShowRejectionModal(false);
+  //   setRejectionReason("");
+  // };
 
   const totalPages = Math.ceil(reservations.length / pageSize);
   const displayedReservations = reservations.slice(
     currentPage * pageSize,
     (currentPage + 1) * pageSize
   );
+
+  const handleBackClick = () => {
+    navigate("/check");
+  };
 
   return (
     <div className={styles.page}>
@@ -223,10 +227,11 @@ const CheckListPage = () => {
             {displayedReservations.map((reservation) => (
               <div
                 key={reservation.reservationId}
-                className={`${styles.card} ${isPastDateTime(reservation.date, reservation.endTime)
-                  ? styles.pastCard
-                  : ""
-                  }`}
+                className={`${styles.card} ${
+                  isPastDateTime(reservation.date, reservation.endTime)
+                    ? styles.pastCard
+                    : ""
+                }`}
               >
                 <div className={styles.cardHeader}>
                   <div className={styles.cardHeaderLeft}>
@@ -234,14 +239,15 @@ const CheckListPage = () => {
                     <p className={styles.day}>{reservation.day}</p>
                   </div>
                   <span
-                    className={`${styles.statusCircle} ${reservation.status === "APPROVED"
-                      ? styles.approved
-                      : reservation.status === "PENDING"
+                    className={`${styles.statusCircle} ${
+                      reservation.status === "APPROVED"
+                        ? styles.approved
+                        : reservation.status === "PENDING"
                         ? styles.pending
                         : reservation.status === "CANCELLED"
-                          ? styles.rejected
-                          : ""
-                      }`}
+                        ? styles.rejected
+                        : ""
+                    }`}
                   />
                 </div>
                 <p className={styles.time}>{reservation.time}</p>
@@ -250,14 +256,9 @@ const CheckListPage = () => {
                   {!isPastDateTime(reservation.date, reservation.endTime) && (
                     <div className={styles.actions}>
                       {reservation.status === "CANCELLED" ? (
-                        <button
-                          className={styles.reasonBtn}
-                          onClick={() =>
-                            handleRejectionClick(reservation.rejectionReason)
-                          }
-                        >
-                          사유
-                        </button>
+                        <p className={styles.rejectionText}>
+                          사유: {reservation.cancelledReason}
+                        </p>
                       ) : (
                         <button
                           className={styles.editBtn}
@@ -308,17 +309,6 @@ const CheckListPage = () => {
           <button className={styles.backBtn} onClick={handleBackClick}>
             이전으로
           </button>
-        </div>
-      )}
-
-      {/* 사유 팝업 */}
-      {showRejectionModal && (
-        <div className={styles.rejectionModal}>
-          <div className={styles.modalContent}>
-            <span>거절 사유</span>
-            <p>{rejectionReason}</p>
-            <button onClick={closeRejectionModal}>닫기</button>
-          </div>
         </div>
       )}
 
