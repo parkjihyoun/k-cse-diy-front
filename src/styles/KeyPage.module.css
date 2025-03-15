@@ -415,7 +415,7 @@ body {
   .closeButton,
   .cancelButton {
     width: 48%; /* 버튼이 입력창의 절반 크기 */
-    height: 45px; /* 입력 필드와 동일한 높이 */
+    height: 40px; /* 입력 필드와 동일한 높이 */
     font-size: 14px;
     display: flex;
     justify-content: center;
