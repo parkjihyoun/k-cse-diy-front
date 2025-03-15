@@ -308,6 +308,7 @@ body {
   background: transparent;
   color: white;
   font-size: 14px;
+  align-items: center;
 }
 
 .input::placeholder {
@@ -332,6 +333,8 @@ body {
 
 .closeButton,
 .cancelButton {
+    flex: 1; 
+    justify-content: center;
     padding: 10px 50px;
     border-radius: 5px;
     cursor: pointer;
@@ -341,6 +344,7 @@ body {
     font-size: 16px;
     border: 1.3px solid #ffffff; 
     transition: background 0.3s, transform 0.3s;
+    box-sizing: border-box;
 }
 
 .closeButton:hover {
@@ -373,10 +377,10 @@ body {
   }
 
   .centerBox {
-    width: 70%; /* 전체 화면의 90% 사용 */
+    width: 85%; /* 전체 화면의 90% 사용 */
     padding: 15px;
-    height: 240px;
-    margin-top: 170px;
+    height: 220px;
+    margin-top: 160px;
   }
 
   .roomTitle, .roomSubtitle, .lastUserTitle {
@@ -394,29 +398,42 @@ body {
 
   .buttonContainer {
     flex-direction: row; /* 버튼을 세로로 배치 */
-    width: 70%; /* 너비를 100%로 조정 */
+    width: 85%; /* 너비를 100%로 조정 */
     align-items: center;
   }
 
   .actionButton {
-    width: 90%; /* 버튼 너비 조정 */
-    margin-bottom: -2px; /* 버튼 간 간격 추가 */
     margin-top: -10px;
-    
   }
 
+
   .modalContent, .ruleModalContent {
-    width: 80%; /* 모달 너비를 화면에 맞게 조정 */
+
     padding: 15px;
   }
 
-  .closeButton {
-
-    align-self: center;
-    margin: 0 auto; 
+  .closeButton,
+  .cancelButton {
+    width: 48%; /* 버튼이 입력창의 절반 크기 */
+    height: 45px; /* 입력 필드와 동일한 높이 */
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
+
+  .closeButton {
+    align-self: flex-start; /* 왼쪽 정렬 */
+  }
+
+  .cancelButton {
+    align-self: flex-end; /* 오른쪽 정렬 */
+  }
+
+
+
   .rules {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   
   }
   .page {
@@ -435,8 +452,8 @@ body {
   }
 
   .statusCircle {
-    width: 15px;
-    height: 15px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%; /* 원 모양 */
     display: inline-block; /* 크기를 유지하며 인라인 요소로 처리 */
     margin-left: 8px; /* 텍스트와의 간격 */
@@ -466,16 +483,22 @@ body {
     margin-top: -10px;
   }
   .ruleModalContent {
-    padding-left: 30px;
+    padding: 20px 20px;
+  }
+  .ruleModalContent ol {
+    list-style-position: inside; /* 숫자를 안쪽으로 배치 */
+    padding-left: 0; /* 왼쪽 여백 제거 */
   }
   .modalButtonContainer {
     display: flex;
-    margin-top: 10px;
-    gap: 40px;
-    justify-content: center; /* 버튼을 가로 중앙 정렬 */
-    align-items: center; /* 버튼을 세로로도 정렬 */
-    justify-content: center;
-  }
+    justify-content: space-between; /* 버튼을 좌우 정렬 */
+    align-items: center;
+    width: 100%; /* 부모 요소 전체 너비 사용 */
+    max-width: 300px; /* 입력창과 동일한 크기 */
+    gap: 10px; /* 버튼 사이 간격 */
+}
+
+
 
 }
 
