@@ -93,6 +93,8 @@ const ReservationModal = ({ selectedDate, onClose, handleSave }) => {
               alert("인증 코드는 4자리 숫자여야 합니다. ");
             } else if (errorData.code === "INVALID_RESERVATION_TIME") {
               alert("예약 시간이 잘못 설정되었습니다. 시작 시간은 끝나는 시간보다 이전이어야 합니다.");
+            } else if (errorData.code == "RESERVATION_DATE_OUT_OF_RANGE") {
+              alert("현재 시간으로부터 4주 이내의 날짜만 예약할 수 있습니다.");
             }
             break;
           default:
